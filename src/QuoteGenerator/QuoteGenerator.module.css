@@ -1,0 +1,31 @@
+.quote-generator-container {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.quote-card {
+  width: 100%;
+}
+
+.card-footer {
+  background: none;
+  border: none;
+  text-align: center;
+  margin: 1rem;
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
+}
+
+.button-wrapper button:not(:last-child) {
+  width: 50%;
+}
+
+@media (max-width: 768px) {
+  .quote-generator-container {
+    width: 90%;
+  }
+}
