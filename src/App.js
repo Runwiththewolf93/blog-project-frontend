@@ -2,6 +2,7 @@
 // import MarkdownPreviewer from "./components/MarkdownPreview";
 import Navbar from "./Blog/components/Navbar";
 import Message from "./Blog/components/Message";
+import Body from "./Blog/components/Body";
 import "./App.css";
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
     <>
       <Navbar />
       <Message />
+      <Body />
     </>
   );
 }
