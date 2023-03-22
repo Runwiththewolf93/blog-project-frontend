@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 
-const ModalElement = () => {
+const ModalElement = ({ button }) => {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -12,7 +12,7 @@ const ModalElement = () => {
   return (
     <>
       <Button variant="light" onClick={handleShow} className="mt-3">
-        Add Post
+        {button === "add" ? "Add Post" : "Edit"}
       </Button>
 
       <Modal show={show} onHide={handleClose}>
@@ -21,29 +21,30 @@ const ModalElement = () => {
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+            <Form.Group className="mb-3" controlId="ControlInput1">
               <Form.Label>Title</Form.Label>
               <Form.Control
-                type="email"
-                placeholder="name@example.com"
+                type="text"
+                placeholder="Title of the post"
                 autoFocus
               />
             </Form.Group>
-            <Form.Group
-              className="mb-3"
-              controlId="exampleForm.ControlTextarea1"
-            >
+            <Form.Group className="mb-3" controlId="ControlTextarea1">
               <Form.Label>Text</Form.Label>
-              <Form.Control as="textarea" rows={3} />
+              <Form.Control
+                as="textarea"
+                rows={3}
+                placeholder="Text of the post"
+              />
             </Form.Group>
           </Form>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="d-flex justify-content-between">
           <Button variant="secondary" onClick={handleClose}>
-            Close
+            Cancel
           </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
+          <Button variant="secondary" onClick={handleClose}>
+            Post
           </Button>
         </Modal.Footer>
       </Modal>

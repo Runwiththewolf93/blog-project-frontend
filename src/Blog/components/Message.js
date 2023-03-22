@@ -27,7 +27,7 @@ function Message() {
             </Card.Body>
           </Card>
           <div className="d-flex justify-content-end">
-            <Modal />
+            <Modal button="add" />
           </div>
         </Col>
       </Row>
