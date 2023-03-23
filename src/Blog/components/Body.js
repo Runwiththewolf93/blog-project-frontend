@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Container,
   Row,
@@ -19,6 +20,13 @@ const scrollToBlogPost = category => {
 };
 
 const Body = () => {
+  const [blogData, setBlogData] = useState(blog);
+
+  const handleDeletePost = postId => {
+    const updatedBlogPost = blogData.filter(post => post.id !== postId);
+    setBlogData(updatedBlogPost);
+  };
+
   return (
     <Container>
       <Row className="my-3" id="category1">
@@ -39,7 +47,7 @@ const Body = () => {
           </Card>
         </Col>
         <Col md={10}>
-          {blog.map(post => (
+          {blogData.map(post => (
             <Card key={post.id} className="mb-3" id={`category${post.id}`}>
               <Card.Body>
                 <Row>
@@ -61,7 +69,11 @@ const Body = () => {
                     </div>
                     <div className="d-flex align-items-center">
                       <ModalElement />
-                      <Button variant="light" className="ms-3 mt-3">
+                      <Button
+                        variant="light"
+                        className="ms-3 mt-3"
+                        onClick={() => handleDeletePost(post.id)}
+                      >
                         Delete
                       </Button>
                     </div>
@@ -71,7 +83,7 @@ const Body = () => {
                 {post.images && (
                   <Row>
                     {post.images.map(image => (
-                      <Col key={image.id} xs={12} md={4} className="mb-3">
+                      <Col key={image.id} xs={12} md={4}>
                         <Image
                           src={image.src || placeholderImage}
                           alt={image.alt}
