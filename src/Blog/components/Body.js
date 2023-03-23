@@ -22,6 +22,10 @@ const scrollToBlogPost = category => {
 const Body = () => {
   const [blogData, setBlogData] = useState(blog);
 
+  const addBlogPost = updatedBlogData => {
+    setBlogData(updatedBlogData);
+  };
+
   const handleDeletePost = postId => {
     const updatedBlogPost = blogData.filter(post => post.id !== postId);
     setBlogData(updatedBlogPost);
@@ -68,7 +72,11 @@ const Body = () => {
                       </Card.Subtitle>
                     </div>
                     <div className="d-flex align-items-center">
-                      <ModalElement />
+                      <ModalElement
+                        blogData={blogData}
+                        setBlogData={setBlogData}
+                        onSubmit={addBlogPost}
+                      />
                       <Button
                         variant="light"
                         className="ms-3 mt-3"

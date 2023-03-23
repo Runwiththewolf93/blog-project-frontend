@@ -1,45 +1,64 @@
-import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Modal from "react-bootstrap/Modal";
-import blog from "../data/blog";
+import React, { useState, useEffect } from "react";
+import { Button, Form, Modal } from "react-bootstrap";
 import placeholderImage from "../images/images.png";
+import Loader from "./Spinner";
 
-const ModalElement = ({ button }) => {
+const ModalElement = ({ button, blogData, setBlogData, onSubmit }) => {
   const [show, setShow] = useState(false);
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
-  console.log(title, text);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const handleSubmit = e => {
+  useEffect(() => {
+    if (blogData) {
+      setIsLoading(false);
+    }
+  }, [blogData]);
+
+  const handleSubmit = (e, handleClose) => {
     e.preventDefault();
-    blog.push({
-      id: blog.length + 1,
-      title: `${title}`,
-      date: new Date().toLocaleString(),
-      avatar: {
-        id: 1,
-        src: placeholderImage,
-        alt: "Avatar Image",
+
+    const newBlogData = [
+      ...blogData,
+      {
+        id: blogData.length + 1,
+        title: `${title}`,
+        date: new Date().toLocaleString(),
+        avatar: {
+          id: 1,
+          src: placeholderImage,
+          alt: "Avatar Image",
+        },
+        content: `${text}`,
+        images: [
+          { id: 1, src: placeholderImage, alt: "Image 1" },
+          { id: 2, src: placeholderImage, alt: "Image 2" },
+          { id: 3, src: placeholderImage, alt: "Image 3" },
+        ],
       },
-      content: `${text}`,
-      images: [
-        { id: 1, src: placeholderImage, alt: "Image 1" },
-        { id: 2, src: placeholderImage, alt: "Image 2" },
-        { id: 3, src: placeholderImage, alt: "Image 3" },
-      ],
-    });
+    ];
+
+    setTimeout(() => {
+      setBlogData(newBlogData);
+      onSubmit(newBlogData);
+      setTitle("");
+      setText("");
+      handleClose();
+    }, 100);
   };
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <>
       <Button variant="light" onClick={handleShow} className="mt-3">
         {button === "add" ? "Add Post" : "Edit"}
       </Button>
-
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Add / Edit blog post</Modal.Title>
@@ -72,7 +91,11 @@ const ModalElement = ({ button }) => {
           <Button type="button" variant="secondary" onClick={handleClose}>
             Cancel
           </Button>
-          <Button type="submit" variant="secondary" onClick={handleClose}>
+          <Button
+            type="submit"
+            variant="secondary"
+            onClick={e => handleSubmit(e, handleClose)}
+          >
             Post
           </Button>
         </Modal.Footer>
