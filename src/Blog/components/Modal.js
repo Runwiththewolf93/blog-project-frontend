@@ -1,38 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import placeholderImage from "../images/images.png";
-import Loader from "./Spinner";
 
-const ModalElement = ({ button, blogData, setBlogData, onSubmit }) => {
+const ModalElement = ({ button, blogData, setBlogData }) => {
   const [show, setShow] = useState(false);
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [modalBlogData, setModalBlogData] = useState([]);
 
   useEffect(() => {
-    if (blogData) {
-      setIsLoading(false);
-    }
+    setModalBlogData(blogData);
   }, [blogData]);
 
-  const handleSubmit = (e, handleClose) => {
-    e.preventDefault();
-
+  const handleClose = () => {
+    console.log(modalBlogData);
     const newBlogData = [
-      ...blogData,
+      ...modalBlogData,
       {
-        id: blogData.length + 1,
-        title: `${title}`,
+        id: modalBlogData.length + 1,
+        title: title,
         date: new Date().toLocaleString(),
-        avatar: {
-          id: 1,
-          src: placeholderImage,
-          alt: "Avatar Image",
-        },
-        content: `${text}`,
+        avatar: { id: 1, src: placeholderImage, alt: "Avatar Image" },
+        content: text,
         images: [
           { id: 1, src: placeholderImage, alt: "Image 1" },
           { id: 2, src: placeholderImage, alt: "Image 2" },
@@ -40,19 +29,14 @@ const ModalElement = ({ button, blogData, setBlogData, onSubmit }) => {
         ],
       },
     ];
-
-    setTimeout(() => {
-      setBlogData(newBlogData);
-      onSubmit(newBlogData);
-      setTitle("");
-      setText("");
-      handleClose();
-    }, 100);
+    setBlogData(newBlogData);
+    setTitle("");
+    setText("");
+    setShow(false);
   };
 
-  if (isLoading) {
-    return <Loader />;
-  }
+  const handleShow = () => setShow(true);
+  console.log(blogData);
 
   return (
     <>
@@ -64,7 +48,7 @@ const ModalElement = ({ button, blogData, setBlogData, onSubmit }) => {
           <Modal.Title>Add / Edit blog post</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form onSubmit={handleSubmit}>
+          <Form>
             <Form.Group className="mb-3" controlId="ControlInput1">
               <Form.Label>Title</Form.Label>
               <Form.Control
@@ -88,14 +72,14 @@ const ModalElement = ({ button, blogData, setBlogData, onSubmit }) => {
           </Form>
         </Modal.Body>
         <Modal.Footer className="d-flex justify-content-between">
-          <Button type="button" variant="secondary" onClick={handleClose}>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => setShow(false)}
+          >
             Cancel
           </Button>
-          <Button
-            type="submit"
-            variant="secondary"
-            onClick={e => handleSubmit(e, handleClose)}
-          >
+          <Button type="submit" variant="secondary" onClick={handleClose}>
             Post
           </Button>
         </Modal.Footer>
