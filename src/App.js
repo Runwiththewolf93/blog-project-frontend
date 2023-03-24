@@ -7,6 +7,7 @@ import blog from "./Blog/data/blog";
 
 function App() {
   const [blogData, setBlogData] = useState(blog);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const storedData = localStorage.getItem("blogData");
@@ -25,11 +26,21 @@ function App() {
     setBlogData(blogData);
   };
 
+  const handleSearch = event => {
+    event.preventDefault();
+    const searchQuery = event.target.value.trim().toLowerCase();
+    setSearchQuery(searchQuery);
+  };
+
   return (
     <>
-      <Navbar />
+      <Navbar handleSearch={handleSearch} />
       <Message blogData={blogData} setBlogData={blogDataSetter} />
-      <Body blogData={blogData} setBlogData={blogDataSetter} />
+      <Body
+        blogData={blogData}
+        setBlogData={blogDataSetter}
+        searchQuery={searchQuery}
+      />
     </>
   );
 }

@@ -8,7 +8,7 @@ import {
 } from "react-bootstrap";
 import styles from "./Navbar.module.css";
 
-function Navigation() {
+function Navigation({ handleSearch }) {
   return (
     <Navbar bg="light" expand="lg">
       <Container>
@@ -22,6 +22,7 @@ function Navigation() {
                 placeholder="Search"
                 className="me-2"
                 aria-label="Search"
+                onChange={handleSearch}
               />
               <Button variant="outline-dark">Search</Button>
             </Form>
