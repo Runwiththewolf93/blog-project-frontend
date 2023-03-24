@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Container,
   Row,
@@ -9,8 +8,7 @@ import {
   ListGroup,
 } from "react-bootstrap";
 import placeholderImage from "../images/images.png";
-import ModalElement from "./Modal";
-import blog from "../data/blog";
+import ModalElement from "./ModalElement";
 
 const scrollToBlogPost = category => {
   const blogPostElement = document.getElementById(category);
@@ -19,18 +17,7 @@ const scrollToBlogPost = category => {
   }
 };
 
-const Body = () => {
-  const [blogData, setBlogData] = useState(blog);
-
-  const handleDeletePost = postId => {
-    const updatedBlogPost = blogData.filter(post => post.id !== postId);
-    setBlogData(updatedBlogPost);
-  };
-
-  const handleUpdateBlogData = newBlogData => {
-    setBlogData(newBlogData);
-  };
-
+const Body = ({ blogData, onAddPost, handleDeletePost }) => {
   return (
     <Container>
       <Row className="my-3" id="category1">
@@ -38,7 +25,7 @@ const Body = () => {
           <Card>
             <Card.Header as="h5">Blog Sections</Card.Header>
             <ListGroup variant="flush">
-              {blog.map(post => (
+              {blogData.map(post => (
                 <ListGroup.Item
                   key={post.id}
                   onClick={() => scrollToBlogPost(`category${post.id}`)}
@@ -72,10 +59,7 @@ const Body = () => {
                       </Card.Subtitle>
                     </div>
                     <div className="d-flex align-items-center">
-                      <ModalElement
-                        blogData={blogData}
-                        setBlogData={handleUpdateBlogData}
-                      />
+                      <ModalElement onAddPost={onAddPost} />
                       <Button
                         variant="light"
                         className="ms-3 mt-3"

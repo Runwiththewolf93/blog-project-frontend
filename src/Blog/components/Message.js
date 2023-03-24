@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Card, Container, Row, Col, CloseButton } from "react-bootstrap";
-import Modal from "./Modal";
+import ModalElement from "./ModalElement";
 
-function Message() {
+function Message({ onAddPost }) {
   const [showCard, setShowCard] = useState(false);
 
   const handleCloseCard = () => {
@@ -27,7 +27,7 @@ function Message() {
             </Card.Body>
           </Card>
           <div className="d-flex justify-content-end">
-            <Modal button="add" />
+            <ModalElement onAddPost={onAddPost} />
           </div>
         </Col>
       </Row>
