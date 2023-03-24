@@ -1,9 +1,30 @@
 import { useState } from "react";
 import { Card, Container, Row, Col, CloseButton } from "react-bootstrap";
-import ModalElement from "./ModalElement";
+import ModalAdd from "./modals/ModalAdd";
+import placeholderImage from "../images/images.png";
 
-function Message({ onAddPost }) {
+function Message({ blogData, setBlogData }) {
   const [showCard, setShowCard] = useState(false);
+
+  const handleAddPost = (title, text) => {
+    const newBlogData = [
+      ...blogData,
+      {
+        id: blogData.length + 1,
+        title: title,
+        date: new Date().toLocaleString(),
+        avatar: { id: 1, src: placeholderImage, alt: "Avatar Image" },
+        content: text,
+        images: [
+          { id: 1, src: placeholderImage, alt: "Image 1" },
+          { id: 2, src: placeholderImage, alt: "Image 2" },
+          { id: 3, src: placeholderImage, alt: "Image 3" },
+        ],
+      },
+    ];
+    setBlogData(newBlogData);
+    localStorage.setItem("blogData", JSON.stringify(newBlogData));
+  };
 
   const handleCloseCard = () => {
     setShowCard(true);
@@ -27,7 +48,7 @@ function Message({ onAddPost }) {
             </Card.Body>
           </Card>
           <div className="d-flex justify-content-end">
-            <ModalElement onAddPost={onAddPost} />
+            <ModalAdd onAddPost={handleAddPost} />
           </div>
         </Col>
       </Row>

@@ -8,7 +8,7 @@ import {
   ListGroup,
 } from "react-bootstrap";
 import placeholderImage from "../images/images.png";
-import ModalElement from "./ModalElement";
+import ModalEdit from "./modals/ModalEdit";
 
 const scrollToBlogPost = category => {
   const blogPostElement = document.getElementById(category);
@@ -17,7 +17,13 @@ const scrollToBlogPost = category => {
   }
 };
 
-const Body = ({ blogData, onAddPost, handleDeletePost }) => {
+const Body = ({ blogData, setBlogData }) => {
+  const handleDeletePost = postId => {
+    const updatedBlogPost = blogData.filter(post => post.id !== postId);
+    setBlogData(updatedBlogPost);
+    localStorage.removeItem("blogData");
+  };
+
   return (
     <Container>
       <Row className="my-3" id="category1">
@@ -38,8 +44,8 @@ const Body = ({ blogData, onAddPost, handleDeletePost }) => {
           </Card>
         </Col>
         <Col md={10}>
-          {blogData.map(post => (
-            <Card key={post.id} className="mb-3" id={`category${post.id}`}>
+          {blogData.map((post, index) => (
+            <Card key={index} className="mb-3" id={`category${post.id}`}>
               <Card.Body>
                 <Row>
                   <Col xs={1}>
@@ -59,7 +65,11 @@ const Body = ({ blogData, onAddPost, handleDeletePost }) => {
                       </Card.Subtitle>
                     </div>
                     <div className="d-flex align-items-center">
-                      <ModalElement onAddPost={onAddPost} />
+                      <ModalEdit
+                        post={post}
+                        blogData={blogData}
+                        setBlogData={setBlogData}
+                      />
                       <Button
                         variant="light"
                         className="ms-3 mt-3"

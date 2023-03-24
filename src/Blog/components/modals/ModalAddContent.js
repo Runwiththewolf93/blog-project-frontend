@@ -27,11 +27,11 @@ const ModalContent = ({
 
   return (
     <>
-      <Form onSubmit={handleSubmit}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add / Edit blog post</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+      <Modal.Header closeButton>
+        <Modal.Title>Add blog post</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="ControlInput1">
             <Form.Label>Title</Form.Label>
             <Form.Control
@@ -52,16 +52,16 @@ const ModalContent = ({
               onChange={handleTextChange}
             />
           </Form.Group>
-        </Modal.Body>
-        <Modal.Footer className="d-flex justify-content-between">
-          <Button type="button" variant="secondary" onClick={handleCancel}>
-            Cancel
-          </Button>
-          <Button type="submit" variant="secondary">
-            Post
-          </Button>
-        </Modal.Footer>
-      </Form>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer className="d-flex justify-content-between">
+        <Button type="button" variant="secondary" onClick={handleCancel}>
+          Cancel
+        </Button>
+        <Button type="submit" variant="secondary">
+          Post
+        </Button>
+      </Modal.Footer>
     </>
   );
 };
