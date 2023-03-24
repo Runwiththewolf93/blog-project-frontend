@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Navbar from "./Blog/components/Navbar";
 import Message from "./Blog/components/Message";
 import Body from "./Blog/components/Body";
+import Footer from "./Blog/components/Footer";
 import "./App.css";
 import blog from "./Blog/data/blog";
 
@@ -41,6 +42,7 @@ function App() {
         setBlogData={blogDataSetter}
         searchQuery={searchQuery}
       />
+      <Footer />
     </>
   );
 }
