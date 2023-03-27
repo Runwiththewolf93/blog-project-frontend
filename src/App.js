@@ -1,49 +1,16 @@
-import { useState, useEffect } from "react";
-import Navbar from "./Blog/components/Navbar";
-import Message from "./Blog/components/Message";
-import Body from "./Blog/components/Body";
-import Footer from "./Blog/components/Footer";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import HomePage from "./Blog/pages/HomePage";
+import ProfilePage from "./Blog/pages/ProfilePage";
 import "./App.css";
-import blog from "./Blog/data/blog";
 
 function App() {
-  const [blogData, setBlogData] = useState(blog);
-  const [searchQuery, setSearchQuery] = useState("");
-
-  useEffect(() => {
-    const storedData = localStorage.getItem("blogData");
-    if (storedData) {
-      setBlogData(JSON.parse(storedData));
-    } else {
-      setBlogData(blog);
-    }
-
-    window.addEventListener("beforeunload", () => {
-      localStorage.removeItem("blogData");
-    });
-  }, []);
-
-  const blogDataSetter = blogData => {
-    setBlogData(blogData);
-  };
-
-  const handleSearch = event => {
-    event.preventDefault();
-    const searchQuery = event.target.value.trim().toLowerCase();
-    setSearchQuery(searchQuery);
-  };
-
   return (
-    <>
-      <Navbar handleSearch={handleSearch} />
-      <Message blogData={blogData} setBlogData={blogDataSetter} />
-      <Body
-        blogData={blogData}
-        setBlogData={blogDataSetter}
-        searchQuery={searchQuery}
-      />
-      <Footer />
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/profile-page" element={<ProfilePage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

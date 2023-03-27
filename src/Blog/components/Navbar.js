@@ -6,7 +6,7 @@ import {
   FormControl,
   Button,
 } from "react-bootstrap";
-import styles from "./Navbar.module.css";
+import { Link } from "react-router-dom";
 
 function Navigation({ handleSearch }) {
   return (
@@ -16,20 +16,24 @@ function Navigation({ handleSearch }) {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            <Form className="d-flex">
-              <FormControl
-                type="search"
-                placeholder="Search"
-                className="me-2"
-                aria-label="Search"
-                onChange={handleSearch}
-              />
-              <Button variant="outline-dark">Search</Button>
-            </Form>
-            <Nav.Link href="#home">Link 1</Nav.Link>
+            {handleSearch && (
+              <Form className="d-flex">
+                <FormControl
+                  type="search"
+                  placeholder="Search"
+                  className="me-2"
+                  aria-label="Search"
+                  onChange={handleSearch}
+                />
+                <Button variant="outline-dark">Search</Button>
+              </Form>
+            )}
+            <Nav.Link href="#link">Link 1</Nav.Link>
             <Nav.Link href="#link">Link 2</Nav.Link>
             <Nav.Link href="#link">Link 3</Nav.Link>
-            <Nav.Link href="#link">My Profile</Nav.Link>
+            <Link to="/profile-page" className="nav-link">
+              My Profile
+            </Link>
             <Nav.Link href="#link">Logout</Nav.Link>
           </Nav>
         </Navbar.Collapse>

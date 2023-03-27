@@ -5,45 +5,57 @@ function Footer() {
         <section className="mb-4">
           <a
             className="btn btn-outline-light btn-floating m-1"
-            href="#!"
+            href="https://www.facebook.com/"
             role="button"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <i className="fab fa-facebook-f"></i>
+            <i className="fab fa-facebook-f" />
           </a>
           <a
             className="btn btn-outline-light btn-floating m-1"
-            href="#!"
+            href="https://twitter.com/"
             role="button"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <i className="fab fa-twitter"></i>
+            <i className="fab fa-twitter" />
           </a>
           <a
             className="btn btn-outline-light btn-floating m-1"
-            href="#!"
+            href="https://www.google.com/"
             role="button"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <i className="fab fa-google"></i>
+            <i className="fab fa-google" />
           </a>
           <a
             className="btn btn-outline-light btn-floating m-1"
-            href="#!"
+            href="https://www.instagram.com/"
             role="button"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <i className="fab fa-instagram"></i>
+            <i className="fab fa-instagram" />
           </a>
           <a
             className="btn btn-outline-light btn-floating m-1"
-            href="#!"
+            href="https://www.linkedin.com/"
             role="button"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <i className="fab fa-linkedin-in"></i>
+            <i className="fab fa-linkedin-in" />
           </a>
           <a
             className="btn btn-outline-light btn-floating m-1"
-            href="#!"
+            href="https://github.com/"
             role="button"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <i className="fab fa-github"></i>
+            <i className="fab fa-github" />
           </a>
         </section>
       </div>
