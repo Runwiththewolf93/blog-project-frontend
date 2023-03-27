@@ -10,6 +10,7 @@ const ModalAdd = ({ onAddPost }) => {
   const handleShow = () => setShow(true);
 
   const handleAddButtonClick = e => {
+    e.preventDefault();
     onAddPost(title, text);
     setTitle("");
     setText("");

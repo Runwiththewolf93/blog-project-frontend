@@ -11,7 +11,8 @@ const ModalEdit = ({ post, blogData, setBlogData }) => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const handleSubmit = () => {
+  const handleSubmit = e => {
+    e.preventDefault();
     const postIndex = blogData.findIndex(item => item.id === post.id);
 
     const newPost = {
