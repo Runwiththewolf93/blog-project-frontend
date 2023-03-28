@@ -5,7 +5,7 @@ const Layout = ({ children, handleSearch }) => {
   return (
     <>
       {handleSearch ? <Navbar handleSearch={handleSearch} /> : <Navbar />}
-      <div className="mt-5">{children}</div>
+      {children}
       <Footer />
     </>
   );

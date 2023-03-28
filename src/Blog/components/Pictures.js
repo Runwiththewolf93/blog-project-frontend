@@ -5,7 +5,7 @@ import axios from "axios";
 function Pictures({ userProfile }) {
   const [images, setImages] = useState([]);
 
-  const accessKey = "yDiYUV-P8GDTUkoWrXX-5wF4TdtV9qWZbc_IdUB1Jx8";
+  const accessKey = process.env.REACT_APP_UNSPLASH_ACCESS_KEY;
 
   useEffect(() => {
     axios
@@ -13,7 +13,7 @@ function Pictures({ userProfile }) {
         `https://api.unsplash.com/search/photos?page=1&per_page=9&query=nature&client_id=${accessKey}`
       )
       .then(({ data }) => setImages(data.results));
-  }, []);
+  }, [accessKey]);
 
   return (
     <Card className="mt-4">

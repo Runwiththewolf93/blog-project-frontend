@@ -20,7 +20,7 @@ const ProfilePage = () => {
 
   return (
     <Layout>
-      <Container style={{ height: "100vh" }}>
+      <Container style={{ height: "100vh" }} className="mt-5">
         <Row>
           <Col>
             <ProfileCard userProfile={userProfile} />

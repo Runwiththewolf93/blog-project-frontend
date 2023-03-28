@@ -31,8 +31,8 @@ function Message({ blogData, setBlogData }) {
   };
 
   return (
-    <Container>
-      <Row className="my-3">
+    <Container className="my-3">
+      <Row>
         <Col md={2} />
         <Col md={10}>
           <Card.Header className="h1 mb-3">Welcome to my Blog</Card.Header>
