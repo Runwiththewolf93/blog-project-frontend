@@ -4,6 +4,10 @@ import Layout from "../components/Layout";
 import { Container, Row, Col } from "react-bootstrap";
 import ProfileCard from "../components/ProfileCard";
 import Progress from "../components/Progress";
+import Relationships from "../components/Relationships";
+import Pictures from "../components/Pictures";
+import Map from "../components/Map";
+import Information from "../components/Information";
 
 const ProfilePage = () => {
   const [userProfile, setUserProfile] = useState({});
@@ -11,21 +15,25 @@ const ProfilePage = () => {
   useEffect(() => {
     axios.get("https://randomuser.me/api/").then(({ data }) => {
       setUserProfile(data.results[0]);
-      console.log(data.results[0]);
     });
   }, []);
 
   return (
     <Layout>
-      <Container>
+      <Container style={{ height: "100vh" }}>
         <Row>
           <Col>
             <ProfileCard userProfile={userProfile} />
           </Col>
           <Col md={6}>
             <Progress userProfile={userProfile} />
+            <Relationships userProfile={userProfile} />
+            <Pictures userProfile={userProfile} />
           </Col>
-          <Col></Col>
+          <Col>
+            <Map userProfile={userProfile} />
+            <Information userProfile={userProfile} />
+          </Col>
         </Row>
       </Container>
     </Layout>

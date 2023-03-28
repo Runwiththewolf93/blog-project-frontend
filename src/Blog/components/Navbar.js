@@ -30,12 +30,12 @@ function Navigation({ handleSearch }) {
                 <Button variant="outline-dark">Search</Button>
               </Form>
             )}
-            <Nav.Link href="#link">Link 1</Nav.Link>
-            <Nav.Link href="#link">Link 2</Nav.Link>
-            <Nav.Link href="#link">Link 3</Nav.Link>
             <Link to="/profile-page" className="nav-link">
               My Profile
             </Link>
+            <Nav.Link href="#link">Link 2</Nav.Link>
+            <Nav.Link href="#link">Link 3</Nav.Link>
+            <Nav.Link href="#link">Login</Nav.Link>
             <Nav.Link href="#link">Logout</Nav.Link>
           </Nav>
         </Navbar.Collapse>

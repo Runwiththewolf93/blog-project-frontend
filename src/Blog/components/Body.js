@@ -92,7 +92,12 @@ const Body = ({ blogData, setBlogData, searchQuery }) => {
                   {post.images && (
                     <Row>
                       {post.images.map(image => (
-                        <Col key={image.id} xs={12} md={4}>
+                        <Col
+                          key={image.id}
+                          xs={12}
+                          md={4}
+                          className="text-center"
+                        >
                           <Image
                             src={image.src || placeholderImage}
                             alt={image.alt}

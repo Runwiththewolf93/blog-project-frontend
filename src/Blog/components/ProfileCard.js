@@ -25,7 +25,7 @@ const ProfileCard = ({ userProfile }) => {
             <ListGroup.Item>{userProfile.location?.city}</ListGroup.Item>
             <ListGroup.Item>{userProfile.phone}</ListGroup.Item>
           </ListGroup>
-          <Card.Body>
+          <Card.Body className="d-flex justify-content-around">
             <Card.Link href="https://www.facebook.com/">
               <FontAwesomeIcon icon={faFacebook} size="2x" />
             </Card.Link>
