@@ -34,6 +34,7 @@ const Exchange = () => {
 
   const handleClear = () => {
     dispatch({ type: "CLEAR_FORM" });
+    dispatch({ type: "SET_BASE_EXCHANGE_RATE", payload: "EUR" });
   };
 
   useEffect(() => {
@@ -43,7 +44,10 @@ const Exchange = () => {
       )
       .then(({ data }) => {
         dispatch({ type: "SET_EXCHANGE_RATES", payload: data.exchange_rates });
-        dispatch({ type: "SET_BASE_EXCHANGE_RATE", payload: data.base });
+        dispatch({
+          type: "SET_BASE_EXCHANGE_RATE",
+          payload: data.base,
+        });
       });
   }, [abstractAPIKey]);
 
@@ -78,7 +82,7 @@ const Exchange = () => {
                     type: "SET_BASE_CURRENCY",
                     payload: e.target.value,
                   });
-                  dispatch({ type: "SHOW_EXCHANGE_RATE" });
+                  dispatch({ type: "HIDE_EXCHANGE_RATE" });
                 }}
               >
                 <option value={state.baseExchangeRate}>
@@ -97,7 +101,7 @@ const Exchange = () => {
               style={{ width: "100px" }}
               onClick={() => {
                 handleSwapCurrencies();
-                dispatch({ type: "SHOW_EXCHANGE_RATE" });
+                dispatch({ type: "HIDE_EXCHANGE_RATE" });
               }}
             >
               <FontAwesomeIcon icon={faArrowRightArrowLeft} />
@@ -113,7 +117,7 @@ const Exchange = () => {
                     type: "SET_TARGET_CURRENCY",
                     payload: e.target.value,
                   });
-                  dispatch({ type: "SHOW_EXCHANGE_RATE" });
+                  dispatch({ type: "HIDE_EXCHANGE_RATE" });
                 }}
               >
                 <option value={state.baseExchangeRate}>
@@ -172,7 +176,7 @@ const Exchange = () => {
             <Button
               type="submit"
               style={{ height: "40px", marginTop: "auto" }}
-              onClick={() => dispatch({ type: "HIDE_EXCHANGE_RATE" })}
+              onClick={() => dispatch({ type: "SHOW_EXCHANGE_RATE" })}
             >
               Convert
             </Button>

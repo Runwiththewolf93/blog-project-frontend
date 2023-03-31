@@ -59,12 +59,12 @@ export const exchangeReducer = (state, action) => {
         baseCurrency: state.targetCurrency,
         targetCurrency: state.baseCurrency,
       };
-    case "SHOW_EXCHANGE_RATE":
+    case "HIDE_EXCHANGE_RATE":
       return {
         ...state,
         showExchangeRate: false,
       };
-    case "HIDE_EXCHANGE_RATE":
+    case "SHOW_EXCHANGE_RATE":
       return {
         ...state,
         showExchangeRate: true,
