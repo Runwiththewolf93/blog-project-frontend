@@ -8,7 +8,7 @@ import axios from "axios";
 const Exchange = () => {
   const [state, dispatch] = useReducer(exchangeReducer, initialState);
 
-  const abstractAPIKey = process.env.REACT_APP_ABSTRACT_API_KEY;
+  const abstractAPIKey = process.env.REACT_APP_ABSTRACT_EXCHANGE_API_KEY;
 
   const handleFormSubmit = e => {
     e.preventDefault();
