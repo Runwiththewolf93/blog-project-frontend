@@ -1,11 +1,13 @@
 export const initialState = {
   baseCurrency: "USD",
   targetCurrency: "EUR",
-  date: new Date(Date.now() - 86400000).toISOString().substring(0, 10),
+  date: new Date(Date.now() - 172800000).toISOString().substring(0, 10),
   baseAmount: "",
   convertedAmount: "",
   exchangeRate: "",
   exchangeRates: {},
+  baseExchangeRate: "",
+  showExchangeRate: true,
 };
 
 export const exchangeReducer = (state, action) => {
@@ -56,6 +58,21 @@ export const exchangeReducer = (state, action) => {
         ...state,
         baseCurrency: state.targetCurrency,
         targetCurrency: state.baseCurrency,
+      };
+    case "SHOW_EXCHANGE_RATE":
+      return {
+        ...state,
+        showExchangeRate: false,
+      };
+    case "HIDE_EXCHANGE_RATE":
+      return {
+        ...state,
+        showExchangeRate: true,
+      };
+    case "SET_BASE_EXCHANGE_RATE":
+      return {
+        ...state,
+        baseExchangeRate: action.payload,
       };
     default:
       break;

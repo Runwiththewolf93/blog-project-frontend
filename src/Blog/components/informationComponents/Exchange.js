@@ -43,6 +43,7 @@ const Exchange = () => {
       )
       .then(({ data }) => {
         dispatch({ type: "SET_EXCHANGE_RATES", payload: data.exchange_rates });
+        dispatch({ type: "SET_BASE_EXCHANGE_RATE", payload: data.base });
       });
   }, [abstractAPIKey]);
 
@@ -72,13 +73,17 @@ const Exchange = () => {
               <Form.Label>From</Form.Label>
               <Form.Select
                 value={state.baseCurrency}
-                onChange={e =>
+                onChange={e => {
                   dispatch({
                     type: "SET_BASE_CURRENCY",
                     payload: e.target.value,
-                  })
-                }
+                  });
+                  dispatch({ type: "SHOW_EXCHANGE_RATE" });
+                }}
               >
+                <option value={state.baseExchangeRate}>
+                  {state.baseExchangeRate}
+                </option>
                 {Object.keys(state.exchangeRates).map(currency => (
                   <option key={currency} value={currency}>
                     {currency}
@@ -88,7 +93,13 @@ const Exchange = () => {
             </Form.Group>
           </Col>
           <Col xs="auto" className="align-self-end" type="button">
-            <Button style={{ width: "100px" }} onClick={handleSwapCurrencies}>
+            <Button
+              style={{ width: "100px" }}
+              onClick={() => {
+                handleSwapCurrencies();
+                dispatch({ type: "SHOW_EXCHANGE_RATE" });
+              }}
+            >
               <FontAwesomeIcon icon={faArrowRightArrowLeft} />
             </Button>
           </Col>
@@ -97,13 +108,17 @@ const Exchange = () => {
               <Form.Label>To</Form.Label>
               <Form.Select
                 value={state.targetCurrency}
-                onChange={e =>
+                onChange={e => {
                   dispatch({
                     type: "SET_TARGET_CURRENCY",
                     payload: e.target.value,
-                  })
-                }
+                  });
+                  dispatch({ type: "SHOW_EXCHANGE_RATE" });
+                }}
               >
+                <option value={state.baseExchangeRate}>
+                  {state.baseExchangeRate}
+                </option>
                 {Object.keys(state.exchangeRates).map(currency => (
                   <option key={currency} value={currency}>
                     {currency}
@@ -131,7 +146,7 @@ const Exchange = () => {
             md={9}
             className="d-flex justify-content-around align-items-center"
           >
-            {state.exchangeRate && (
+            {state.exchangeRate && state.showExchangeRate && (
               <>
                 <p className="mt-4 mb-0">
                   {state.baseAmount} {state.baseCurrency} =
@@ -154,7 +169,11 @@ const Exchange = () => {
             >
               Clear
             </Button>
-            <Button type="submit" style={{ height: "40px", marginTop: "auto" }}>
+            <Button
+              type="submit"
+              style={{ height: "40px", marginTop: "auto" }}
+              onClick={() => dispatch({ type: "HIDE_EXCHANGE_RATE" })}
+            >
               Convert
             </Button>
           </Col>
