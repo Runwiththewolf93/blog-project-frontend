@@ -28,7 +28,7 @@ function OtherChoices() {
 
   return (
     <div className="m-3">
-      <h1>Other things that might interest you...</h1>
+      <h1>Other topics that might interest you...</h1>
       <Accordion defaultActiveKey="0">
         {[
           { eventKey: "0", title: "Items of interest #1" },
@@ -49,7 +49,10 @@ function OtherChoices() {
                         style={{ objectFit: "cover", height: "200px" }}
                       />
                       <div className="card-body">
-                        <h5 className="card-title">{image.alt_description}</h5>
+                        <h5 className="card-title">
+                          {image.alt_description.charAt(0).toUpperCase() +
+                            image.alt_description.slice(1)}
+                        </h5>
                         <p className="card-text">
                           {image.description ||
                             "Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae, provident!"}

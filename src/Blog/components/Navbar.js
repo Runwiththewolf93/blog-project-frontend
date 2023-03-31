@@ -36,7 +36,9 @@ function Navigation({ handleSearch }) {
             <Link to="/interests-page" className="nav-link">
               Interests
             </Link>
-            <Nav.Link href="#link">Link 3</Nav.Link>
+            <Link to="/information-page" className="nav-link">
+              Information
+            </Link>
             <Nav.Link href="#link">Login</Nav.Link>
             <Nav.Link href="#link">Logout</Nav.Link>
           </Nav>
