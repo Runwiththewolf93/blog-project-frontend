@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Toast from "react-bootstrap/Toast";
 import moment from "moment";
 import Spinner from "../Spinner";
@@ -6,6 +6,11 @@ import Spinner from "../Spinner";
 const ToastComponent = ({ locationIpAddress, locationIsVpn }) => {
   const [showToast, setShowToast] = useState(true);
   const handleClose = () => setShowToast(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowToast(false), 10000);
+    return () => clearTimeout(timer);
+  }, []);
 
   return !locationIpAddress ? (
     <Spinner />

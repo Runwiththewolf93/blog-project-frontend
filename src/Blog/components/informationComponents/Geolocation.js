@@ -1,31 +1,21 @@
 import { useState, useEffect } from "react";
 import { Card, Badge } from "react-bootstrap";
 import axios from "axios";
-import useGeolocation from "./useGeolocation";
 import ToastComponent from "./Toast";
+import TabbedInterface from "./TabbedInterface";
 
-const Geolocation = () => {
-  const apiKey = process.env.REACT_APP_ABSTRACT_LOCATION_API_KEY;
+const Geolocation = ({ locationData }) => {
+  const [images, setImages] = useState([]);
 
-  const {
-    continent: locationContinent,
-    continent_code: locationContinentCode,
-    postal_code: locationPostalCode,
-    country: locationCountry,
-    country_code: locationCountryCode,
-    city: locationCity,
-    region: locationRegion,
-    png: locationPng,
-    currency_code: locationCurrencyCode,
-    currency_name: locationCurrencyName,
-    ip_address: locationIpAddress,
-    latitude: locationLatitude,
-    longitude: locationLongitude,
-    is_vpn: locationIsVpn,
-    current_time: locationCurrentTime,
-  } = useGeolocation(apiKey);
+  const accessKey = process.env.REACT_APP_UNSPLASH_ACCESS_KEY;
 
-  console.log(locationIpAddress);
+  useEffect(() => {
+    axios
+      .get(
+        `https://api.unsplash.com/search/photos?page=1&per_page=12&query=${locationData.city}&client_id=${accessKey}`
+      )
+      .then(({ data }) => setImages(data.results));
+  }, [locationData.city, accessKey]);
 
   return (
     <>
@@ -36,13 +26,16 @@ const Geolocation = () => {
         </Badge>
       </h3>
       <ToastComponent
-        locationIpAddress={locationIpAddress}
-        locationIsVpn={locationIsVpn}
+        locationIpAddress={locationData.ip_address}
+        locationIsVpn={locationData.is_vpn}
       />
-      <Card>
+      <Card className="mb-3">
         <Card.Body>
-          <Card.Title></Card.Title>
-          <Card.Subtitle></Card.Subtitle>
+          <Card.Title>Based on your recent interests,</Card.Title>
+          <Card.Subtitle className="mb-3">
+            We suggest the following location:
+          </Card.Subtitle>
+          <TabbedInterface locationData={locationData} images={images} />
         </Card.Body>
       </Card>
     </>
