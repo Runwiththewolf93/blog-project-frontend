@@ -1,21 +1,10 @@
-import { useState, useEffect } from "react";
 import { Card, Badge } from "react-bootstrap";
-import axios from "axios";
 import ToastComponent from "./Toast";
 import TabbedInterface from "./TabbedInterface";
+import useUnsplashImages from "../hooks/useUnsplash";
 
 const Geolocation = ({ locationData }) => {
-  const [images, setImages] = useState([]);
-
-  const accessKey = process.env.REACT_APP_UNSPLASH_ACCESS_KEY;
-
-  useEffect(() => {
-    axios
-      .get(
-        `https://api.unsplash.com/search/photos?page=1&per_page=12&query=${locationData.city}&client_id=${accessKey}`
-      )
-      .then(({ data }) => setImages(data.results));
-  }, [locationData.city, accessKey]);
+  const images = useUnsplashImages(locationData.city, 12);
 
   return (
     <>

@@ -1,19 +1,8 @@
-import { useState, useEffect } from "react";
 import { Card, CardGroup } from "react-bootstrap";
-import axios from "axios";
+import useUnsplashImages from "./hooks/useUnsplash";
 
-function EditorsChoice() {
-  const [images, setImages] = useState([]);
-
-  const accessKey = process.env.REACT_APP_UNSPLASH_ACCESS_KEY;
-
-  useEffect(() => {
-    axios
-      .get(
-        `https://api.unsplash.com/search/photos?page=1&per_page=3&query=random&client_id=${accessKey}`
-      )
-      .then(({ data }) => setImages(data.results));
-  }, [accessKey]);
+const EditorsChoice = () => {
+  const images = useUnsplashImages("random", 3);
 
   return (
     <div className="m-3">
@@ -49,6 +38,6 @@ function EditorsChoice() {
       </CardGroup>
     </div>
   );
-}
+};
 
 export default EditorsChoice;

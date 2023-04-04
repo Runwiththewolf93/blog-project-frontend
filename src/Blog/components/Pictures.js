@@ -1,19 +1,8 @@
-import { useState, useEffect } from "react";
 import { Row, Col, Card, Image } from "react-bootstrap";
-import axios from "axios";
+import useUnsplashImages from "./hooks/useUnsplash";
 
 function Pictures({ userProfile }) {
-  const [images, setImages] = useState([]);
-
-  const accessKey = process.env.REACT_APP_UNSPLASH_ACCESS_KEY;
-
-  useEffect(() => {
-    axios
-      .get(
-        `https://api.unsplash.com/search/photos?page=1&per_page=9&query=nature&client_id=${accessKey}`
-      )
-      .then(({ data }) => setImages(data.results));
-  }, [accessKey]);
+  const images = useUnsplashImages("nature", 9);
 
   return (
     <Card className="mt-4">

@@ -1,30 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Accordion } from "react-bootstrap";
-import axios from "axios";
+import useUnsplashImages from "./hooks/useUnsplash";
 
 function OtherChoices() {
-  const [images, setImages] = useState([]);
   const [activeItem, setActiveItem] = useState("0");
 
-  const accessKey = process.env.REACT_APP_UNSPLASH_ACCESS_KEY;
+  let query = "city";
+  if (activeItem === "1") query = "sea";
+  if (activeItem === "2") query = "forest";
 
-  useEffect(() => {
-    let query = "city";
-
-    if (activeItem === "1") {
-      query = "sea";
-    }
-
-    if (activeItem === "2") {
-      query = "forest";
-    }
-
-    axios
-      .get(
-        `https://api.unsplash.com/search/photos?page=1&per_page=3&query=${query}&client_id=${accessKey}`
-      )
-      .then(({ data }) => setImages(data.results));
-  }, [accessKey, activeItem]);
+  const images = useUnsplashImages(query, 3);
 
   return (
     <div className="m-3">

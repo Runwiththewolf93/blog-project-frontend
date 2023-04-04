@@ -4,7 +4,7 @@ import Layout from "../components/Layout";
 import Exchange from "../components/informationComponents/Exchange";
 import Geolocation from "../components/informationComponents/Geolocation";
 import Holiday from "../components/informationComponents/Holiday";
-import useGeolocation from "../components/informationComponents/useGeolocation";
+import useGeolocation from "../components/hooks/useGeolocation";
 
 const InformationPage = () => {
   const apiKey = process.env.REACT_APP_ABSTRACT_LOCATION_API_KEY;
@@ -14,11 +14,11 @@ const InformationPage = () => {
     { text: "Exchange rates for your trip", component: <Exchange /> },
     {
       text: "Location of your trip",
-      component: <Geolocation locationData={locationData} />,
+      component: locationData && <Geolocation locationData={locationData} />,
     },
     {
       text: "Holiday season at destination",
-      component: <Holiday locationData={locationData} />,
+      component: locationData && <Holiday locationData={locationData} />,
     },
   ];
 

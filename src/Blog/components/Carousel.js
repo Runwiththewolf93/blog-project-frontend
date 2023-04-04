@@ -1,26 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Row, Col, Carousel, ListGroup, Card } from "react-bootstrap";
-import axios from "axios";
+import useUnsplashImages from "./hooks/useUnsplash";
 
 const CarouselComponent = () => {
-  const [images, setImages] = useState([]);
-  const [currentImage, setCurrentImage] = useState(images[0]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const accessKey = process.env.REACT_APP_UNSPLASH_ACCESS_KEY;
-
-  useEffect(() => {
-    axios
-      .get(
-        `https://api.unsplash.com/search/photos?page=1&per_page=3&query=cars&client_id=${accessKey}`
-      )
-      .then(({ data }) => {
-        setImages(data.results);
-        setCurrentImage(data.results[0]);
-      });
-  }, [accessKey]);
+  const images = useUnsplashImages("cars", 3);
 
   const handleSelect = selectedIndex => {
-    setCurrentImage(images[selectedIndex]);
+    setCurrentImageIndex(selectedIndex);
   };
 
   return (
@@ -42,15 +30,19 @@ const CarouselComponent = () => {
       </Col>
       <Col style={{ margin: 0, padding: 0 }}>
         <Card>
-          {currentImage && (
+          {images[currentImageIndex] && (
             <>
-              <Card.Header>By {currentImage.user.name}</Card.Header>
+              <Card.Header>
+                By {images[currentImageIndex].user.name}
+              </Card.Header>
               <ListGroup>
-                <ListGroup.Item>{currentImage.description}</ListGroup.Item>
                 <ListGroup.Item>
-                  Number of likes: {currentImage.likes}
+                  {images[currentImageIndex].description}
                 </ListGroup.Item>
-                {currentImage.tags.map((tag, idx) => (
+                <ListGroup.Item>
+                  Number of likes: {images[currentImageIndex].likes}
+                </ListGroup.Item>
+                {images[currentImageIndex].tags.map((tag, idx) => (
                   <ListGroup.Item key={idx}>{tag.title}</ListGroup.Item>
                 ))}
               </ListGroup>

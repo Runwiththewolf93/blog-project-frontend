@@ -1,15 +1,8 @@
-import { useState, useEffect } from "react";
 import { CardGroup, Card, Image } from "react-bootstrap";
-import axios from "axios";
+import useRandomUsers from "./hooks/useRandomUsers";
 
 const Relationships = ({ userProfile }) => {
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    axios
-      .get("https://randomuser.me/api/?results=7")
-      .then(({ data }) => setUsers(data.results));
-  }, []);
+  const { users } = useRandomUsers();
 
   return (
     <Card className="mt-4">

@@ -20,7 +20,7 @@ const Holiday = ({ locationData }) => {
   ) : (
     <>
       <h3>A list of all the holidays at destination:</h3>
-      <Table striped bordered hover variant="dark">
+      <Table striped bordered hover responsive variant="dark">
         <thead>
           <tr>
             <th>Name</th>
@@ -43,7 +43,9 @@ const Holiday = ({ locationData }) => {
               <td>{holiday.fixed ? "Yes" : "No"}</td>
               <td>{holiday.global ? "Yes" : "No"}</td>
               <td>
-                {holiday.counties
+                {holiday.counties && holiday.counties.length > 8
+                  ? holiday.counties.slice(0, 8).join(", ") + "..."
+                  : holiday.counties
                   ? holiday.counties.join(", ")
                   : `${locationData.country_code}`}
               </td>
