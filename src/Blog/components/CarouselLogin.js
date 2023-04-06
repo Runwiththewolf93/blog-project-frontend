@@ -1,45 +1,45 @@
-import Carousel from "react-bootstrap/Carousel";
+import { Carousel, Image } from "react-bootstrap";
+import useUnsplashImages from "./hooks/useUnsplash";
 
 const CarouselLogin = () => {
+  const images = useUnsplashImages("blog", 3);
+
+  const carouselText = [
+    {
+      h3: "Stay up to date",
+      p: "With the many topics available for browsing on our website",
+    },
+    {
+      h3: "Spark your interest",
+      p: "Get your creative juices flowing with our many social networks",
+    },
+    {
+      h3: "Get relevant information",
+      p: "For your vacation trip to another country around the world",
+    },
+  ];
+
   return (
-    <Carousel fade variant="dark">
-      <Carousel.Item interval={5000}>
-        <img
-          className="d-block w-100"
-          src="holder.js/800x400?text=First slide&bg=373940"
-          alt="First slide"
-        />
-        <Carousel.Caption>
-          <h3>First slide label</h3>
-          <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-        </Carousel.Caption>
-      </Carousel.Item>
-      <Carousel.Item interval={5000}>
-        <img
-          className="d-block w-100"
-          src="holder.js/800x400?text=Second slide&bg=282c34"
-          alt="Second slide"
-        />
-
-        <Carousel.Caption>
-          <h3>Second slide label</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        </Carousel.Caption>
-      </Carousel.Item>
-      <Carousel.Item interval={5000}>
-        <img
-          className="d-block w-100"
-          src="holder.js/800x400?text=Third slide&bg=20232a"
-          alt="Third slide"
-        />
-
-        <Carousel.Caption>
-          <h3>Third slide label</h3>
-          <p>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur.
-          </p>
-        </Carousel.Caption>
-      </Carousel.Item>
+    <Carousel fade pause="hover" controls={false}>
+      {images &&
+        images.map((image, index) => (
+          <Carousel.Item interval={10000} key={image.id}>
+            <Image
+              style={{ objectFit: "cover", height: "500px" }}
+              src={image.urls?.regular}
+              alt={image.alt_description}
+              rounded
+            />
+            <Carousel.Caption>
+              <h3 style={{ color: "black" }}>
+                <strong>{carouselText[index].h3}</strong>
+              </h3>
+              <p style={{ color: "black" }}>
+                <strong>{carouselText[index].p}</strong>
+              </p>
+            </Carousel.Caption>
+          </Carousel.Item>
+        ))}
     </Carousel>
   );
 };
