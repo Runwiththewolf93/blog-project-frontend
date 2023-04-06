@@ -18,10 +18,11 @@ const initialState = {
   isMember: true,
 };
 
+// figure out error issues
+
 const LoginPage = ({ show, handleClose }) => {
   const [values, setValues] = useState(initialState);
   const [formValid, setFormValid] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const { isLoading, error, registerUser, loginUser } = useAppContext();
 
   const toggleMember = () => {
@@ -49,7 +50,6 @@ const LoginPage = ({ show, handleClose }) => {
   const handleChange = e => {
     setValues({ ...values, [e.target.name]: e.target.value });
     checkFormValidity();
-    setErrorMessage("");
   };
 
   const onSubmit = e => {
@@ -60,16 +60,12 @@ const LoginPage = ({ show, handleClose }) => {
       window.alert("Please provide all values");
       return;
     }
-    try {
-      if (isMember) {
-        loginUser({ email, password });
-      } else {
-        registerUser({ name, email, password });
-      }
-      handleClose();
-    } catch (error) {
-      setErrorMessage(error.message);
+    if (isMember) {
+      loginUser({ email, password });
+    } else {
+      registerUser({ name, email, password });
     }
+    handleClose();
   };
 
   return (
@@ -85,11 +81,7 @@ const LoginPage = ({ show, handleClose }) => {
           <Container>
             <Row>
               <Col md={6}>
-                {errorMessage && (
-                  <Alert variant="danger" show={!!errorMessage}>
-                    {errorMessage}
-                  </Alert>
-                )}
+                {error && <Alert variant="danger">{error}</Alert>}
                 <h1 className="text-center mb-4">
                   {values.isMember ? "Login to blog" : "Create an account"}
                 </h1>
@@ -148,7 +140,7 @@ const LoginPage = ({ show, handleClose }) => {
                     type="submit"
                     variant="secondary"
                     onClick={handleClose}
-                    disabled={isLoading || !formValid || error || errorMessage}
+                    disabled={isLoading || !formValid || error}
                     className="mt-3 w-100 fs-5"
                   >
                     Submit
