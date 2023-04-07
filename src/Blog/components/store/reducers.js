@@ -31,6 +31,7 @@ const reducer = (state, action) => {
       ...state,
       isLoading: false,
       error: action.payload,
+      success: false,
     };
   }
   // login reducer
@@ -51,6 +52,7 @@ const reducer = (state, action) => {
       ...state,
       isLoading: false,
       error: action.payload,
+      success: false,
     };
   }
   // logout reducer

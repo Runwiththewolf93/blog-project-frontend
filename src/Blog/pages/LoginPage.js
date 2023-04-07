@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Container,
   Row,
@@ -59,6 +59,7 @@ const LoginPage = ({ show, handleClose }) => {
     checkFormValidity();
     if (error && e.target.value) {
       resetUserError();
+      resetUserSuccess();
     }
   };
 
@@ -75,6 +76,14 @@ const LoginPage = ({ show, handleClose }) => {
       registerUser({ name, email, password });
     }
   };
+
+  useEffect(() => {
+    if (success) {
+      handleClose();
+      resetUserError();
+      resetUserSuccess();
+    }
+  }, [success, handleClose, resetUserError, resetUserSuccess]);
 
   console.log(success);
   console.log(error);
@@ -156,16 +165,7 @@ const LoginPage = ({ show, handleClose }) => {
                     variant="secondary"
                     disabled={isLoading || !formValid}
                     className="mt-3 w-100 fs-5"
-                    onClick={() => {
-                      // if (error) {
-                      //   // setInputError(true);
-                      // } else
-                      if (success) {
-                        handleClose();
-                        resetUserError();
-                        resetUserSuccess();
-                      }
-                    }}
+                    onClick={onSubmit}
                   >
                     Submit
                   </Button>
