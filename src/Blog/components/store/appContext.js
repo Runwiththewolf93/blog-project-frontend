@@ -10,6 +10,8 @@ import {
   LOGIN_USER_SUCCESS,
   LOGIN_USER_ERROR,
   LOGOUT_USER,
+  RESET_USER_ERROR,
+  RESET_USER_SUCCESS,
 } from "./actions";
 
 const userInfoFromLocalStorage = localStorage.getItem("userInfo")
@@ -20,6 +22,7 @@ const initialState = {
   isLoading: false,
   userInfo: userInfoFromLocalStorage,
   error: null,
+  success: false,
 };
 
 const AppContext = React.createContext();
@@ -89,6 +92,14 @@ const AppProvider = ({ children }) => {
     localStorage.removeItem("userInfo");
   };
 
+  const resetUserError = () => {
+    dispatch({ type: RESET_USER_ERROR });
+  };
+
+  const resetUserSuccess = () => {
+    dispatch({ type: RESET_USER_SUCCESS });
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -97,6 +108,8 @@ const AppProvider = ({ children }) => {
         registerUser,
         loginUser,
         logoutUser,
+        resetUserError,
+        resetUserSuccess,
       }}
     >
       {children}

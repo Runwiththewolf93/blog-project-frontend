@@ -18,12 +18,19 @@ const initialState = {
   isMember: true,
 };
 
-// figure out error issues
-
 const LoginPage = ({ show, handleClose }) => {
   const [values, setValues] = useState(initialState);
   const [formValid, setFormValid] = useState(false);
-  const { isLoading, error, registerUser, loginUser } = useAppContext();
+
+  const {
+    isLoading,
+    error,
+    success,
+    registerUser,
+    loginUser,
+    resetUserError,
+    resetUserSuccess,
+  } = useAppContext();
 
   const toggleMember = () => {
     setValues({ ...values, isMember: !values.isMember });
@@ -50,10 +57,12 @@ const LoginPage = ({ show, handleClose }) => {
   const handleChange = e => {
     setValues({ ...values, [e.target.name]: e.target.value });
     checkFormValidity();
+    if (error && e.target.value) {
+      resetUserError();
+    }
   };
 
   const onSubmit = e => {
-    console.log("does this shit work");
     e.preventDefault();
     const { name, email, password, isMember } = values;
     if (!formValid) {
@@ -65,8 +74,10 @@ const LoginPage = ({ show, handleClose }) => {
     } else {
       registerUser({ name, email, password });
     }
-    handleClose();
   };
+
+  console.log(success);
+  console.log(error);
 
   return (
     <>
@@ -81,7 +92,11 @@ const LoginPage = ({ show, handleClose }) => {
           <Container>
             <Row>
               <Col md={6}>
-                {error && <Alert variant="danger">{error}</Alert>}
+                {error && (
+                  <Alert variant="danger" className="text-center fs-5">
+                    {error}
+                  </Alert>
+                )}
                 <h1 className="text-center mb-4">
                   {values.isMember ? "Login to blog" : "Create an account"}
                 </h1>
@@ -139,9 +154,18 @@ const LoginPage = ({ show, handleClose }) => {
                   <Button
                     type="submit"
                     variant="secondary"
-                    onClick={handleClose}
-                    disabled={isLoading || !formValid || error}
+                    disabled={isLoading || !formValid}
                     className="mt-3 w-100 fs-5"
+                    onClick={() => {
+                      // if (error) {
+                      //   // setInputError(true);
+                      // } else
+                      if (success) {
+                        handleClose();
+                        resetUserError();
+                        resetUserSuccess();
+                      }
+                    }}
                   >
                     Submit
                   </Button>
