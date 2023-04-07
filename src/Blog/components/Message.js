@@ -2,9 +2,12 @@ import { useState } from "react";
 import { Card, Container, Row, Col, CloseButton } from "react-bootstrap";
 import ModalAdd from "./modals/ModalAdd";
 import placeholderImage from "../images/images.png";
+import { useAppContext } from "./store/appContext";
 
 function Message({ blogData, setBlogData }) {
   const [showCard, setShowCard] = useState(false);
+  const { userInfo } = useAppContext();
+  console.log(userInfo);
 
   const handleAddPost = (title, text) => {
     const newBlogData = [
@@ -39,12 +42,20 @@ function Message({ blogData, setBlogData }) {
           <Card style={{ display: showCard ? "none" : "flex" }}>
             <Card.Body>
               <div className="d-flex justify-content-between">
-                <Card.Title>See what's new</Card.Title>
+                <Card.Title>
+                  {userInfo
+                    ? `Welcome back, ${userInfo.name}`
+                    : "See what's new"}
+                </Card.Title>
                 <div className="d-flex justify-content-end">
                   <CloseButton onClick={handleCloseCard} />
                 </div>
               </div>
-              <Card.Text>Container for showing application messages</Card.Text>
+              <Card.Text>
+                {userInfo
+                  ? "Check below some of the blog posts we have curated for you:"
+                  : "Container for showing application messages"}
+              </Card.Text>
             </Card.Body>
           </Card>
           <div className="d-flex justify-content-end">

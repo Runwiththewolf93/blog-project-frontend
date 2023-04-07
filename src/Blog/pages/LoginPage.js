@@ -85,9 +85,6 @@ const LoginPage = ({ show, handleClose }) => {
     }
   }, [success, handleClose, resetUserError, resetUserSuccess]);
 
-  console.log(success);
-  console.log(error);
-
   return (
     <>
       <Modal

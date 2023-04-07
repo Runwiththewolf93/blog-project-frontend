@@ -9,9 +9,11 @@ import {
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import LoginPage from "../pages/LoginPage";
+import { useAppContext } from "./store/appContext";
 
 function Navigation({ handleSearch }) {
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const { userInfo, logoutUser } = useAppContext();
 
   const handleLoginClick = () => {
     setShowLoginModal(true);
@@ -48,10 +50,15 @@ function Navigation({ handleSearch }) {
               <Link to="/information-page" className="nav-link">
                 Information
               </Link>
-              <Link to="#" className="nav-link" onClick={handleLoginClick}>
-                Login
-              </Link>
-              <Nav.Link href="#link">Logout</Nav.Link>
+              {userInfo ? (
+                <Link href="#" className="nav-link" onClick={logoutUser}>
+                  Logout
+                </Link>
+              ) : (
+                <Link to="#" className="nav-link" onClick={handleLoginClick}>
+                  Login
+                </Link>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>
