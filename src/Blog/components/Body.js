@@ -58,7 +58,7 @@ const Body = ({ blogData, setBlogData, searchQuery }) => {
                   <Row>
                     <Col xs={1}>
                       <Image
-                        style={{ width: "80px", height: "80px" }}
+                        style={{ width: "60px", height: "60px" }}
                         src={post.avatar.src || placeholderImage}
                         alt={post.avatar.alt}
                         fluid

@@ -43,8 +43,11 @@ function Message({ blogData, setBlogData }) {
             <Card.Body>
               <div className="d-flex justify-content-between">
                 <Card.Title>
-                  {userInfo
-                    ? `Welcome back, ${userInfo.name}`
+                  {userInfo && userInfo.name
+                    ? `Welcome back, ${
+                        userInfo.name.charAt(0).toUpperCase() +
+                        userInfo.name.slice(1).toLowerCase()
+                      }`
                     : "See what's new"}
                 </Card.Title>
                 <div className="d-flex justify-content-end">

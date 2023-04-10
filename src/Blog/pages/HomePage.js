@@ -1,12 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Message from "../components/Message";
 import Body from "../components/Body";
 import Layout from "../components/Layout";
 import blog from "../data/blog";
+import { useAppContext } from "../components/store/appContext";
 
 const HomePage = () => {
+  const { getAllBlogPosts, blogInfo } = useAppContext();
   const [blogData, setBlogData] = useState(blog);
   const [searchQuery, setSearchQuery] = useState("");
+
+  useCallback(() => {
+    getAllBlogPosts();
+  }, [getAllBlogPosts]);
+
+  console.log(blogInfo);
 
   useEffect(() => {
     const storedData = localStorage.getItem("blogData");

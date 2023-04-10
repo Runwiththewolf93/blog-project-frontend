@@ -12,17 +12,27 @@ import {
   LOGOUT_USER,
   RESET_USER_ERROR,
   RESET_USER_SUCCESS,
+  GET_ALL_BLOG_POSTS_BEGIN,
+  GET_ALL_BLOG_POSTS_SUCCESS,
+  GET_ALL_BLOG_POSTS_ERROR,
 } from "./actions";
 
 const userInfoFromLocalStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
   : null;
 
+const blogInfoFromLocalStorage = localStorage.getItem("blogInfo")
+  ? JSON.parse(localStorage.getItem("blogInfo"))
+  : {};
+
 const initialState = {
   isLoading: false,
   userInfo: userInfoFromLocalStorage,
   error: null,
   success: false,
+  isLoadingBlog: false,
+  blogInfo: blogInfoFromLocalStorage,
+  errorBlog: null,
 };
 
 const AppContext = React.createContext();
@@ -48,7 +58,6 @@ const AppProvider = ({ children }) => {
       );
 
       dispatch({ type: REGISTER_USER_SUCCESS, payload: data });
-      dispatch({ type: LOGIN_USER_SUCCESS, payload: data });
 
       localStorage.setItem("userInfo", JSON.stringify(data));
     } catch (error) {
@@ -75,10 +84,9 @@ const AppProvider = ({ children }) => {
         config
       );
 
-      dispatch({
-        type: LOGIN_USER_SUCCESS,
-        payload: data,
-      });
+      dispatch({ type: LOGIN_USER_SUCCESS, payload: data });
+
+      localStorage.setItem("userInfo", JSON.stringify(data));
     } catch (error) {
       if (error.response) {
         const errorMessage = error.response.data.msg;
@@ -100,6 +108,28 @@ const AppProvider = ({ children }) => {
     dispatch({ type: RESET_USER_SUCCESS });
   };
 
+  const getAllBlogPosts = async () => {
+    dispatch({ type: GET_ALL_BLOG_POSTS_BEGIN });
+
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${state.userInfo.token}`,
+        },
+      };
+
+      const { data } = await axios.get("/api/v1/blog", config);
+
+      dispatch({ type: GET_ALL_BLOG_POSTS_SUCCESS, payload: data });
+      localStorage.setItem("blogInfo", JSON.stringify(data));
+    } catch (error) {
+      if (error.response) {
+        const errorMessage = error.response.data.msg;
+        dispatch({ type: GET_ALL_BLOG_POSTS_ERROR, payload: errorMessage });
+      }
+    }
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -110,6 +140,7 @@ const AppProvider = ({ children }) => {
         logoutUser,
         resetUserError,
         resetUserSuccess,
+        getAllBlogPosts,
       }}
     >
       {children}

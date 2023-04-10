@@ -8,6 +8,9 @@ import {
   LOGOUT_USER,
   RESET_USER_ERROR,
   RESET_USER_SUCCESS,
+  GET_ALL_BLOG_POSTS_BEGIN,
+  GET_ALL_BLOG_POSTS_SUCCESS,
+  GET_ALL_BLOG_POSTS_ERROR,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -66,6 +69,15 @@ const reducer = (state, action) => {
   // reset success state
   if (action.type === RESET_USER_SUCCESS) {
     return { ...state, success: false };
+  }
+  if (action.type === GET_ALL_BLOG_POSTS_BEGIN) {
+    return { ...state, isLoadingBlog: true };
+  }
+  if (action.type === GET_ALL_BLOG_POSTS_SUCCESS) {
+    return { ...state, blogInfo: action.payload, errorBlog: null };
+  }
+  if (action.type === GET_ALL_BLOG_POSTS_ERROR) {
+    return { ...state, isLoadingBlog: false, errorBlog: action.payload };
   }
   return state;
 };
