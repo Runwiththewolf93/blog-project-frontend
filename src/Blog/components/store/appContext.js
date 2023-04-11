@@ -15,6 +15,9 @@ import {
   GET_ALL_BLOG_POSTS_BEGIN,
   GET_ALL_BLOG_POSTS_SUCCESS,
   GET_ALL_BLOG_POSTS_ERROR,
+  ADD_BLOG_POST_BEGIN,
+  ADD_BLOG_POST_SUCCESS,
+  ADD_BLOG_POST_ERROR,
 } from "./actions";
 
 const userInfoFromLocalStorage = localStorage.getItem("userInfo")
@@ -130,6 +133,28 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const addBlogPost = async newPostData => {
+    dispatch({ type: ADD_BLOG_POST_BEGIN });
+
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${state.userInfo.token}`,
+        },
+      };
+
+      const { data } = await axios.post("/api/v1/blog", newPostData, config);
+
+      dispatch({ type: ADD_BLOG_POST_SUCCESS, payload: data });
+      localStorage.setItem("blogInfo", JSON.stringify(data));
+    } catch (error) {
+      if (error.response) {
+        const errorMessage = error.response.data.msg;
+        dispatch({ type: ADD_BLOG_POST_ERROR, payload: errorMessage });
+      }
+    }
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -141,6 +166,7 @@ const AppProvider = ({ children }) => {
         resetUserError,
         resetUserSuccess,
         getAllBlogPosts,
+        addBlogPost,
       }}
     >
       {children}

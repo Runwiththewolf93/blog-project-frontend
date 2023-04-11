@@ -25,7 +25,7 @@ const Body = ({ blogData, setBlogData, searchQuery, blogInfo }) => {
     localStorage.removeItem("blogData");
   };
 
-  const filteredBlogData = blogData.filter(post =>
+  const filteredBlogData = blogInfo.filter(post =>
     post.title.toLowerCase().includes(searchQuery)
   );
 
@@ -38,10 +38,10 @@ const Body = ({ blogData, setBlogData, searchQuery, blogInfo }) => {
           <Card>
             <Card.Header as="h5">Blog Sections</Card.Header>
             <ListGroup variant="flush">
-              {blogInfo.map(post => (
+              {filteredBlogData.map((post, index) => (
                 <ListGroup.Item
-                  key={post.id}
-                  onClick={() => scrollToBlogPost(`category${post.id}`)}
+                  key={index}
+                  onClick={() => scrollToBlogPost(`category${index + 1}`)}
                   style={{ cursor: "pointer" }}
                 >
                   {post.title}
@@ -51,11 +51,11 @@ const Body = ({ blogData, setBlogData, searchQuery, blogInfo }) => {
           </Card>
         </Col>
         <Col md={10}>
-          {!blogInfo.length > 0 ? (
+          {!filteredBlogData.length > 0 ? (
             <Alert variant="danger">No blog posts match your query</Alert>
           ) : (
-            blogInfo.map((post, index) => (
-              <Card key={index} className="mb-3" id={`category${post.id}`}>
+            filteredBlogData.map((post, index) => (
+              <Card key={index} className="mb-3" id={`category${index + 1}`}>
                 <Card.Body>
                   <Row>
                     <Col xs={1}>

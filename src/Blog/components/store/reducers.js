@@ -11,6 +11,9 @@ import {
   GET_ALL_BLOG_POSTS_BEGIN,
   GET_ALL_BLOG_POSTS_SUCCESS,
   GET_ALL_BLOG_POSTS_ERROR,
+  ADD_BLOG_POST_BEGIN,
+  ADD_BLOG_POST_SUCCESS,
+  ADD_BLOG_POST_ERROR,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -70,6 +73,7 @@ const reducer = (state, action) => {
   if (action.type === RESET_USER_SUCCESS) {
     return { ...state, success: false };
   }
+  // list available blog posts
   if (action.type === GET_ALL_BLOG_POSTS_BEGIN) {
     return { ...state, isLoadingBlog: true };
   }
@@ -77,6 +81,21 @@ const reducer = (state, action) => {
     return { ...state, blogInfo: action.payload, errorBlog: null };
   }
   if (action.type === GET_ALL_BLOG_POSTS_ERROR) {
+    return { ...state, isLoadingBlog: false, errorBlog: action.payload };
+  }
+  // add a new blog post
+  if (action.type === ADD_BLOG_POST_BEGIN) {
+    return { ...state, isLoadingBlog: true, errorBlog: null };
+  }
+  if (action.type === ADD_BLOG_POST_SUCCESS) {
+    return {
+      ...state,
+      isLoadingBlog: false,
+      blogInfo: [...state.blogInfo, action.payload],
+      errorBlog: null,
+    };
+  }
+  if (action.type === ADD_BLOG_POST_ERROR) {
     return { ...state, isLoadingBlog: false, errorBlog: action.payload };
   }
   return state;
