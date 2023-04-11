@@ -25,11 +25,11 @@ const Body = ({ blogData, setBlogData, searchQuery, blogInfo }) => {
     localStorage.removeItem("blogData");
   };
 
-  const filteredBlogData = blogInfo.filter(post =>
-    post.title.toLowerCase().includes(searchQuery)
-  );
-
   console.log(blogInfo);
+
+  const filteredBlogData = blogInfo
+    ? blogInfo.filter(post => post.title.toLowerCase().includes(searchQuery))
+    : [];
 
   return (
     <Container>

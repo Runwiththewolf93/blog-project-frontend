@@ -18,6 +18,9 @@ import {
   ADD_BLOG_POST_BEGIN,
   ADD_BLOG_POST_SUCCESS,
   ADD_BLOG_POST_ERROR,
+  EDIT_BLOG_POST_BEGIN,
+  EDIT_BLOG_POST_SUCCESS,
+  EDIT_BLOG_POST_ERROR,
 } from "./actions";
 
 const userInfoFromLocalStorage = localStorage.getItem("userInfo")
@@ -155,6 +158,32 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const editBlogPost = async ({ id, updatedValues }) => {
+    dispatch({ type: EDIT_BLOG_POST_BEGIN });
+
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${state.userInfo.token}`,
+        },
+      };
+
+      const { data } = await axios.patch(
+        `/api/v1/blog/${id}`,
+        updatedValues,
+        config
+      );
+
+      dispatch({ type: EDIT_BLOG_POST_SUCCESS, payload: data });
+      localStorage.setItem("blogInfo", JSON.stringify(data));
+    } catch (error) {
+      if (error.response) {
+        const errorMessage = error.response.data.msg;
+        dispatch({ type: EDIT_BLOG_POST_ERROR, payload: errorMessage });
+      }
+    }
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -167,6 +196,7 @@ const AppProvider = ({ children }) => {
         resetUserSuccess,
         getAllBlogPosts,
         addBlogPost,
+        editBlogPost,
       }}
     >
       {children}

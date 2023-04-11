@@ -14,6 +14,9 @@ import {
   ADD_BLOG_POST_BEGIN,
   ADD_BLOG_POST_SUCCESS,
   ADD_BLOG_POST_ERROR,
+  EDIT_BLOG_POST_BEGIN,
+  EDIT_BLOG_POST_SUCCESS,
+  EDIT_BLOG_POST_ERROR,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -96,6 +99,23 @@ const reducer = (state, action) => {
     };
   }
   if (action.type === ADD_BLOG_POST_ERROR) {
+    return { ...state, isLoadingBlog: false, errorBlog: action.payload };
+  }
+  // edit an existing blog post
+  if (action.type === EDIT_BLOG_POST_BEGIN) {
+    return { ...state, isLoadingBlog: true, errorBlog: null };
+  }
+  if (action.type === EDIT_BLOG_POST_SUCCESS) {
+    const updatedBlogInfo = state.blogInfo.map(post => {
+      if (post._id === action.payload.id) {
+        return { ...post, ...action.payload.updatedValues };
+      } else {
+        return post;
+      }
+    });
+    return { ...state, blogInfo: updatedBlogInfo };
+  }
+  if (action.type === EDIT_BLOG_POST_ERROR) {
     return { ...state, isLoadingBlog: false, errorBlog: action.payload };
   }
   return state;

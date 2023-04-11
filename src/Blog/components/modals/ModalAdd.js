@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { useAppContext } from "../store/appContext";
 
-const initialState = {
+export const initialState = {
   title: "",
   avatar: "",
   content: "",

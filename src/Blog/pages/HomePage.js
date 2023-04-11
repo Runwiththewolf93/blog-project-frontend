@@ -39,11 +39,7 @@ const HomePage = () => {
 
   return (
     <Layout handleSearch={handleSearch}>
-      <Message
-        blogData={blogData}
-        setBlogData={blogDataSetter}
-        getAllBlogPosts={getAllBlogPosts}
-      />
+      <Message getAllBlogPosts={getAllBlogPosts} />
       <Body
         blogData={blogData}
         setBlogData={blogDataSetter}
@@ -55,3 +51,7 @@ const HomePage = () => {
 };
 
 export default HomePage;
+
+// previously passed down props to message component
+// blogData={blogData}
+// setBlogData={blogDataSetter}
