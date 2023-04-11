@@ -85,7 +85,7 @@ const Body = ({ blogData, setBlogData, searchQuery, blogInfo }) => {
                           className="ms-3 mt-3"
                           onClick={() => handleDeletePost(post.id)}
                         >
-                          Delete
+                          Delete Post
                         </Button>
                       </div>
                     </Col>
