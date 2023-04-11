@@ -18,7 +18,7 @@ const scrollToBlogPost = category => {
   }
 };
 
-const Body = ({ blogData, setBlogData, searchQuery }) => {
+const Body = ({ blogData, setBlogData, searchQuery, blogInfo }) => {
   const handleDeletePost = postId => {
     const updatedBlogPost = blogData.filter(post => post.id !== postId);
     setBlogData(updatedBlogPost);
@@ -29,6 +29,8 @@ const Body = ({ blogData, setBlogData, searchQuery }) => {
     post.title.toLowerCase().includes(searchQuery)
   );
 
+  console.log(blogInfo);
+
   return (
     <Container>
       <Row className="my-3" id="category1">
@@ -36,7 +38,7 @@ const Body = ({ blogData, setBlogData, searchQuery }) => {
           <Card>
             <Card.Header as="h5">Blog Sections</Card.Header>
             <ListGroup variant="flush">
-              {filteredBlogData.map(post => (
+              {blogInfo.map(post => (
                 <ListGroup.Item
                   key={post.id}
                   onClick={() => scrollToBlogPost(`category${post.id}`)}
@@ -49,18 +51,18 @@ const Body = ({ blogData, setBlogData, searchQuery }) => {
           </Card>
         </Col>
         <Col md={10}>
-          {!filteredBlogData.length > 0 ? (
+          {!blogInfo.length > 0 ? (
             <Alert variant="danger">No blog posts match your query</Alert>
           ) : (
-            filteredBlogData.map((post, index) => (
+            blogInfo.map((post, index) => (
               <Card key={index} className="mb-3" id={`category${post.id}`}>
                 <Card.Body>
                   <Row>
                     <Col xs={1}>
                       <Image
                         style={{ width: "60px", height: "60px" }}
-                        src={post.avatar.src || placeholderImage}
-                        alt={post.avatar.alt}
+                        src={post.avatar || placeholderImage}
+                        alt={`${post.title} Image 1`}
                         fluid
                         rounded
                       />
@@ -69,7 +71,7 @@ const Body = ({ blogData, setBlogData, searchQuery }) => {
                       <div className="flex-grow-1">
                         <Card.Title>{post.title}</Card.Title>
                         <Card.Subtitle className="mb-2 text-muted">
-                          {post.date}
+                          {post.date.slice(0, 10)}
                         </Card.Subtitle>
                       </div>
                       <div className="d-flex align-items-center">
@@ -91,17 +93,13 @@ const Body = ({ blogData, setBlogData, searchQuery }) => {
                   <Card.Text className="mt-3">{post.content}</Card.Text>
                   {post.images && (
                     <Row>
-                      {post.images.map(image => (
-                        <Col
-                          key={image.id}
-                          xs={12}
-                          md={4}
-                          className="text-center"
-                        >
+                      {post.images.map((image, idx) => (
+                        <Col key={idx} xs={12} md={4} className="text-center">
                           <Image
-                            src={image.src || placeholderImage}
-                            alt={image.alt}
+                            src={image || placeholderImage}
+                            alt={`${post.title} Image ${idx + 2}`}
                             fluid
+                            rounded
                             style={{ width: "100px", height: "100px" }}
                           />
                         </Col>

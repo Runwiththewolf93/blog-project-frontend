@@ -1,10 +1,17 @@
 import { useState } from "react";
-import { Card, Container, Row, Col, CloseButton } from "react-bootstrap";
+import {
+  Card,
+  Container,
+  Row,
+  Col,
+  CloseButton,
+  Button,
+} from "react-bootstrap";
 import ModalAdd from "./modals/ModalAdd";
 import placeholderImage from "../images/images.png";
 import { useAppContext } from "./store/appContext";
 
-function Message({ blogData, setBlogData }) {
+function Message({ blogData, setBlogData, getAllBlogPosts }) {
   const [showCard, setShowCard] = useState(false);
   const { userInfo } = useAppContext();
   console.log(userInfo);
@@ -31,6 +38,10 @@ function Message({ blogData, setBlogData }) {
 
   const handleCloseCard = () => {
     setShowCard(true);
+  };
+
+  const handleRefresh = () => {
+    getAllBlogPosts();
   };
 
   return (
@@ -61,7 +72,10 @@ function Message({ blogData, setBlogData }) {
               </Card.Text>
             </Card.Body>
           </Card>
-          <div className="d-flex justify-content-end">
+          <div className="d-flex justify-content-between">
+            <Button className="mt-3" variant="light" onClick={handleRefresh}>
+              Refresh Post
+            </Button>
             <ModalAdd onAddPost={handleAddPost} />
           </div>
         </Col>

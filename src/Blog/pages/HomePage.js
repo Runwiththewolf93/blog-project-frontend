@@ -14,8 +14,6 @@ const HomePage = () => {
     getAllBlogPosts();
   }, [getAllBlogPosts]);
 
-  console.log(blogInfo);
-
   useEffect(() => {
     const storedData = localStorage.getItem("blogData");
     if (storedData) {
@@ -41,11 +39,16 @@ const HomePage = () => {
 
   return (
     <Layout handleSearch={handleSearch}>
-      <Message blogData={blogData} setBlogData={blogDataSetter} />
+      <Message
+        blogData={blogData}
+        setBlogData={blogDataSetter}
+        getAllBlogPosts={getAllBlogPosts}
+      />
       <Body
         blogData={blogData}
         setBlogData={blogDataSetter}
         searchQuery={searchQuery}
+        blogInfo={blogInfo}
       />
     </Layout>
   );
