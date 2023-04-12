@@ -25,11 +25,11 @@ const Body = ({ blogData, setBlogData, searchQuery, blogInfo }) => {
     localStorage.removeItem("blogData");
   };
 
-  console.log(blogInfo);
-
   const filteredBlogData = blogInfo
     ? blogInfo.filter(post => post.title.toLowerCase().includes(searchQuery))
     : [];
+
+  // When user is not logged in posts cannot be seen, which should be reflected in the code below as well, for tomorrow. Check localStorage, make sure it is updating correctly and reflecting changes.
 
   return (
     <Container>
@@ -60,7 +60,11 @@ const Body = ({ blogData, setBlogData, searchQuery, blogInfo }) => {
                   <Row>
                     <Col xs={1}>
                       <Image
-                        style={{ width: "60px", height: "60px" }}
+                        style={{
+                          width: "60px",
+                          height: "60px",
+                          objectFit: "cover",
+                        }}
                         src={post.avatar || placeholderImage}
                         alt={`${post.title} Image 1`}
                         fluid
@@ -100,7 +104,11 @@ const Body = ({ blogData, setBlogData, searchQuery, blogInfo }) => {
                             alt={`${post.title} Image ${idx + 2}`}
                             fluid
                             rounded
-                            style={{ width: "100px", height: "100px" }}
+                            style={{
+                              width: "100px",
+                              height: "100px",
+                              objectFit: "cover",
+                            }}
                           />
                         </Col>
                       ))}

@@ -32,6 +32,8 @@ const ModalEdit = ({ post }) => {
 
     editBlogPost({ id: values._id, updatedValues });
     handleClose();
+
+    window.location.reload();
   };
 
   return (

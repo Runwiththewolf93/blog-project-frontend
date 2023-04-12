@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Message from "../components/Message";
 import Body from "../components/Body";
 import Layout from "../components/Layout";
@@ -10,9 +10,12 @@ const HomePage = () => {
   const [blogData, setBlogData] = useState(blog);
   const [searchQuery, setSearchQuery] = useState("");
 
-  useCallback(() => {
+  console.log(blogInfo);
+
+  useEffect(() => {
     getAllBlogPosts();
-  }, [getAllBlogPosts]);
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     const storedData = localStorage.getItem("blogData");

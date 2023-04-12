@@ -29,9 +29,12 @@ const ModalAdd = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
+
     addBlogPost(values);
     setValues(initialState);
+
     handleClose();
+    window.location.reload();
   };
 
   return (

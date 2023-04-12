@@ -23,13 +23,11 @@ import {
   EDIT_BLOG_POST_ERROR,
 } from "./actions";
 
-const userInfoFromLocalStorage = localStorage.getItem("userInfo")
-  ? JSON.parse(localStorage.getItem("userInfo"))
-  : null;
+const userInfoFromLocalStorage =
+  JSON.parse(localStorage.getItem("userInfo")) || null;
 
-const blogInfoFromLocalStorage = localStorage.getItem("blogInfo")
-  ? JSON.parse(localStorage.getItem("blogInfo"))
-  : {};
+const blogInfoFromLocalStorage =
+  JSON.parse(localStorage.getItem("blogInfo")) || [];
 
 const initialState = {
   isLoading: false,
@@ -149,7 +147,9 @@ const AppProvider = ({ children }) => {
       const { data } = await axios.post("/api/v1/blog", newPostData, config);
 
       dispatch({ type: ADD_BLOG_POST_SUCCESS, payload: data });
-      localStorage.setItem("blogInfo", JSON.stringify(data));
+
+      const updatedBlogInfo = [...blogInfoFromLocalStorage, data];
+      localStorage.setItem("blogInfo", JSON.stringify(updatedBlogInfo));
     } catch (error) {
       if (error.response) {
         const errorMessage = error.response.data.msg;
@@ -175,7 +175,11 @@ const AppProvider = ({ children }) => {
       );
 
       dispatch({ type: EDIT_BLOG_POST_SUCCESS, payload: data });
-      localStorage.setItem("blogInfo", JSON.stringify(data));
+
+      const updatedBlogInfo = blogInfoFromLocalStorage.map(post =>
+        post._id === id ? data : post
+      );
+      localStorage.setItem("blogInfo", JSON.stringify(updatedBlogInfo));
     } catch (error) {
       if (error.response) {
         const errorMessage = error.response.data.msg;
