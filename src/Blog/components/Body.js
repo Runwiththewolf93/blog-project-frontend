@@ -18,24 +18,7 @@ const scrollToBlogPost = category => {
   }
 };
 
-const Body = ({
-  blogData,
-  setBlogData,
-  searchQuery,
-  deleteBlogPost,
-  blogInfo,
-  userInfo,
-}) => {
-  const handleDeletePost = postId => {
-    const updatedBlogPost = blogData.filter(post => post.id !== postId);
-    setBlogData(updatedBlogPost);
-    localStorage.removeItem("blogData");
-  };
-
-  const filteredBlogData = blogInfo
-    ? blogInfo.filter(post => post.title.toLowerCase().includes(searchQuery))
-    : [];
-
+const Body = ({ userInfo, filteredBlogData, deleteBlogPost }) => {
   return (
     <Container>
       <Row className="my-3" id="category1">
@@ -134,3 +117,14 @@ export default Body;
 // no longer being passed into ModalEdit
 // blogData={blogData}
 // setBlogData={setBlogData}
+
+// no longer being passed down from parent
+// blogData,
+// setBlogData,
+
+// deletion now done on the backend, no need for it anymore
+// const handleDeletePost = postId => {
+//   const updatedBlogPost = blogData.filter(post => post.id !== postId);
+//   setBlogData(updatedBlogPost);
+//   localStorage.removeItem("blogData");
+// };
