@@ -6,11 +6,13 @@ import blog from "../data/blog";
 import { useAppContext } from "../components/store/appContext";
 
 const HomePage = () => {
-  const { getAllBlogPosts, blogInfo } = useAppContext();
+  const { getAllBlogPosts, deleteBlogPost, blogInfo, userInfo } =
+    useAppContext();
   const [blogData, setBlogData] = useState(blog);
   const [searchQuery, setSearchQuery] = useState("");
 
   console.log(blogInfo);
+  console.log(userInfo);
 
   useEffect(() => {
     getAllBlogPosts();
@@ -48,6 +50,8 @@ const HomePage = () => {
         setBlogData={blogDataSetter}
         searchQuery={searchQuery}
         blogInfo={blogInfo}
+        userInfo={userInfo}
+        deleteBlogPost={deleteBlogPost}
       />
     </Layout>
   );

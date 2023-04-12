@@ -17,6 +17,9 @@ import {
   EDIT_BLOG_POST_BEGIN,
   EDIT_BLOG_POST_SUCCESS,
   EDIT_BLOG_POST_ERROR,
+  DELETE_BLOG_POST_BEGIN,
+  DELETE_BLOG_POST_SUCCESS,
+  DELETE_BLOG_POST_ERROR,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -116,6 +119,19 @@ const reducer = (state, action) => {
     return { ...state, blogInfo: updatedBlogInfo };
   }
   if (action.type === EDIT_BLOG_POST_ERROR) {
+    return { ...state, isLoadingBlog: false, errorBlog: action.payload };
+  }
+  // delete an existing blog post
+  if (action.type === DELETE_BLOG_POST_BEGIN) {
+    return { ...state, isLoadingBlog: true, errorBlog: null };
+  }
+  if (action.type === DELETE_BLOG_POST_SUCCESS) {
+    const updatedBlogInfo = state.blogInfo.filter(
+      post => post._id !== action.payload
+    );
+    return { ...state, blogInfo: updatedBlogInfo };
+  }
+  if (action.type === DELETE_BLOG_POST_ERROR) {
     return { ...state, isLoadingBlog: false, errorBlog: action.payload };
   }
   return state;

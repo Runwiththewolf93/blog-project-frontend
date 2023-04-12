@@ -18,7 +18,14 @@ const scrollToBlogPost = category => {
   }
 };
 
-const Body = ({ blogData, setBlogData, searchQuery, blogInfo }) => {
+const Body = ({
+  blogData,
+  setBlogData,
+  searchQuery,
+  deleteBlogPost,
+  blogInfo,
+  userInfo,
+}) => {
   const handleDeletePost = postId => {
     const updatedBlogPost = blogData.filter(post => post.id !== postId);
     setBlogData(updatedBlogPost);
@@ -28,8 +35,6 @@ const Body = ({ blogData, setBlogData, searchQuery, blogInfo }) => {
   const filteredBlogData = blogInfo
     ? blogInfo.filter(post => post.title.toLowerCase().includes(searchQuery))
     : [];
-
-  // When user is not logged in posts cannot be seen, which should be reflected in the code below as well, for tomorrow. Check localStorage, make sure it is updating correctly and reflecting changes.
 
   return (
     <Container>
@@ -51,7 +56,11 @@ const Body = ({ blogData, setBlogData, searchQuery, blogInfo }) => {
           </Card>
         </Col>
         <Col md={10}>
-          {!filteredBlogData.length > 0 ? (
+          {!userInfo ? (
+            <Alert variant="danger">
+              Please log in to view available blog posts
+            </Alert>
+          ) : !filteredBlogData.length > 0 ? (
             <Alert variant="danger">No blog posts match your query</Alert>
           ) : (
             filteredBlogData.map((post, index) => (
@@ -79,15 +88,11 @@ const Body = ({ blogData, setBlogData, searchQuery, blogInfo }) => {
                         </Card.Subtitle>
                       </div>
                       <div className="d-flex align-items-center">
-                        <ModalEdit
-                          post={post}
-                          blogData={blogData}
-                          setBlogData={setBlogData}
-                        />
+                        <ModalEdit post={post} />
                         <Button
                           variant="light"
                           className="ms-3 mt-3"
-                          onClick={() => handleDeletePost(post.id)}
+                          onClick={() => deleteBlogPost(post._id)}
                         >
                           Delete Post
                         </Button>
@@ -125,3 +130,7 @@ const Body = ({ blogData, setBlogData, searchQuery, blogInfo }) => {
 };
 
 export default Body;
+
+// no longer being passed into ModalEdit
+// blogData={blogData}
+// setBlogData={setBlogData}

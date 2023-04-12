@@ -21,6 +21,9 @@ import {
   EDIT_BLOG_POST_BEGIN,
   EDIT_BLOG_POST_SUCCESS,
   EDIT_BLOG_POST_ERROR,
+  DELETE_BLOG_POST_BEGIN,
+  DELETE_BLOG_POST_SUCCESS,
+  DELETE_BLOG_POST_ERROR,
 } from "./actions";
 
 const userInfoFromLocalStorage =
@@ -188,6 +191,32 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const deleteBlogPost = async id => {
+    dispatch({ type: EDIT_BLOG_POST_BEGIN });
+
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${state.userInfo.token}`,
+        },
+      };
+
+      await axios.delete(`/api/v1/blog/${id}`, config);
+
+      dispatch({ type: DELETE_BLOG_POST_SUCCESS, payload: id });
+
+      const updatedBlogInfo = blogInfoFromLocalStorage.filter(
+        post => post._id !== id
+      );
+      localStorage.setItem("blogInfo", JSON.stringify(updatedBlogInfo));
+    } catch (error) {
+      if (error.response) {
+        const errorMessage = error.response.data.msg;
+        dispatch({ type: DELETE_BLOG_POST_ERROR, payload: errorMessage });
+      }
+    }
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -201,6 +230,7 @@ const AppProvider = ({ children }) => {
         getAllBlogPosts,
         addBlogPost,
         editBlogPost,
+        deleteBlogPost,
       }}
     >
       {children}
