@@ -192,7 +192,7 @@ const AppProvider = ({ children }) => {
   };
 
   const deleteBlogPost = async id => {
-    dispatch({ type: EDIT_BLOG_POST_BEGIN });
+    dispatch({ type: DELETE_BLOG_POST_BEGIN });
 
     try {
       const config = {

@@ -8,6 +8,7 @@ const HomePage = () => {
   const { getAllBlogPosts, deleteBlogPost, blogInfo, userInfo } =
     useAppContext();
   const [searchQuery, setSearchQuery] = useState("");
+  const [showMyPosts, setShowMyPosts] = useState(false);
 
   const handleSearch = event => {
     event.preventDefault();
@@ -15,9 +16,17 @@ const HomePage = () => {
     setSearchQuery(searchQuery);
   };
 
-  const filteredBlogData = blogInfo
-    ? blogInfo.filter(post => post.title.toLowerCase().includes(searchQuery))
-    : [];
+  const filteredBlogData = blogInfo.filter(post =>
+    post.title?.toLowerCase().includes(searchQuery)
+  );
+
+  const filteredMyPosts = blogInfo.filter(
+    post => post.user?._id === userInfo?._id
+  );
+
+  const toggleShowMyPosts = () => {
+    setShowMyPosts(!showMyPosts);
+  };
 
   useEffect(() => {
     getAllBlogPosts();
@@ -27,13 +36,19 @@ const HomePage = () => {
   console.log(blogInfo);
   console.log(userInfo);
 
+  const blogDataToShow = showMyPosts ? filteredMyPosts : filteredBlogData;
+
   return (
     <Layout handleSearch={handleSearch}>
-      <Message getAllBlogPosts={getAllBlogPosts} />
+      <Message
+        userInfo={userInfo}
+        getAllBlogPosts={getAllBlogPosts}
+        toggleShowMyPosts={toggleShowMyPosts}
+      />
       <Body
         userInfo={userInfo}
-        filteredBlogData={filteredBlogData}
         deleteBlogPost={deleteBlogPost}
+        blogDataToShow={blogDataToShow}
       />
     </Layout>
   );

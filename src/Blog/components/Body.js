@@ -18,7 +18,7 @@ const scrollToBlogPost = category => {
   }
 };
 
-const Body = ({ userInfo, filteredBlogData, deleteBlogPost }) => {
+const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
   return (
     <Container>
       <Row className="my-3" id="category1">
@@ -26,27 +26,28 @@ const Body = ({ userInfo, filteredBlogData, deleteBlogPost }) => {
           <Card>
             <Card.Header as="h5">Blog Sections</Card.Header>
             <ListGroup variant="flush">
-              {filteredBlogData.map((post, index) => (
-                <ListGroup.Item
-                  key={index}
-                  onClick={() => scrollToBlogPost(`category${index + 1}`)}
-                  style={{ cursor: "pointer" }}
-                >
-                  {post.title}
-                </ListGroup.Item>
-              ))}
+              {userInfo &&
+                blogDataToShow.map((post, index) => (
+                  <ListGroup.Item
+                    key={index}
+                    onClick={() => scrollToBlogPost(`category${index + 1}`)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {post.title}
+                  </ListGroup.Item>
+                ))}
             </ListGroup>
           </Card>
         </Col>
         <Col md={10}>
           {!userInfo ? (
-            <Alert variant="danger">
+            <Alert variant="info" className="fs-5">
               Please log in to view available blog posts
             </Alert>
-          ) : !filteredBlogData.length > 0 ? (
+          ) : !blogDataToShow.length > 0 ? (
             <Alert variant="danger">No blog posts match your query</Alert>
           ) : (
-            filteredBlogData.map((post, index) => (
+            blogDataToShow.map((post, index) => (
               <Card key={index} className="mb-3" id={`category${index + 1}`}>
                 <Card.Body>
                   <Row>
@@ -71,14 +72,18 @@ const Body = ({ userInfo, filteredBlogData, deleteBlogPost }) => {
                         </Card.Subtitle>
                       </div>
                       <div className="d-flex align-items-center">
-                        <ModalEdit post={post} />
-                        <Button
-                          variant="light"
-                          className="ms-3 mt-3"
-                          onClick={() => deleteBlogPost(post._id)}
-                        >
-                          Delete Post
-                        </Button>
+                        {userInfo._id === post.user._id && (
+                          <>
+                            <ModalEdit post={post} />
+                            <Button
+                              variant="light"
+                              className="ms-3 mt-3"
+                              onClick={() => deleteBlogPost(post._id)}
+                            >
+                              Delete Post
+                            </Button>
+                          </>
+                        )}
                       </div>
                     </Col>
                   </Row>

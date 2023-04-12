@@ -8,11 +8,9 @@ import {
   Button,
 } from "react-bootstrap";
 import ModalAdd from "./modals/ModalAdd";
-import { useAppContext } from "./store/appContext";
 
-function Message({ getAllBlogPosts }) {
+function Message({ userInfo, getAllBlogPosts, toggleShowMyPosts }) {
   const [showCard, setShowCard] = useState(false);
-  const { userInfo } = useAppContext();
 
   const handleCloseCard = () => {
     setShowCard(true);
@@ -51,9 +49,25 @@ function Message({ getAllBlogPosts }) {
             </Card.Body>
           </Card>
           <div className="d-flex justify-content-between">
-            <Button className="mt-3" variant="light" onClick={handleRefresh}>
-              Refresh Post
-            </Button>
+            <div>
+              <Button
+                className="mt-3"
+                variant="light"
+                onClick={() => {
+                  handleRefresh();
+                  toggleShowMyPosts();
+                }}
+              >
+                Refresh Post
+              </Button>
+              <Button
+                className="ms-3 mt-3"
+                variant="secondary"
+                onClick={toggleShowMyPosts}
+              >
+                Your posts
+              </Button>
+            </div>
             <ModalAdd />
           </div>
         </Col>
