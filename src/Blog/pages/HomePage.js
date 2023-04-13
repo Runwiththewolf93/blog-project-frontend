@@ -39,7 +39,7 @@ const HomePage = () => {
   const blogDataToShow = showMyPosts ? filteredMyPosts : filteredBlogData;
 
   return (
-    <Layout handleSearch={handleSearch}>
+    <Layout handleSearch={blogDataToShow === filteredBlogData && handleSearch}>
       <Message
         userInfo={userInfo}
         getAllBlogPosts={getAllBlogPosts}

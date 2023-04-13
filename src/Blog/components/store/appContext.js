@@ -15,6 +15,9 @@ import {
   GET_ALL_BLOG_POSTS_BEGIN,
   GET_ALL_BLOG_POSTS_SUCCESS,
   GET_ALL_BLOG_POSTS_ERROR,
+  GET_SINGLE_BLOG_POST_BEGIN,
+  GET_SINGLE_BLOG_POST_SUCCESS,
+  GET_SINGLE_BLOG_POST_ERROR,
   ADD_BLOG_POST_BEGIN,
   ADD_BLOG_POST_SUCCESS,
   ADD_BLOG_POST_ERROR,
@@ -32,6 +35,9 @@ const userInfoFromLocalStorage =
 const blogInfoFromLocalStorage =
   JSON.parse(localStorage.getItem("blogInfo")) || [];
 
+const blogPostFromLocalStorage =
+  JSON.parse(localStorage.getItem("blogPost")) || {};
+
 const initialState = {
   isLoading: false,
   userInfo: userInfoFromLocalStorage,
@@ -40,6 +46,7 @@ const initialState = {
   isLoadingBlog: false,
   blogInfo: blogInfoFromLocalStorage,
   errorBlog: null,
+  blogPost: blogPostFromLocalStorage,
 };
 
 const AppContext = React.createContext();
@@ -137,6 +144,22 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const getSingleBlogPost = async id => {
+    dispatch({ type: GET_SINGLE_BLOG_POST_BEGIN });
+
+    try {
+      const { data } = await axios.get(`/api/v1/blog/${id}`);
+
+      dispatch({ type: GET_SINGLE_BLOG_POST_SUCCESS, payload: data });
+      localStorage.setItem("blogPost", JSON.stringify(data));
+    } catch (error) {
+      if (error.response) {
+        const errorMessage = error.response.data.msg;
+        dispatch({ type: GET_SINGLE_BLOG_POST_ERROR, payload: errorMessage });
+      }
+    }
+  };
+
   const addBlogPost = async newPostData => {
     dispatch({ type: ADD_BLOG_POST_BEGIN });
 
@@ -228,6 +251,7 @@ const AppProvider = ({ children }) => {
         resetUserError,
         resetUserSuccess,
         getAllBlogPosts,
+        getSingleBlogPost,
         addBlogPost,
         editBlogPost,
         deleteBlogPost,

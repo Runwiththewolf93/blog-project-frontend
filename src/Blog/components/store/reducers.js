@@ -11,6 +11,9 @@ import {
   GET_ALL_BLOG_POSTS_BEGIN,
   GET_ALL_BLOG_POSTS_SUCCESS,
   GET_ALL_BLOG_POSTS_ERROR,
+  GET_SINGLE_BLOG_POST_BEGIN,
+  GET_SINGLE_BLOG_POST_SUCCESS,
+  GET_SINGLE_BLOG_POST_ERROR,
   ADD_BLOG_POST_BEGIN,
   ADD_BLOG_POST_SUCCESS,
   ADD_BLOG_POST_ERROR,
@@ -102,6 +105,16 @@ const reducer = (state, action) => {
     };
   }
   if (action.type === ADD_BLOG_POST_ERROR) {
+    return { ...state, isLoadingBlog: false, errorBlog: action.payload };
+  }
+  // get single blog post
+  if (action.type === GET_SINGLE_BLOG_POST_BEGIN) {
+    return { ...state, isLoadingBlog: true, errorBlog: null };
+  }
+  if (action.type === GET_SINGLE_BLOG_POST_SUCCESS) {
+    return { ...state, isLoadingBlog: false, blogPost: action.payload };
+  }
+  if (action.type === GET_SINGLE_BLOG_POST_ERROR) {
     return { ...state, isLoadingBlog: false, errorBlog: action.payload };
   }
   // edit an existing blog post
