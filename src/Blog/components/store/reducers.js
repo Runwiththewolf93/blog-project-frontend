@@ -6,6 +6,7 @@ import {
   LOGIN_USER_SUCCESS,
   LOGIN_USER_ERROR,
   LOGOUT_USER,
+  RESET_BLOG_POST,
   RESET_USER_ERROR,
   RESET_USER_SUCCESS,
   GET_ALL_BLOG_POSTS_BEGIN,
@@ -73,6 +74,10 @@ const reducer = (state, action) => {
   // logout reducer
   if (action.type === LOGOUT_USER) {
     return { ...initialState, userInfo: null, error: null };
+  }
+  // reset blogPost state
+  if (action.type === RESET_BLOG_POST) {
+    return { ...state, blogPost: null };
   }
   // reset error state
   if (action.type === RESET_USER_ERROR) {

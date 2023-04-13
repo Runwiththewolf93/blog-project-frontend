@@ -38,7 +38,7 @@ const ModalEdit = ({ post }) => {
 
   return (
     <>
-      <Button variant="light" onClick={handleShow} className="mt-3">
+      <Button variant="light" onClick={handleShow}>
         Edit Post
       </Button>
       <Modal show={show} onHide={handleClose}>

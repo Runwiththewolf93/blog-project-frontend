@@ -7,18 +7,29 @@ import Pictures from "../components/Pictures";
 import Map from "../components/Map";
 import Information from "../components/Information";
 import useRandomUsers from "../components/hooks/useRandomUsers";
+import BlogPost from "../components/BlogPost";
+import { useAppContext } from "../components/store/appContext";
 
 const ProfilePage = () => {
   const { userProfile } = useRandomUsers();
+  const {
+    blogPost,
+    userInfo,
+    deleteBlogPost,
+    getSingleBlogPost,
+    resetBlogPost,
+  } = useAppContext();
+
+  console.log(blogPost);
 
   return (
     <Layout>
-      <Container style={{ height: "100vh" }} className="mt-5">
+      <Container className="mt-5">
         <Row>
           <Col>
             <ProfileCard userProfile={userProfile} />
           </Col>
-          <Col md={6}>
+          <Col md={6} className="mb-4">
             <Progress userProfile={userProfile} />
             <Relationships userProfile={userProfile} />
             <Pictures userProfile={userProfile} />
@@ -27,6 +38,16 @@ const ProfilePage = () => {
             <Map userProfile={userProfile} />
             <Information userProfile={userProfile} />
           </Col>
+          {blogPost && (
+            <BlogPost
+              post={blogPost}
+              userInfo={userInfo}
+              deleteBlogPost={deleteBlogPost}
+              getSingleBlogPost={getSingleBlogPost}
+              showPostOverlay={false}
+              resetBlogPost={resetBlogPost}
+            />
+          )}
         </Row>
       </Container>
     </Layout>

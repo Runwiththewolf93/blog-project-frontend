@@ -10,6 +10,7 @@ import {
   LOGIN_USER_SUCCESS,
   LOGIN_USER_ERROR,
   LOGOUT_USER,
+  RESET_BLOG_POST,
   RESET_USER_ERROR,
   RESET_USER_SUCCESS,
   GET_ALL_BLOG_POSTS_BEGIN,
@@ -36,7 +37,7 @@ const blogInfoFromLocalStorage =
   JSON.parse(localStorage.getItem("blogInfo")) || [];
 
 const blogPostFromLocalStorage =
-  JSON.parse(localStorage.getItem("blogPost")) || {};
+  JSON.parse(localStorage.getItem("blogPost")) || null;
 
 const initialState = {
   isLoading: false,
@@ -112,6 +113,11 @@ const AppProvider = ({ children }) => {
   const logoutUser = () => {
     dispatch({ type: LOGOUT_USER });
     localStorage.removeItem("userInfo");
+  };
+
+  const resetBlogPost = () => {
+    dispatch({ type: RESET_BLOG_POST });
+    localStorage.removeItem("blogPost");
   };
 
   const resetUserError = () => {
@@ -248,6 +254,7 @@ const AppProvider = ({ children }) => {
         registerUser,
         loginUser,
         logoutUser,
+        resetBlogPost,
         resetUserError,
         resetUserSuccess,
         getAllBlogPosts,

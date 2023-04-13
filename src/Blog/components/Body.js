@@ -1,15 +1,6 @@
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Image,
-  Button,
-  ListGroup,
-  Alert,
-} from "react-bootstrap";
-import placeholderImage from "../images/images.png";
-import ModalEdit from "./modals/ModalEdit";
+import { Container, Row, Col, Card, ListGroup, Alert } from "react-bootstrap";
+import { useAppContext } from "./store/appContext";
+import BlogPost from "./BlogPost";
 
 const scrollToBlogPost = category => {
   const blogPostElement = document.getElementById(category);
@@ -19,6 +10,9 @@ const scrollToBlogPost = category => {
 };
 
 const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
+  const { getSingleBlogPost, blogPost } = useAppContext();
+  console.log(blogPost);
+
   return (
     <Container>
       <Row className="my-3" id="category1">
@@ -48,67 +42,14 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
             <Alert variant="danger">No blog posts match your query</Alert>
           ) : (
             blogDataToShow.map((post, index) => (
-              <Card key={index} className="mb-3" id={`category${index + 1}`}>
-                <Card.Body>
-                  <Row>
-                    <Col xs={1}>
-                      <Image
-                        style={{
-                          width: "60px",
-                          height: "60px",
-                          objectFit: "cover",
-                        }}
-                        src={post.avatar || placeholderImage}
-                        alt={`${post.title} Image 1`}
-                        fluid
-                        rounded
-                      />
-                    </Col>
-                    <Col xs={11} className="d-flex align-items-center">
-                      <div className="flex-grow-1">
-                        <Card.Title>{post.title}</Card.Title>
-                        <Card.Subtitle className="mb-2 text-muted">
-                          {post.date.slice(0, 10)}
-                        </Card.Subtitle>
-                      </div>
-                      <div className="d-flex align-items-center">
-                        {userInfo._id === post.user._id && (
-                          <>
-                            <ModalEdit post={post} />
-                            <Button
-                              variant="light"
-                              className="ms-3 mt-3"
-                              onClick={() => deleteBlogPost(post._id)}
-                            >
-                              Delete Post
-                            </Button>
-                          </>
-                        )}
-                      </div>
-                    </Col>
-                  </Row>
-                  <Card.Text className="mt-3">{post.content}</Card.Text>
-                  {post.images && (
-                    <Row>
-                      {post.images.map((image, idx) => (
-                        <Col key={idx} xs={12} md={4} className="text-center">
-                          <Image
-                            src={image || placeholderImage}
-                            alt={`${post.title} Image ${idx + 2}`}
-                            fluid
-                            rounded
-                            style={{
-                              width: "100px",
-                              height: "100px",
-                              objectFit: "cover",
-                            }}
-                          />
-                        </Col>
-                      ))}
-                    </Row>
-                  )}
-                </Card.Body>
-              </Card>
+              <BlogPost
+                post={post}
+                key={index}
+                userInfo={userInfo}
+                deleteBlogPost={deleteBlogPost}
+                getSingleBlogPost={getSingleBlogPost}
+                showPostOverlay={true}
+              />
             ))
           )}
         </Col>
@@ -133,3 +74,10 @@ export default Body;
 //   setBlogData(updatedBlogPost);
 //   localStorage.removeItem("blogData");
 // };
+
+// previously imported for the blog post
+// import placeholderImage from "../images/images.png";
+// import ModalEdit from "./modals/ModalEdit";
+// import PostOverlay from "./PostOverlay";
+// Image,
+// Button,
