@@ -55,7 +55,7 @@ function Message({ userInfo, getAllBlogPosts, toggleShowMyPosts }) {
                 variant="light"
                 onClick={() => {
                   handleRefresh();
-                  toggleShowMyPosts();
+                  // toggleShowMyPosts();
                 }}
               >
                 Refresh Post

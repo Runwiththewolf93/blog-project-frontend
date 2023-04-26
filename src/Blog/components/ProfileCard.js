@@ -3,7 +3,7 @@ import Spinner from "./Spinner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook, faInstagram } from "@fortawesome/free-brands-svg-icons";
 
-const ProfileCard = ({ userProfile }) => {
+const ProfileCard = ({ userProfile, userInfo }) => {
   return (
     <Card>
       {userProfile ? (
@@ -11,7 +11,8 @@ const ProfileCard = ({ userProfile }) => {
           <Card.Img variant="top" src={userProfile.picture?.large} />
           <Card.Body>
             <Card.Title>
-              {userProfile.name?.first} {userProfile.name?.last}
+              {userInfo.name ||
+                userProfile.name?.first + userProfile.name?.last}
             </Card.Title>
             <Card.Text>
               Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iure
@@ -21,7 +22,9 @@ const ProfileCard = ({ userProfile }) => {
             </Card.Text>
           </Card.Body>
           <ListGroup className="list-group-flush">
-            <ListGroup.Item>{userProfile.email}</ListGroup.Item>
+            <ListGroup.Item>
+              {userInfo.email || userProfile.email}
+            </ListGroup.Item>
             <ListGroup.Item>{userProfile.location?.city}</ListGroup.Item>
             <ListGroup.Item>{userProfile.phone}</ListGroup.Item>
           </ListGroup>

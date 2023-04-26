@@ -33,8 +33,8 @@ const HomePage = () => {
     // eslint-disable-next-line
   }, []);
 
-  // console.log(blogInfo);
-  // console.log(userInfo);
+  console.log(blogInfo);
+  console.log(userInfo);
 
   const blogDataToShow = showMyPosts ? filteredMyPosts : filteredBlogData;
 

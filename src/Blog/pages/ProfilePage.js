@@ -27,7 +27,7 @@ const ProfilePage = () => {
       <Container className="mt-5">
         <Row>
           <Col>
-            <ProfileCard userProfile={userProfile} />
+            <ProfileCard userProfile={userProfile} userInfo={userInfo} />
           </Col>
           <Col md={6} className="mb-4">
             <Progress userProfile={userProfile} />
