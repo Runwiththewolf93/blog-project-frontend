@@ -6,6 +6,12 @@ import {
   GET_ALL_COMMENTS_BLOG_POST_BEGIN,
   GET_ALL_COMMENTS_BLOG_POST_SUCCESS,
   GET_ALL_COMMENTS_BLOG_POST_ERROR,
+  GET_ALL_COMMENTS_USER_BEGIN,
+  GET_ALL_COMMENTS_USER_SUCCESS,
+  GET_ALL_COMMENTS_USER_ERROR,
+  ADD_COMMENT_BLOG_POST_BEGIN,
+  ADD_COMMENT_BLOG_POST_SUCCESS,
+  ADD_COMMENT_BLOG_POST_ERROR,
 } from "./actions";
 import { userInfoFromLocalStorage } from "./appContext";
 
@@ -17,9 +23,10 @@ const initialState = {
   commentInfo: commentInfoFromLocalStorage,
   errorComment: null,
   userInfo: userInfoFromLocalStorage,
+  isLoadingUserComment: false,
+  userCommentInfo: [],
+  errorUserComment: null,
 };
-
-console.log(userInfoFromLocalStorage);
 
 const CommentContext = React.createContext();
 
@@ -54,12 +61,67 @@ const CommentProvider = ({ children }) => {
     }
   };
 
+  const getAllCommentsUser = async () => {
+    dispatch({ type: GET_ALL_COMMENTS_USER_BEGIN });
+
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${state.userInfo.token}`,
+        },
+      };
+
+      const { data } = await axios.get(`/api/v1/comment/user`, config);
+
+      dispatch({ type: GET_ALL_COMMENTS_USER_SUCCESS, payload: data });
+    } catch (error) {
+      if (error.response) {
+        const errorMessage = error.response.data.msg;
+        dispatch({
+          type: GET_ALL_COMMENTS_USER_ERROR,
+          payload: errorMessage,
+        });
+      }
+    }
+  };
+
+  const addCommentBlogPost = async blogId => {
+    dispatch({ type: ADD_COMMENT_BLOG_POST_BEGIN });
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${state.userInfo.token}`,
+        },
+      };
+
+      const { data } = await axios.post(
+        `/api/v1/comment/blogId/${blogId}`,
+        config
+      );
+
+      dispatch({ type: ADD_COMMENT_BLOG_POST_SUCCESS, payload: data });
+
+      const updatedCommentInfo = [...commentInfoFromLocalStorage, data];
+      localStorage.setItem("commentInfo", JSON.stringify(updatedCommentInfo));
+    } catch (error) {
+      if (error.response) {
+        const errorMessage = error.response.data.msg;
+        dispatch({
+          type: ADD_COMMENT_BLOG_POST_ERROR,
+          payload: errorMessage,
+        });
+      }
+    }
+  };
+
   return (
     <CommentContext.Provider
       value={{
         ...state,
         // dispatch functions
         getAllCommentsBlogPost,
+        getAllCommentsUser,
+        addCommentBlogPost,
       }}
     >
       {children}

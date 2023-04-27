@@ -9,6 +9,8 @@ const CommentList = ({ blogId }) => {
     isLoadingComment,
     commentInfo,
     errorComment,
+    // implement in component adding a blog post
+    addCommentBlogPost,
   } = useCommentContext();
 
   useEffect(() => {
@@ -29,16 +31,13 @@ const CommentList = ({ blogId }) => {
           <ListGroup.Item variant="danger">{errorComment}</ListGroup.Item>
         </ListGroup>
       )}
-      {commentsForBlogPost.length === 0 &&
-        !isLoadingComment &&
-        !errorComment && (
-          <ListGroup className="mb-3">
-            <ListGroup.Item>
-              No comments? Be the first to comment on this post!
-            </ListGroup.Item>
-          </ListGroup>
-        )}
-      {commentsForBlogPost && commentsForBlogPost.length > 0 && (
+      {commentsForBlogPost.length === 0 ? (
+        <ListGroup className="mb-3">
+          <ListGroup.Item>
+            No comments? Be the first to comment on this post!
+          </ListGroup.Item>
+        </ListGroup>
+      ) : (
         <ListGroup className="mb-3">
           {commentsForBlogPost.map(comment => (
             <ListGroup.Item key={comment._id}>
@@ -49,7 +48,7 @@ const CommentList = ({ blogId }) => {
               </small>
               <br />
               <small>
-                updatedAt: {new Date(comment.createdAt).toLocaleString()}
+                updatedAt: {new Date(comment.updatedAt).toLocaleString()}
               </small>
             </ListGroup.Item>
           ))}
