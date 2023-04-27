@@ -192,6 +192,10 @@ const AppProvider = ({ children }) => {
       if (error.response) {
         const errorMessage = error.response.data.msg;
         dispatch({ type: ADD_BLOG_POST_ERROR, payload: errorMessage });
+        if (errorMessage === "Authentication Invalid, token failed") {
+          logoutUser();
+          alert("Session expired, please log in again to view the blog.");
+        }
       }
     }
   };
@@ -222,6 +226,10 @@ const AppProvider = ({ children }) => {
       if (error.response) {
         const errorMessage = error.response.data.msg;
         dispatch({ type: EDIT_BLOG_POST_ERROR, payload: errorMessage });
+        if (errorMessage === "Authentication Invalid, token failed") {
+          logoutUser();
+          alert("Session expired, please log in again to view the blog.");
+        }
       }
     }
   };
@@ -248,6 +256,10 @@ const AppProvider = ({ children }) => {
       if (error.response) {
         const errorMessage = error.response.data.msg;
         dispatch({ type: DELETE_BLOG_POST_ERROR, payload: errorMessage });
+        if (errorMessage === "Authentication Invalid, token failed") {
+          logoutUser();
+          alert("Session expired, please log in again to view the blog.");
+        }
       }
     }
   };
