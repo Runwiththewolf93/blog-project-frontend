@@ -1,7 +1,9 @@
+import React from "react";
 import { Container, Row, Col, Card, ListGroup, Alert } from "react-bootstrap";
 import { useAppContext } from "./store/appContext";
 import BlogPost from "./BlogPost";
 import Spinner from "./Spinner";
+import CommentList from "./CommentList";
 
 const scrollToBlogPost = category => {
   const blogPostElement = document.getElementById(category);
@@ -45,15 +47,17 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
           ) : !blogDataToShow.length > 0 ? (
             <Alert variant="danger">No blog posts match your query</Alert>
           ) : (
-            blogDataToShow.map((post, index) => (
-              <BlogPost
-                post={post}
-                key={index}
-                userInfo={userInfo}
-                deleteBlogPost={deleteBlogPost}
-                getSingleBlogPost={getSingleBlogPost}
-                showPostOverlay={true}
-              />
+            blogDataToShow.map(post => (
+              <React.Fragment key={post._id}>
+                <BlogPost
+                  post={post}
+                  userInfo={userInfo}
+                  deleteBlogPost={deleteBlogPost}
+                  getSingleBlogPost={getSingleBlogPost}
+                  showPostOverlay={true}
+                />
+                <CommentList blogId={post._id} />
+              </React.Fragment>
             ))
           )}
         </Col>

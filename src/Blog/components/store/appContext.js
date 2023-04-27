@@ -30,7 +30,7 @@ import {
   DELETE_BLOG_POST_ERROR,
 } from "./actions";
 
-const userInfoFromLocalStorage =
+export const userInfoFromLocalStorage =
   JSON.parse(localStorage.getItem("userInfo")) || null;
 
 const blogInfoFromLocalStorage =

@@ -52,7 +52,6 @@ const HomePage = () => {
         userInfo={userInfo}
         deleteBlogPost={deleteBlogPost}
         blogDataToShow={blogDataToShow}
-        blogInfo={blogInfo}
       />
     </Layout>
   );
