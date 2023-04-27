@@ -48,28 +48,31 @@ function Message({ userInfo, getAllBlogPosts, toggleShowMyPosts }) {
               </Card.Text>
             </Card.Body>
           </Card>
-          <div className="d-flex justify-content-between">
-            <div>
-              <Button
-                className="mt-3"
-                variant="light"
-                onClick={() => {
-                  handleRefresh();
-                  // toggleShowMyPosts();
-                }}
-              >
-                Refresh Post
-              </Button>
-              <Button
-                className="ms-3 mt-3"
-                variant="secondary"
-                onClick={toggleShowMyPosts}
-              >
-                Your posts
-              </Button>
+          {userInfo && (
+            <div className="d-flex justify-content-between">
+              <div>
+                <Button
+                  className="mt-3"
+                  variant="light"
+                  onClick={() => {
+                    handleRefresh();
+                    // temporary solution
+                    window.location.reload();
+                  }}
+                >
+                  Refresh Post
+                </Button>
+                <Button
+                  className="ms-3 mt-3"
+                  variant="secondary"
+                  onClick={toggleShowMyPosts}
+                >
+                  Your posts
+                </Button>
+              </div>
+              <ModalAdd />
             </div>
-            <ModalAdd />
-          </div>
+          )}
         </Col>
       </Row>
     </Container>

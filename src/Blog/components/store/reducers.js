@@ -92,7 +92,12 @@ const reducer = (state, action) => {
     return { ...state, isLoadingBlog: true };
   }
   if (action.type === GET_ALL_BLOG_POSTS_SUCCESS) {
-    return { ...state, blogInfo: action.payload, errorBlog: null };
+    return {
+      ...state,
+      isLoadingBlog: false,
+      blogInfo: action.payload,
+      errorBlog: null,
+    };
   }
   if (action.type === GET_ALL_BLOG_POSTS_ERROR) {
     return { ...state, isLoadingBlog: false, errorBlog: action.payload };
@@ -134,7 +139,7 @@ const reducer = (state, action) => {
         return post;
       }
     });
-    return { ...state, blogInfo: updatedBlogInfo };
+    return { ...state, isLoadingBlog: false, blogInfo: updatedBlogInfo };
   }
   if (action.type === EDIT_BLOG_POST_ERROR) {
     return { ...state, isLoadingBlog: false, errorBlog: action.payload };
@@ -147,7 +152,7 @@ const reducer = (state, action) => {
     const updatedBlogInfo = state.blogInfo.filter(
       post => post._id !== action.payload
     );
-    return { ...state, blogInfo: updatedBlogInfo };
+    return { ...state, isLoadingBlog: false, blogInfo: updatedBlogInfo };
   }
   if (action.type === DELETE_BLOG_POST_ERROR) {
     return { ...state, isLoadingBlog: false, errorBlog: action.payload };

@@ -113,6 +113,8 @@ const AppProvider = ({ children }) => {
   const logoutUser = () => {
     dispatch({ type: LOGOUT_USER });
     localStorage.removeItem("userInfo");
+    localStorage.removeItem("blogInfo");
+    localStorage.removeItem("blogPost");
   };
 
   const resetBlogPost = () => {
@@ -146,6 +148,10 @@ const AppProvider = ({ children }) => {
       if (error.response) {
         const errorMessage = error.response.data.msg;
         dispatch({ type: GET_ALL_BLOG_POSTS_ERROR, payload: errorMessage });
+        if (errorMessage === "Authentication Invalid, token failed") {
+          logoutUser();
+          alert("Session expired, please log in again to view the blog.");
+        }
       }
     }
   };

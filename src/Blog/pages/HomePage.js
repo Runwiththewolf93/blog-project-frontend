@@ -38,6 +38,9 @@ const HomePage = () => {
 
   const blogDataToShow = showMyPosts ? filteredMyPosts : filteredBlogData;
 
+  // figure out why this isn't working
+  console.log(blogDataToShow);
+
   return (
     <Layout handleSearch={blogDataToShow === filteredBlogData && handleSearch}>
       <Message
@@ -49,6 +52,7 @@ const HomePage = () => {
         userInfo={userInfo}
         deleteBlogPost={deleteBlogPost}
         blogDataToShow={blogDataToShow}
+        blogInfo={blogInfo}
       />
     </Layout>
   );

@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Container, Row, Col, Card, ListGroup, Alert } from "react-bootstrap";
 import { useAppContext } from "./store/appContext";
 import BlogPost from "./BlogPost";
@@ -12,16 +11,9 @@ const scrollToBlogPost = category => {
 };
 
 const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
-  const { getSingleBlogPost, blogPost } = useAppContext();
-  const [loading, setLoading] = useState(true);
+  const { getSingleBlogPost, blogPost, isLoadingBlog } = useAppContext();
   console.log(blogPost);
   console.log(blogDataToShow);
-
-  useEffect(() => {
-    if (blogDataToShow && blogDataToShow.length > 0) {
-      setLoading(false);
-    }
-  }, [blogDataToShow]);
 
   return (
     <Container>
@@ -48,7 +40,7 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
             <Alert variant="info" className="fs-5">
               Please log in to view available blog posts
             </Alert>
-          ) : loading ? (
+          ) : isLoadingBlog ? (
             <Spinner />
           ) : !blogDataToShow.length > 0 ? (
             <Alert variant="danger">No blog posts match your query</Alert>
