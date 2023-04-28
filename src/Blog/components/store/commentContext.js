@@ -15,6 +15,9 @@ import {
   ADD_COMMENT_BLOG_POST_BEGIN,
   ADD_COMMENT_BLOG_POST_SUCCESS,
   ADD_COMMENT_BLOG_POST_ERROR,
+  EDIT_COMMENT_BLOG_POST_BEGIN,
+  EDIT_COMMENT_BLOG_POST_SUCCESS,
+  EDIT_COMMENT_BLOG_POST_ERROR,
 } from "./actions";
 import { userInfoFromLocalStorage } from "./appContext";
 
@@ -144,6 +147,36 @@ const CommentProvider = ({ children }) => {
     }
   };
 
+  const editCommentBlogPost = async (blogId, commentId, comment) => {
+    dispatch({ type: EDIT_COMMENT_BLOG_POST_BEGIN });
+
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${state.userInfo.token}`,
+        },
+      };
+
+      const { data } = await axios.patch(
+        `/api/v1/comment/blogId/${blogId}/commentId/${commentId}`,
+        comment,
+        config
+      );
+
+      dispatch({ type: EDIT_COMMENT_BLOG_POST_SUCCESS, payload: data });
+
+      const updatedCommentInfo = commentInfoFromLocalStorage.map(comment =>
+        comment._id === commentId ? data : comment
+      );
+      localStorage.setItem("commentInfo", JSON.stringify(updatedCommentInfo));
+    } catch (error) {
+      if (error.response) {
+        const errorMessage = error.response.data.msg;
+        dispatch({ type: EDIT_COMMENT_BLOG_POST_ERROR, payload: errorMessage });
+      }
+    }
+  };
+
   return (
     <CommentContext.Provider
       value={{
@@ -153,6 +186,7 @@ const CommentProvider = ({ children }) => {
         getAllCommentsUser,
         getAllComments,
         addCommentBlogPost,
+        editCommentBlogPost,
       }}
     >
       {children}

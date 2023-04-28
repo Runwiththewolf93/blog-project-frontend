@@ -11,6 +11,9 @@ import {
   ADD_COMMENT_BLOG_POST_BEGIN,
   ADD_COMMENT_BLOG_POST_SUCCESS,
   ADD_COMMENT_BLOG_POST_ERROR,
+  EDIT_COMMENT_BLOG_POST_BEGIN,
+  EDIT_COMMENT_BLOG_POST_SUCCESS,
+  EDIT_COMMENT_BLOG_POST_ERROR,
 } from "./actions";
 
 import { initialState } from "./commentContext";
@@ -78,6 +81,25 @@ const commentReducer = (state, action) => {
     };
   }
   if (action.type === ADD_COMMENT_BLOG_POST_ERROR) {
+    return { ...state, isLoadingComment: false, errorComment: action.payload };
+  }
+  // edit comments to existing blog post
+  if (action.type === EDIT_COMMENT_BLOG_POST_BEGIN) {
+    return { ...state, isLoadingComment: true };
+  }
+  if (action.type === EDIT_COMMENT_BLOG_POST_SUCCESS) {
+    const updatedComment = action.payload;
+    const updatedComments = state.commentInfo.map(comment =>
+      comment._id === updatedComment._id ? updatedComment : comment
+    );
+    return {
+      ...state,
+      isLoadingComment: false,
+      commentInfo: updatedComments,
+      errorComment: null,
+    };
+  }
+  if (action.type === EDIT_COMMENT_BLOG_POST_ERROR) {
     return { ...state, isLoadingComment: false, errorComment: action.payload };
   }
   return state;

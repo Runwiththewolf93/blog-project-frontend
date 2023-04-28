@@ -115,6 +115,7 @@ const AppProvider = ({ children }) => {
     localStorage.removeItem("userInfo");
     localStorage.removeItem("blogInfo");
     localStorage.removeItem("blogPost");
+    localStorage.removeItem("commentInfo");
   };
 
   const resetBlogPost = () => {

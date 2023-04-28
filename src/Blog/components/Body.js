@@ -16,14 +16,12 @@ const scrollToBlogPost = category => {
 
 const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
   const { getSingleBlogPost, isLoadingBlog } = useAppContext();
-  const { getAllComments, commentInfo } = useCommentContext();
+  const { getAllComments, editCommentBlogPost } = useCommentContext();
 
   useEffect(() => {
     getAllComments();
     // eslint-disable-next-line
   }, []);
-
-  console.log(commentInfo);
 
   return (
     <Container>
@@ -65,7 +63,10 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
                   showPostOverlay={true}
                 />
                 <Card className="mb-3">
-                  <CommentList blogId={post._id} />
+                  <CommentList
+                    blogId={post._id}
+                    editCommentBlogPost={editCommentBlogPost}
+                  />
                   <CommentForm blogId={post._id} />
                 </Card>
               </React.Fragment>
@@ -109,3 +110,7 @@ export default Body;
 //   }
 //   commentsByBlogPost[blogId].push(comment);
 // });
+
+// useEffect(() => {
+//   console.log(isLoadingBlog);
+// }, [isLoadingBlog]);

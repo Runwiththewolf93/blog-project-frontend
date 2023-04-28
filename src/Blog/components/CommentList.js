@@ -1,9 +1,13 @@
 import { ListGroup } from "react-bootstrap";
 import { useCommentContext } from "./store/commentContext";
+import { useAppContext } from "./store/appContext";
 import Spinner from "./Spinner";
 
-const CommentList = ({ blogId }) => {
+const CommentList = ({ blogId, editCommentBlogPost }) => {
+  const { userInfo } = useAppContext();
   const { isLoadingComment, commentInfo, errorComment } = useCommentContext();
+
+  // implement edit comment blog post, use CommentForm input field to achieve functionality.
 
   const commentsForBlogPost = commentInfo.filter(
     comment => comment.blog === blogId
@@ -18,7 +22,7 @@ const CommentList = ({ blogId }) => {
         </ListGroup>
       )}
       {commentsForBlogPost.length === 0 ? (
-        <ListGroup className="mb-1" variant="flush">
+        <ListGroup className="mb-1">
           <ListGroup.Item>
             No comments? Be the first to comment on this post!
           </ListGroup.Item>
@@ -27,7 +31,7 @@ const CommentList = ({ blogId }) => {
         <ListGroup className="mb-1">
           {commentsForBlogPost.map(comment => (
             <ListGroup.Item key={comment._id}>
-              <h5>{comment.user.name}</h5>
+              <h5>{comment.user.name || userInfo.name}</h5>
               <p>{comment.comment}</p>
               <small>
                 createdAt: {new Date(comment.createdAt).toLocaleString()}
