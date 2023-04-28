@@ -4,6 +4,7 @@ import { useAppContext } from "./store/appContext";
 import BlogPost from "./BlogPost";
 import Spinner from "./Spinner";
 import CommentList from "./CommentList";
+import CommentForm from "./CommentForm";
 
 const scrollToBlogPost = category => {
   const blogPostElement = document.getElementById(category);
@@ -56,7 +57,10 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
                   getSingleBlogPost={getSingleBlogPost}
                   showPostOverlay={true}
                 />
-                <CommentList blogId={post._id} />
+                <Card className="mb-3">
+                  <CommentList blogId={post._id} />
+                  <CommentForm blogId={post._id} />
+                </Card>
               </React.Fragment>
             ))
           )}

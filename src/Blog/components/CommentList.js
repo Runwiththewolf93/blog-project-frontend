@@ -9,8 +9,6 @@ const CommentList = ({ blogId }) => {
     isLoadingComment,
     commentInfo,
     errorComment,
-    // implement in component adding a blog post
-    addCommentBlogPost,
   } = useCommentContext();
 
   useEffect(() => {
@@ -27,18 +25,18 @@ const CommentList = ({ blogId }) => {
     <>
       {isLoadingComment && <Spinner />}
       {errorComment && (
-        <ListGroup className="mb-3">
+        <ListGroup className="mb-1">
           <ListGroup.Item variant="danger">{errorComment}</ListGroup.Item>
         </ListGroup>
       )}
       {commentsForBlogPost.length === 0 ? (
-        <ListGroup className="mb-3">
+        <ListGroup className="mb-1" variant="flush">
           <ListGroup.Item>
             No comments? Be the first to comment on this post!
           </ListGroup.Item>
         </ListGroup>
       ) : (
-        <ListGroup className="mb-3">
+        <ListGroup className="mb-1">
           {commentsForBlogPost.map(comment => (
             <ListGroup.Item key={comment._id}>
               <h5>{comment.user.name}</h5>

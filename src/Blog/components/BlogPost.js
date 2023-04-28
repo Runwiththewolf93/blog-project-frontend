@@ -13,7 +13,7 @@ const BlogPost = ({
   resetBlogPost,
 }) => {
   return (
-    <Card className="mb-3">
+    <Card className="mb-1">
       <Card.Body>
         <Row>
           <Col xs={1}>

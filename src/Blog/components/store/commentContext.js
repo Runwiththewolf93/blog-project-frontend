@@ -85,8 +85,9 @@ const CommentProvider = ({ children }) => {
     }
   };
 
-  const addCommentBlogPost = async blogId => {
+  const addCommentBlogPost = async (blogId, comment) => {
     dispatch({ type: ADD_COMMENT_BLOG_POST_BEGIN });
+
     try {
       const config = {
         headers: {
@@ -96,6 +97,7 @@ const CommentProvider = ({ children }) => {
 
       const { data } = await axios.post(
         `/api/v1/comment/blogId/${blogId}`,
+        comment,
         config
       );
 
