@@ -33,13 +33,7 @@ const HomePage = () => {
     // eslint-disable-next-line
   }, []);
 
-  console.log(blogInfo);
-  console.log(userInfo);
-
   const blogDataToShow = showMyPosts ? filteredMyPosts : filteredBlogData;
-
-  // figure out why this isn't working
-  console.log(blogDataToShow);
 
   return (
     <Layout handleSearch={blogDataToShow === filteredBlogData && handleSearch}>

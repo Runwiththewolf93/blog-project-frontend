@@ -9,6 +9,9 @@ import {
   GET_ALL_COMMENTS_USER_BEGIN,
   GET_ALL_COMMENTS_USER_SUCCESS,
   GET_ALL_COMMENTS_USER_ERROR,
+  GET_ALL_COMMENTS_BEGIN,
+  GET_ALL_COMMENTS_SUCCESS,
+  GET_ALL_COMMENTS_ERROR,
   ADD_COMMENT_BLOG_POST_BEGIN,
   ADD_COMMENT_BLOG_POST_SUCCESS,
   ADD_COMMENT_BLOG_POST_ERROR,
@@ -23,6 +26,7 @@ const initialState = {
   commentInfo: commentInfoFromLocalStorage,
   errorComment: null,
   userInfo: userInfoFromLocalStorage,
+  blogCommentInfo: [],
   isLoadingUserComment: false,
   userCommentInfo: [],
   errorUserComment: null,
@@ -49,7 +53,6 @@ const CommentProvider = ({ children }) => {
       );
 
       dispatch({ type: GET_ALL_COMMENTS_BLOG_POST_SUCCESS, payload: data });
-      localStorage.setItem("commentInfo", JSON.stringify(data));
     } catch (error) {
       if (error.response) {
         const errorMessage = error.response.data.msg;
@@ -71,7 +74,7 @@ const CommentProvider = ({ children }) => {
         },
       };
 
-      const { data } = await axios.get(`/api/v1/comment/user`, config);
+      const { data } = await axios.get("/api/v1/comment/user", config);
 
       dispatch({ type: GET_ALL_COMMENTS_USER_SUCCESS, payload: data });
     } catch (error) {
@@ -79,6 +82,31 @@ const CommentProvider = ({ children }) => {
         const errorMessage = error.response.data.msg;
         dispatch({
           type: GET_ALL_COMMENTS_USER_ERROR,
+          payload: errorMessage,
+        });
+      }
+    }
+  };
+
+  const getAllComments = async () => {
+    dispatch({ type: GET_ALL_COMMENTS_BEGIN });
+
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${state.userInfo.token}`,
+        },
+      };
+
+      const { data } = await axios.get("/api/v1/comment", config);
+
+      dispatch({ type: GET_ALL_COMMENTS_SUCCESS, payload: data });
+      localStorage.setItem("commentInfo", JSON.stringify(data));
+    } catch (error) {
+      if (error.response) {
+        const errorMessage = error.response.data.msg;
+        dispatch({
+          type: GET_ALL_COMMENTS_ERROR,
           payload: errorMessage,
         });
       }
@@ -123,6 +151,7 @@ const CommentProvider = ({ children }) => {
         // dispatch functions
         getAllCommentsBlogPost,
         getAllCommentsUser,
+        getAllComments,
         addCommentBlogPost,
       }}
     >

@@ -1,25 +1,13 @@
-import React, { useEffect } from "react";
 import { ListGroup } from "react-bootstrap";
 import { useCommentContext } from "./store/commentContext";
 import Spinner from "./Spinner";
 
 const CommentList = ({ blogId }) => {
-  const {
-    getAllCommentsBlogPost,
-    isLoadingComment,
-    commentInfo,
-    errorComment,
-  } = useCommentContext();
-
-  useEffect(() => {
-    getAllCommentsBlogPost(blogId);
-    // eslint-disable-next-line
-  }, []);
+  const { isLoadingComment, commentInfo, errorComment } = useCommentContext();
 
   const commentsForBlogPost = commentInfo.filter(
     comment => comment.blog === blogId
   );
-  console.log(commentsForBlogPost);
 
   return (
     <>

@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, Row, Col, Card, ListGroup, Alert } from "react-bootstrap";
 import { useAppContext } from "./store/appContext";
 import BlogPost from "./BlogPost";
 import Spinner from "./Spinner";
 import CommentList from "./CommentList";
 import CommentForm from "./CommentForm";
+import { useCommentContext } from "./store/commentContext";
 
 const scrollToBlogPost = category => {
   const blogPostElement = document.getElementById(category);
@@ -14,9 +15,15 @@ const scrollToBlogPost = category => {
 };
 
 const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
-  const { getSingleBlogPost, blogPost, isLoadingBlog } = useAppContext();
-  console.log(blogPost);
-  console.log(blogDataToShow);
+  const { getSingleBlogPost, isLoadingBlog } = useAppContext();
+  const { getAllComments, commentInfo } = useCommentContext();
+
+  useEffect(() => {
+    getAllComments();
+    // eslint-disable-next-line
+  }, []);
+
+  console.log(commentInfo);
 
   return (
     <Container>
@@ -45,7 +52,7 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
             </Alert>
           ) : isLoadingBlog ? (
             <Spinner />
-          ) : !blogDataToShow.length > 0 ? (
+          ) : blogDataToShow.length === 0 ? (
             <Alert variant="danger">No blog posts match your query</Alert>
           ) : (
             blogDataToShow.map(post => (
@@ -93,3 +100,12 @@ export default Body;
 // import PostOverlay from "./PostOverlay";
 // Image,
 // Button,
+
+// const commentsByBlogPost = {};
+// commentInfo.forEach(comment => {
+//   const blogId = comment.blog;
+//   if (!commentsByBlogPost[blogId]) {
+//     commentsByBlogPost[blogId] = [];
+//   }
+//   commentsByBlogPost[blogId].push(comment);
+// });

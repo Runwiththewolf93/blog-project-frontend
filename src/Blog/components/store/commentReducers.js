@@ -5,6 +5,9 @@ import {
   GET_ALL_COMMENTS_USER_BEGIN,
   GET_ALL_COMMENTS_USER_SUCCESS,
   GET_ALL_COMMENTS_USER_ERROR,
+  GET_ALL_COMMENTS_BEGIN,
+  GET_ALL_COMMENTS_SUCCESS,
+  GET_ALL_COMMENTS_ERROR,
   ADD_COMMENT_BLOG_POST_BEGIN,
   ADD_COMMENT_BLOG_POST_SUCCESS,
   ADD_COMMENT_BLOG_POST_ERROR,
@@ -21,7 +24,7 @@ const commentReducer = (state, action) => {
     return {
       ...state,
       isLoadingComment: false,
-      commentInfo: action.payload,
+      blogCommentInfo: action.payload,
       errorComment: null,
     };
   }
@@ -46,6 +49,21 @@ const commentReducer = (state, action) => {
       isLoadingUserComment: false,
       errorUserComment: action.payload,
     };
+  }
+  // list all comments
+  if (action.type === GET_ALL_COMMENTS_BEGIN) {
+    return { ...state, isLoadingComment: true };
+  }
+  if (action.type === GET_ALL_COMMENTS_SUCCESS) {
+    return {
+      ...state,
+      isLoadingComment: false,
+      commentInfo: action.payload,
+      errorComment: null,
+    };
+  }
+  if (action.type === GET_ALL_COMMENTS_ERROR) {
+    return { ...state, isLoadingComment: false, errorComment: action.payload };
   }
   // add comments to existing blog post
   if (action.type === ADD_COMMENT_BLOG_POST_BEGIN) {
