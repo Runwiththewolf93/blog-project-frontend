@@ -147,7 +147,7 @@ const CommentProvider = ({ children }) => {
     }
   };
 
-  const editCommentBlogPost = async (blogId, commentId, comment) => {
+  const editCommentBlogPost = async (blogId, commentId, editedComment) => {
     dispatch({ type: EDIT_COMMENT_BLOG_POST_BEGIN });
 
     try {
@@ -159,7 +159,7 @@ const CommentProvider = ({ children }) => {
 
       const { data } = await axios.patch(
         `/api/v1/comment/blogId/${blogId}/commentId/${commentId}`,
-        comment,
+        editedComment,
         config
       );
 
