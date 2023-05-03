@@ -4,7 +4,11 @@ import { useCommentContext } from "./store/commentContext";
 import { useAppContext } from "./store/appContext";
 import Spinner from "./Spinner";
 
-const CommentList = ({ blogId, editCommentBlogPost }) => {
+const CommentList = ({
+  blogId,
+  editCommentBlogPost,
+  deleteCommentBlogPost,
+}) => {
   const { userInfo } = useAppContext();
   const { isLoadingComment, commentInfo, errorComment } = useCommentContext();
   const [editCommentId, setEditCommentId] = useState(null);
@@ -27,6 +31,10 @@ const CommentList = ({ blogId, editCommentBlogPost }) => {
     editCommentBlogPost(blogId, commentId, { editedComment });
     setEditCommentId(null);
     setEditedComment("");
+  };
+
+  const handleDeleteComment = commentId => {
+    deleteCommentBlogPost(blogId, commentId);
   };
 
   return (
@@ -89,6 +97,14 @@ const CommentList = ({ blogId, editCommentBlogPost }) => {
                     >
                       Edit Comment
                     </Button>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      className="my-2 ms-2"
+                      onClick={() => handleDeleteComment(comment._id)}
+                    >
+                      Delete Comment
+                    </Button>
                   </>
                 )}
               </div>
@@ -108,5 +124,3 @@ const CommentList = ({ blogId, editCommentBlogPost }) => {
 };
 
 export default CommentList;
-
-// implement edit comment blog post, use CommentForm input field to achieve functionality.

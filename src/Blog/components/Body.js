@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Card, ListGroup, Alert } from "react-bootstrap";
 import { useAppContext } from "./store/appContext";
 import BlogPost from "./BlogPost";
@@ -16,12 +16,34 @@ const scrollToBlogPost = category => {
 
 const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
   const { getSingleBlogPost, isLoadingBlog } = useAppContext();
-  const { getAllComments, editCommentBlogPost } = useCommentContext();
+  const { getAllComments, editCommentBlogPost, deleteCommentBlogPost } =
+    useCommentContext();
+  const [shouldReload, setShouldReload] = useState(false);
 
   useEffect(() => {
     getAllComments();
     // eslint-disable-next-line
   }, []);
+
+  // temporary hack to prevent application from hanging
+  useEffect(() => {
+    if (isLoadingBlog || blogDataToShow === 0) {
+      const timer = setTimeout(() => {
+        setShouldReload(true);
+      }, 3000);
+      return () => clearTimeout(timer);
+    } else {
+      setShouldReload(false);
+    }
+  }, [isLoadingBlog, blogDataToShow]);
+
+  if (shouldReload) {
+    return (
+      <Alert variant="warning" className="fs-5">
+        Something went wrong. Reloading...
+      </Alert>
+    );
+  }
 
   return (
     <Container>
@@ -66,6 +88,7 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
                   <CommentList
                     blogId={post._id}
                     editCommentBlogPost={editCommentBlogPost}
+                    deleteCommentBlogPost={deleteCommentBlogPost}
                   />
                   <CommentForm blogId={post._id} />
                 </Card>

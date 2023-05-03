@@ -18,6 +18,9 @@ import {
   EDIT_COMMENT_BLOG_POST_BEGIN,
   EDIT_COMMENT_BLOG_POST_SUCCESS,
   EDIT_COMMENT_BLOG_POST_ERROR,
+  DELETE_COMMENT_BLOG_POST_BEGIN,
+  DELETE_COMMENT_BLOG_POST_SUCCESS,
+  DELETE_COMMENT_BLOG_POST_ERROR,
 } from "./actions";
 import { userInfoFromLocalStorage } from "./appContext";
 
@@ -177,6 +180,38 @@ const CommentProvider = ({ children }) => {
     }
   };
 
+  const deleteCommentBlogPost = async (blogId, commentId) => {
+    dispatch({ type: DELETE_COMMENT_BLOG_POST_BEGIN });
+
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${state.userInfo.token}`,
+        },
+      };
+
+      await axios.delete(
+        `/api/v1/comment/blogId/${blogId}/commentId/${commentId}`,
+        config
+      );
+
+      dispatch({ type: DELETE_COMMENT_BLOG_POST_SUCCESS, payload: commentId });
+
+      const updatedCommentInfo = commentInfoFromLocalStorage.filter(
+        comment => comment._id !== commentId
+      );
+      localStorage.setItem("commentInfo", JSON.stringify(updatedCommentInfo));
+    } catch (error) {
+      if (error.response) {
+        const errorMessage = error.response.data.msg;
+        dispatch({
+          type: DELETE_COMMENT_BLOG_POST_ERROR,
+          payload: errorMessage,
+        });
+      }
+    }
+  };
+
   return (
     <CommentContext.Provider
       value={{
@@ -187,6 +222,7 @@ const CommentProvider = ({ children }) => {
         getAllComments,
         addCommentBlogPost,
         editCommentBlogPost,
+        deleteCommentBlogPost,
       }}
     >
       {children}
