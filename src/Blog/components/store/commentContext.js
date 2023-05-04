@@ -29,6 +29,11 @@ import { userInfoFromLocalStorage } from "./appContext";
 const commentInfoFromLocalStorage =
   JSON.parse(localStorage.getItem("commentInfo")) || [];
 
+const clearLocalStorage = () => {
+  const keysToRemove = ["userInfo", "blogInfo", "blogPost", "commentInfo"];
+  keysToRemove.forEach(key => localStorage.removeItem(key));
+};
+
 const initialState = {
   isLoadingComment: false,
   commentInfo: commentInfoFromLocalStorage,
@@ -119,10 +124,7 @@ const CommentProvider = ({ children }) => {
         });
         if (errorMessage === "Authentication Invalid, token failed") {
           dispatch({ type: LOGOUT_USER });
-          localStorage.removeItem("userInfo");
-          localStorage.removeItem("blogInfo");
-          localStorage.removeItem("blogPost");
-          localStorage.removeItem("commentInfo");
+          clearLocalStorage();
           alert("Session expired, please log in again to view the blog.");
         }
       }
