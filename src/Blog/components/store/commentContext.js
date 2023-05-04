@@ -21,6 +21,7 @@ import {
   DELETE_COMMENT_BLOG_POST_BEGIN,
   DELETE_COMMENT_BLOG_POST_SUCCESS,
   DELETE_COMMENT_BLOG_POST_ERROR,
+  RESET_COMMENT_ERROR,
 } from "./actions";
 import { userInfoFromLocalStorage } from "./appContext";
 
@@ -212,6 +213,10 @@ const CommentProvider = ({ children }) => {
     }
   };
 
+  const resetCommentError = () => {
+    dispatch({ type: RESET_COMMENT_ERROR });
+  };
+
   return (
     <CommentContext.Provider
       value={{
@@ -223,6 +228,7 @@ const CommentProvider = ({ children }) => {
         addCommentBlogPost,
         editCommentBlogPost,
         deleteCommentBlogPost,
+        resetCommentError,
       }}
     >
       {children}

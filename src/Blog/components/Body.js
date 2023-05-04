@@ -7,6 +7,7 @@ import CommentList from "./CommentList";
 import CommentForm from "./CommentForm";
 import { useCommentContext } from "./store/commentContext";
 
+// figure out why this isn't working
 const scrollToBlogPost = category => {
   const blogPostElement = document.getElementById(category);
   if (blogPostElement) {
@@ -15,7 +16,7 @@ const scrollToBlogPost = category => {
 };
 
 const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
-  const { getSingleBlogPost, isLoadingBlog } = useAppContext();
+  const { getSingleBlogPost, isLoadingBlog, errorBlog } = useAppContext();
   const { getAllComments, editCommentBlogPost, deleteCommentBlogPost } =
     useCommentContext();
   const [shouldReload, setShouldReload] = useState(false);
@@ -74,6 +75,8 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
             <Spinner />
           ) : blogDataToShow.length === 0 ? (
             <Alert variant="danger">No blog posts match your query</Alert>
+          ) : errorBlog ? (
+            <Alert variant="danger">{errorBlog}</Alert>
           ) : (
             blogDataToShow.map(post => (
               <React.Fragment key={post._id}>
@@ -89,6 +92,7 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
                     blogId={post._id}
                     editCommentBlogPost={editCommentBlogPost}
                     deleteCommentBlogPost={deleteCommentBlogPost}
+                    userInfo={userInfo}
                   />
                   <CommentForm blogId={post._id} />
                 </Card>

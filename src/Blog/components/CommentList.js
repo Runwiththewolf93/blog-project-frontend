@@ -1,22 +1,22 @@
 import { useState } from "react";
 import { ListGroup, Form, Button } from "react-bootstrap";
 import { useCommentContext } from "./store/commentContext";
-import { useAppContext } from "./store/appContext";
 import Spinner from "./Spinner";
+import CommentSort from "./CommentSort";
 
 const CommentList = ({
   blogId,
   editCommentBlogPost,
   deleteCommentBlogPost,
+  userInfo,
 }) => {
-  const { userInfo } = useAppContext();
   const { isLoadingComment, commentInfo, errorComment } = useCommentContext();
-  const [editCommentId, setEditCommentId] = useState(null);
-  const [editedComment, setEditedComment] = useState("");
-
-  const commentsForBlogPost = commentInfo.filter(
+  const commentsPerBlogPost = commentInfo.filter(
     comment => comment.blog === blogId
   );
+  const [editCommentId, setEditCommentId] = useState(null);
+  const [editedComment, setEditedComment] = useState("");
+  const [sortedComments, setSortedComments] = useState(commentsPerBlogPost);
 
   const handleEditComment = commentId => {
     setEditCommentId(commentId);
@@ -37,6 +37,10 @@ const CommentList = ({
     deleteCommentBlogPost(blogId, commentId);
   };
 
+  const handleSortComments = comments => {
+    setSortedComments(comments);
+  };
+
   return (
     <>
       {isLoadingComment && <Spinner />}
@@ -45,7 +49,7 @@ const CommentList = ({
           <ListGroup.Item variant="danger">{errorComment}</ListGroup.Item>
         </ListGroup>
       )}
-      {commentsForBlogPost.length === 0 ? (
+      {sortedComments.length === 0 ? (
         <ListGroup className="mb-1">
           <ListGroup.Item>
             No comments? Be the first to comment on this post!
@@ -53,7 +57,11 @@ const CommentList = ({
         </ListGroup>
       ) : (
         <ListGroup className="mb-1">
-          {commentsForBlogPost.map(comment => (
+          <CommentSort
+            sortedComments={sortedComments}
+            setSortedComments={handleSortComments}
+          />
+          {sortedComments.map(comment => (
             <ListGroup.Item key={comment._id}>
               <div>
                 <h5>{comment.user.name || userInfo.name}</h5>

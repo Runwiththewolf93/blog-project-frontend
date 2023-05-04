@@ -17,6 +17,7 @@ import {
   DELETE_COMMENT_BLOG_POST_BEGIN,
   DELETE_COMMENT_BLOG_POST_SUCCESS,
   DELETE_COMMENT_BLOG_POST_ERROR,
+  RESET_COMMENT_ERROR,
 } from "./actions";
 
 import { initialState } from "./commentContext";
@@ -123,6 +124,10 @@ const commentReducer = (state, action) => {
   }
   if (action.type === DELETE_COMMENT_BLOG_POST_ERROR) {
     return { ...state, isLoadingComment: false, errorComment: action.payload };
+  }
+  // reset error comment
+  if (action.type === RESET_COMMENT_ERROR) {
+    return { ...state, errorComment: null };
   }
   return state;
 };

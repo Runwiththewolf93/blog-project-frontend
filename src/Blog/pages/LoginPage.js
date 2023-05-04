@@ -10,6 +10,7 @@ import {
 } from "react-bootstrap";
 import CarouselLogin from "../components/CarouselLogin";
 import { useAppContext } from "../components/store/appContext";
+import { useCommentContext } from "../components/store/commentContext";
 
 const initialState = {
   name: "",
@@ -31,6 +32,7 @@ const LoginPage = ({ show, handleClose }) => {
     resetUserError,
     resetUserSuccess,
   } = useAppContext();
+  const { resetCommentError } = useCommentContext();
 
   const toggleMember = () => {
     setValues({ ...values, isMember: !values.isMember });
@@ -82,8 +84,15 @@ const LoginPage = ({ show, handleClose }) => {
       handleClose();
       resetUserError();
       resetUserSuccess();
+      resetCommentError();
     }
-  }, [success, handleClose, resetUserError, resetUserSuccess]);
+  }, [
+    success,
+    handleClose,
+    resetUserError,
+    resetUserSuccess,
+    resetCommentError,
+  ]);
 
   return (
     <>
