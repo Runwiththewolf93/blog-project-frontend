@@ -22,6 +22,7 @@ import {
   DELETE_COMMENT_BLOG_POST_SUCCESS,
   DELETE_COMMENT_BLOG_POST_ERROR,
   RESET_COMMENT_ERROR,
+  LOGOUT_USER,
 } from "./actions";
 import { userInfoFromLocalStorage } from "./appContext";
 
@@ -116,6 +117,14 @@ const CommentProvider = ({ children }) => {
           type: GET_ALL_COMMENTS_ERROR,
           payload: errorMessage,
         });
+        if (errorMessage === "Authentication Invalid, token failed") {
+          dispatch({ type: LOGOUT_USER });
+          localStorage.removeItem("userInfo");
+          localStorage.removeItem("blogInfo");
+          localStorage.removeItem("blogPost");
+          localStorage.removeItem("commentInfo");
+          alert("Session expired, please log in again to view the blog.");
+        }
       }
     }
   };

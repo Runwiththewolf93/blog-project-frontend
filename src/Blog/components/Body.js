@@ -37,19 +37,30 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
     }
   }, [isLoadingBlog, blogDataToShow]);
 
+  if (shouldReload) {
+    return (
+      <div className="d-flex justify-content-center mb-3">
+        <Alert variant="warning" className="fs-5">
+          Something went wrong. Reloading...
+          {window.location.reload()}
+        </Alert>
+      </div>
+    );
+  }
+
   if (isLoadingBlog) {
-    return <Spinner />;
+    return (
+      <div className="d-flex justify-content-center mb-3">
+        <Spinner />
+      </div>
+    );
   }
 
   if (errorBlog) {
-    return <Alert variant="danger">{errorBlog}</Alert>;
-  }
-
-  if (shouldReload) {
     return (
-      <Alert variant="warning" className="fs-5">
-        Something went wrong. Reloading...
-      </Alert>
+      <div className="d-flex justify-content-center mb-3">
+        <Alert variant="danger">{errorBlog}</Alert>;
+      </div>
     );
   }
 
