@@ -4,8 +4,6 @@ import { useState } from "react";
 const CommentSort = ({ sortedComments, setSortedComments }) => {
   const [sortOrder, setSortOrder] = useState("asc");
 
-  console.log(sortedComments);
-
   const handleSortByCreatedAt = () => {
     const sortedByCreatedAt = [...sortedComments].sort((a, b) => {
       if (sortOrder === "asc") {

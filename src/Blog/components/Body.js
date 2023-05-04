@@ -7,9 +7,8 @@ import CommentList from "./CommentList";
 import CommentForm from "./CommentForm";
 import { useCommentContext } from "./store/commentContext";
 
-// figure out why this isn't working
-const scrollToBlogPost = category => {
-  const blogPostElement = document.getElementById(category);
+const scrollToBlogPost = postId => {
+  const blogPostElement = document.getElementById(postId);
   if (blogPostElement) {
     blogPostElement.scrollIntoView({ behavior: "smooth" });
   }
@@ -38,6 +37,14 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
     }
   }, [isLoadingBlog, blogDataToShow]);
 
+  if (isLoadingBlog) {
+    return <Spinner />;
+  }
+
+  if (errorBlog) {
+    return <Alert variant="danger">{errorBlog}</Alert>;
+  }
+
   if (shouldReload) {
     return (
       <Alert variant="warning" className="fs-5">
@@ -48,20 +55,21 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
 
   return (
     <Container>
-      <Row className="my-3" id="category1">
+      <Row className="my-3" id={`category1`}>
         <Col md={2}>
           <Card>
             <Card.Header as="h5">Blog Sections</Card.Header>
             <ListGroup variant="flush">
               {userInfo &&
-                blogDataToShow.map((post, index) => (
-                  <ListGroup.Item
-                    key={index}
-                    onClick={() => scrollToBlogPost(`category${index + 1}`)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    {post.title}
-                  </ListGroup.Item>
+                blogDataToShow.map(post => (
+                  <React.Fragment key={post._id}>
+                    <ListGroup.Item
+                      onClick={() => scrollToBlogPost(post._id)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {post.title}
+                    </ListGroup.Item>
+                  </React.Fragment>
                 ))}
             </ListGroup>
           </Card>
@@ -71,15 +79,12 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
             <Alert variant="info" className="fs-5">
               Please log in to view available blog posts
             </Alert>
-          ) : isLoadingBlog ? (
-            <Spinner />
           ) : blogDataToShow.length === 0 ? (
             <Alert variant="danger">No blog posts match your query</Alert>
-          ) : errorBlog ? (
-            <Alert variant="danger">{errorBlog}</Alert>
           ) : (
             blogDataToShow.map(post => (
               <React.Fragment key={post._id}>
+                <div id={post._id}></div>
                 <BlogPost
                   post={post}
                   userInfo={userInfo}
