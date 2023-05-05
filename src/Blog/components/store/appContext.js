@@ -55,30 +55,56 @@ const AppContext = React.createContext();
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  // axios
+  const authFetch = axios.create({
+    baseURL: "/api/v1",
+  });
+
+  // request
+  authFetch.interceptors.request.use(
+    config => {
+      config.headers.Authorization = `Bearer ${state.userInfo.token}`;
+      return config;
+    },
+    error => {
+      return Promise.reject(error);
+    }
+  );
+
+  // response
+  authFetch.interceptors.response.use(
+    response => {
+      return response;
+    },
+    error => {
+      if (error.response && error.response.status === 401) {
+        alert("Session expired, please log in again to view the blog.");
+        logoutUser();
+        window.location.href = "/";
+      }
+      return Promise.reject(error);
+    }
+  );
+
   // dispatching below
   const registerUser = async ({ name, email, password }) => {
     dispatch({ type: REGISTER_USER_BEGIN });
 
     try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-
-      const { data } = await axios.post(
-        "/api/v1/auth/register",
-        { name, email, password },
-        config
-      );
+      const { data } = await axios.post("/api/v1/auth/register", {
+        name,
+        email,
+        password,
+      });
 
       dispatch({ type: REGISTER_USER_SUCCESS, payload: data });
-
       localStorage.setItem("userInfo", JSON.stringify(data));
     } catch (error) {
       if (error.response) {
-        const errorMessage = error.response.data.msg;
-        dispatch({ type: REGISTER_USER_ERROR, payload: errorMessage });
+        dispatch({
+          type: REGISTER_USER_ERROR,
+          payload: error.response.data.msg,
+        });
       }
     }
   };
@@ -87,35 +113,26 @@ const AppProvider = ({ children }) => {
     dispatch({ type: LOGIN_USER_BEGIN });
 
     try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-
-      const { data } = await axios.post(
-        "/api/v1/auth/login",
-        { email, password },
-        config
-      );
+      const { data } = await axios.post("/api/v1/auth/login", {
+        email,
+        password,
+      });
 
       dispatch({ type: LOGIN_USER_SUCCESS, payload: data });
-
       localStorage.setItem("userInfo", JSON.stringify(data));
     } catch (error) {
       if (error.response) {
-        const errorMessage = error.response.data.msg;
-        dispatch({ type: LOGIN_USER_ERROR, payload: errorMessage });
+        dispatch({
+          type: LOGIN_USER_ERROR,
+          payload: error.response.data.msg,
+        });
       }
     }
   };
 
   const logoutUser = () => {
     dispatch({ type: LOGOUT_USER });
-    localStorage.removeItem("userInfo");
-    localStorage.removeItem("blogInfo");
-    localStorage.removeItem("blogPost");
-    localStorage.removeItem("commentInfo");
+    localStorage.clear();
   };
 
   const resetBlogPost = () => {
@@ -135,24 +152,16 @@ const AppProvider = ({ children }) => {
     dispatch({ type: GET_ALL_BLOG_POSTS_BEGIN });
 
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${state.userInfo.token}`,
-        },
-      };
-
-      const { data } = await axios.get("/api/v1/blog", config);
+      const { data } = await authFetch.get("/blog");
 
       dispatch({ type: GET_ALL_BLOG_POSTS_SUCCESS, payload: data });
       localStorage.setItem("blogInfo", JSON.stringify(data));
     } catch (error) {
       if (error.response) {
-        const errorMessage = error.response.data.msg;
-        dispatch({ type: GET_ALL_BLOG_POSTS_ERROR, payload: errorMessage });
-        if (errorMessage === "Authentication Invalid, token failed") {
-          logoutUser();
-          alert("Session expired, please log in again to view the blog.");
-        }
+        dispatch({
+          type: GET_ALL_BLOG_POSTS_ERROR,
+          payload: error.response.data.msg,
+        });
       }
     }
   };
@@ -167,8 +176,10 @@ const AppProvider = ({ children }) => {
       localStorage.setItem("blogPost", JSON.stringify(data));
     } catch (error) {
       if (error.response) {
-        const errorMessage = error.response.data.msg;
-        dispatch({ type: GET_SINGLE_BLOG_POST_ERROR, payload: errorMessage });
+        dispatch({
+          type: GET_SINGLE_BLOG_POST_ERROR,
+          payload: error.response.data.msg,
+        });
       }
     }
   };
@@ -177,13 +188,7 @@ const AppProvider = ({ children }) => {
     dispatch({ type: ADD_BLOG_POST_BEGIN });
 
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${state.userInfo.token}`,
-        },
-      };
-
-      const { data } = await axios.post("/api/v1/blog", newPostData, config);
+      const { data } = await authFetch.post("/blog", newPostData);
 
       dispatch({ type: ADD_BLOG_POST_SUCCESS, payload: data });
 
@@ -191,12 +196,10 @@ const AppProvider = ({ children }) => {
       localStorage.setItem("blogInfo", JSON.stringify(updatedBlogInfo));
     } catch (error) {
       if (error.response) {
-        const errorMessage = error.response.data.msg;
-        dispatch({ type: ADD_BLOG_POST_ERROR, payload: errorMessage });
-        if (errorMessage === "Authentication Invalid, token failed") {
-          logoutUser();
-          alert("Session expired, please log in again to view the blog.");
-        }
+        dispatch({
+          type: ADD_BLOG_POST_ERROR,
+          payload: error.response.data.msg,
+        });
       }
     }
   };
@@ -205,17 +208,7 @@ const AppProvider = ({ children }) => {
     dispatch({ type: EDIT_BLOG_POST_BEGIN });
 
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${state.userInfo.token}`,
-        },
-      };
-
-      const { data } = await axios.patch(
-        `/api/v1/blog/${id}`,
-        updatedValues,
-        config
-      );
+      const { data } = await authFetch.patch(`/blog/${id}`, updatedValues);
 
       dispatch({ type: EDIT_BLOG_POST_SUCCESS, payload: data });
 
@@ -225,12 +218,10 @@ const AppProvider = ({ children }) => {
       localStorage.setItem("blogInfo", JSON.stringify(updatedBlogInfo));
     } catch (error) {
       if (error.response) {
-        const errorMessage = error.response.data.msg;
-        dispatch({ type: EDIT_BLOG_POST_ERROR, payload: errorMessage });
-        if (errorMessage === "Authentication Invalid, token failed") {
-          logoutUser();
-          alert("Session expired, please log in again to view the blog.");
-        }
+        dispatch({
+          type: EDIT_BLOG_POST_ERROR,
+          payload: error.response.data.msg,
+        });
       }
     }
   };
@@ -239,13 +230,7 @@ const AppProvider = ({ children }) => {
     dispatch({ type: DELETE_BLOG_POST_BEGIN });
 
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${state.userInfo.token}`,
-        },
-      };
-
-      await axios.delete(`/api/v1/blog/${id}`, config);
+      await authFetch.delete(`/blog/${id}`);
 
       dispatch({ type: DELETE_BLOG_POST_SUCCESS, payload: id });
 
@@ -255,12 +240,10 @@ const AppProvider = ({ children }) => {
       localStorage.setItem("blogInfo", JSON.stringify(updatedBlogInfo));
     } catch (error) {
       if (error.response) {
-        const errorMessage = error.response.data.msg;
-        dispatch({ type: DELETE_BLOG_POST_ERROR, payload: errorMessage });
-        if (errorMessage === "Authentication Invalid, token failed") {
-          logoutUser();
-          alert("Session expired, please log in again to view the blog.");
-        }
+        dispatch({
+          type: DELETE_BLOG_POST_ERROR,
+          payload: error.response.data.msg,
+        });
       }
     }
   };

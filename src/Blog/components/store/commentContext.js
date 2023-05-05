@@ -29,11 +29,6 @@ import { userInfoFromLocalStorage } from "./appContext";
 const commentInfoFromLocalStorage =
   JSON.parse(localStorage.getItem("commentInfo")) || [];
 
-const clearLocalStorage = () => {
-  const keysToRemove = ["userInfo", "blogInfo", "blogPost", "commentInfo"];
-  keysToRemove.forEach(key => localStorage.removeItem(key));
-};
-
 const initialState = {
   isLoadingComment: false,
   commentInfo: commentInfoFromLocalStorage,
@@ -50,28 +45,49 @@ const CommentContext = React.createContext();
 const CommentProvider = ({ children }) => {
   const [state, dispatch] = useReducer(commentReducer, initialState);
 
+  // axios
+  const authFetch = axios.create({
+    baseURL: "/api/v1",
+  });
+
+  // request
+  authFetch.interceptors.request.use(
+    config => {
+      config.headers.Authorization = `Bearer ${state.userInfo.token}`;
+      return config;
+    },
+    error => {
+      return Promise.reject(error);
+    }
+  );
+
+  // response
+  authFetch.interceptors.response.use(
+    response => {
+      return response;
+    },
+    error => {
+      if (error.response && error.response.status === 401) {
+        alert("Session expired, please log in again to view the blog.");
+        logoutUser();
+        window.location.href = "/";
+      }
+      return Promise.reject(error);
+    }
+  );
+
   // dispatching below
   const getAllCommentsBlogPost = async blogId => {
     dispatch({ type: GET_ALL_COMMENTS_BLOG_POST_BEGIN });
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${state.userInfo.token}`,
-        },
-      };
-
-      const { data } = await axios.get(
-        `/api/v1/comment/blogId/${blogId}`,
-        config
-      );
+      const { data } = await authFetch.get(`/comment/blogId/${blogId}`);
 
       dispatch({ type: GET_ALL_COMMENTS_BLOG_POST_SUCCESS, payload: data });
     } catch (error) {
       if (error.response) {
-        const errorMessage = error.response.data.msg;
         dispatch({
           type: GET_ALL_COMMENTS_BLOG_POST_ERROR,
-          payload: errorMessage,
+          payload: error.response.data.msg,
         });
       }
     }
@@ -81,27 +97,15 @@ const CommentProvider = ({ children }) => {
     dispatch({ type: GET_ALL_COMMENTS_USER_BEGIN });
 
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${state.userInfo.token}`,
-        },
-      };
-
-      const { data } = await axios.get("/api/v1/comment/user", config);
+      const { data } = await authFetch.get("/comment/user");
 
       dispatch({ type: GET_ALL_COMMENTS_USER_SUCCESS, payload: data });
     } catch (error) {
       if (error.response) {
-        const errorMessage = error.response.data.msg;
         dispatch({
           type: GET_ALL_COMMENTS_USER_ERROR,
-          payload: errorMessage,
+          payload: error.response.data.msg,
         });
-        if (errorMessage === "Authentication Invalid, token failed") {
-          dispatch({ type: LOGOUT_USER });
-          clearLocalStorage();
-          alert("Session expired, please log in again to view the blog.");
-        }
       }
     }
   };
@@ -110,28 +114,16 @@ const CommentProvider = ({ children }) => {
     dispatch({ type: GET_ALL_COMMENTS_BEGIN });
 
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${state.userInfo.token}`,
-        },
-      };
-
-      const { data } = await axios.get("/api/v1/comment", config);
+      const { data } = await authFetch.get("/comment");
 
       dispatch({ type: GET_ALL_COMMENTS_SUCCESS, payload: data });
       localStorage.setItem("commentInfo", JSON.stringify(data));
     } catch (error) {
       if (error.response) {
-        const errorMessage = error.response.data.msg;
         dispatch({
           type: GET_ALL_COMMENTS_ERROR,
-          payload: errorMessage,
+          payload: error.response.data.msg,
         });
-        if (errorMessage === "Authentication Invalid, token failed") {
-          dispatch({ type: LOGOUT_USER });
-          clearLocalStorage();
-          alert("Session expired, please log in again to view the blog.");
-        }
       }
     }
   };
@@ -140,16 +132,9 @@ const CommentProvider = ({ children }) => {
     dispatch({ type: ADD_COMMENT_BLOG_POST_BEGIN });
 
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${state.userInfo.token}`,
-        },
-      };
-
-      const { data } = await axios.post(
-        `/api/v1/comment/blogId/${blogId}`,
-        comment,
-        config
+      const { data } = await authFetch.post(
+        `/comment/blogId/${blogId}`,
+        comment
       );
 
       dispatch({ type: ADD_COMMENT_BLOG_POST_SUCCESS, payload: data });
@@ -158,10 +143,9 @@ const CommentProvider = ({ children }) => {
       localStorage.setItem("commentInfo", JSON.stringify(updatedCommentInfo));
     } catch (error) {
       if (error.response) {
-        const errorMessage = error.response.data.msg;
         dispatch({
           type: ADD_COMMENT_BLOG_POST_ERROR,
-          payload: errorMessage,
+          payload: error.response.data.msg,
         });
       }
     }
@@ -171,16 +155,9 @@ const CommentProvider = ({ children }) => {
     dispatch({ type: EDIT_COMMENT_BLOG_POST_BEGIN });
 
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${state.userInfo.token}`,
-        },
-      };
-
       const { data } = await axios.patch(
-        `/api/v1/comment/blogId/${blogId}/commentId/${commentId}`,
-        editedComment,
-        config
+        `/comment/blogId/${blogId}/commentId/${commentId}`,
+        editedComment
       );
 
       dispatch({ type: EDIT_COMMENT_BLOG_POST_SUCCESS, payload: data });
@@ -191,8 +168,10 @@ const CommentProvider = ({ children }) => {
       localStorage.setItem("commentInfo", JSON.stringify(updatedCommentInfo));
     } catch (error) {
       if (error.response) {
-        const errorMessage = error.response.data.msg;
-        dispatch({ type: EDIT_COMMENT_BLOG_POST_ERROR, payload: errorMessage });
+        dispatch({
+          type: EDIT_COMMENT_BLOG_POST_ERROR,
+          payload: error.response.data.msg,
+        });
       }
     }
   };
@@ -201,16 +180,7 @@ const CommentProvider = ({ children }) => {
     dispatch({ type: DELETE_COMMENT_BLOG_POST_BEGIN });
 
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${state.userInfo.token}`,
-        },
-      };
-
-      await axios.delete(
-        `/api/v1/comment/blogId/${blogId}/commentId/${commentId}`,
-        config
-      );
+      await axios.delete(`/comment/blogId/${blogId}/commentId/${commentId}`);
 
       dispatch({ type: DELETE_COMMENT_BLOG_POST_SUCCESS, payload: commentId });
 
@@ -220,10 +190,9 @@ const CommentProvider = ({ children }) => {
       localStorage.setItem("commentInfo", JSON.stringify(updatedCommentInfo));
     } catch (error) {
       if (error.response) {
-        const errorMessage = error.response.data.msg;
         dispatch({
           type: DELETE_COMMENT_BLOG_POST_ERROR,
-          payload: errorMessage,
+          payload: error.response.data.msg,
         });
       }
     }
@@ -231,6 +200,11 @@ const CommentProvider = ({ children }) => {
 
   const resetCommentError = () => {
     dispatch({ type: RESET_COMMENT_ERROR });
+  };
+
+  const logoutUser = () => {
+    dispatch({ type: LOGOUT_USER });
+    localStorage.clear();
   };
 
   return (
