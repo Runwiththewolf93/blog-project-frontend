@@ -73,7 +73,14 @@ const reducer = (state, action) => {
   }
   // logout reducer
   if (action.type === LOGOUT_USER) {
-    return { ...initialState, userInfo: null, error: null };
+    return {
+      ...initialState,
+      userInfo: null,
+      isLoading: false,
+      isLoadingBlog: false,
+      error: null,
+      errorBlog: null,
+    };
   }
   // reset blogPost state
   if (action.type === RESET_BLOG_POST) {

@@ -18,6 +18,7 @@ import {
   DELETE_COMMENT_BLOG_POST_SUCCESS,
   DELETE_COMMENT_BLOG_POST_ERROR,
   RESET_COMMENT_ERROR,
+  LOGOUT_USER,
 } from "./actions";
 
 import { initialState } from "./commentContext";
@@ -128,6 +129,17 @@ const commentReducer = (state, action) => {
   // reset error comment
   if (action.type === RESET_COMMENT_ERROR) {
     return { ...state, errorComment: null };
+  }
+  // logout user comment
+  if (action.type === LOGOUT_USER) {
+    return {
+      ...initialState,
+      userInfo: null,
+      isLoadingComment: false,
+      isLoadingUserComment: false,
+      errorComment: null,
+      errorUserComment: null,
+    };
   }
   return state;
 };

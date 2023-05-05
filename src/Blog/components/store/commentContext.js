@@ -97,6 +97,11 @@ const CommentProvider = ({ children }) => {
           type: GET_ALL_COMMENTS_USER_ERROR,
           payload: errorMessage,
         });
+        if (errorMessage === "Authentication Invalid, token failed") {
+          dispatch({ type: LOGOUT_USER });
+          clearLocalStorage();
+          alert("Session expired, please log in again to view the blog.");
+        }
       }
     }
   };

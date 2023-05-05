@@ -1,6 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
-import { Container, Row, Col, ListGroup, Card } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  ListGroup,
+  Card,
+  Button,
+  Alert,
+} from "react-bootstrap";
 import ProfileCard from "../components/ProfileCard";
 import Progress from "../components/Progress";
 import Relationships from "../components/Relationships";
@@ -29,14 +37,32 @@ const ProfilePage = () => {
     getAllCommentsUser,
   } = useCommentContext();
 
-  console.log(blogPost);
+  const [sortByTitle, setSortByTitle] = useState(false);
+  const [sortByDate, setSortByDate] = useState(false);
+  const [titleSortOrder, setTitleSortOrder] = useState("asc");
+  const [dateSortOrder, setDateSortOrder] = useState("asc");
+  const [loadingComment, setLoadingComment] = useState(isLoadingUserComment);
 
   useEffect(() => {
     getAllCommentsUser();
+    // to resolve isLoadingUserComment not resetting to false
+    setTimeout(() => {
+      setLoadingComment(false);
+    }, 3000);
     // eslint-disable-next-line
   }, []);
 
-  console.log(userCommentInfo);
+  const sortByTitleFunction = () => {
+    setSortByDate(false);
+    setSortByTitle(!sortByTitle);
+    setTitleSortOrder(titleSortOrder === "asc" ? "desc" : "asc");
+  };
+
+  const sortByDateFunction = () => {
+    setSortByTitle(false);
+    setSortByDate(!sortByDate);
+    setDateSortOrder(dateSortOrder === "asc" ? "desc" : "asc");
+  };
 
   return (
     <Layout>
@@ -54,38 +80,79 @@ const ProfilePage = () => {
             <Map userProfile={userProfile} />
             <Information userProfile={userProfile} />
           </Col>
-          {blogPost && (
-            <BlogPost
-              post={blogPost}
-              userInfo={userInfo}
-              deleteBlogPost={deleteBlogPost}
-              getSingleBlogPost={getSingleBlogPost}
-              showPostOverlay={false}
-              resetBlogPost={resetBlogPost}
-            />
+          {!userInfo && (
+            <Alert variant="info" className="fs-5 text-center mb-4">
+              Please log in to view available blog posts and comments
+            </Alert>
           )}
-          {isLoadingUserComment && <Spinner />}
-          {errorUserComment && (
-            <ListGroup className="mb-3">
-              <ListGroup.Item variant="danger">
-                {errorUserComment}
-              </ListGroup.Item>
-            </ListGroup>
-          )}
-          {!isLoadingUserComment && !errorUserComment && (
+          {userInfo && (
             <>
-              <h3>An overview of all your submitted comments</h3>
-              {userCommentInfo.map(comment => (
-                <Card key={comment._id} className="mb-3">
-                  <Card.Body>
-                    <Card.Title>{comment.blog.title}</Card.Title>
-                    <Card.Subtitle className="mb-2 text-muted">
-                      {new Date(comment.createdAt).toLocaleString()}
-                    </Card.Subtitle>
-                    <Card.Text>{comment.comment}</Card.Text>
-                  </Card.Body>
-                </Card>
-              ))}
+              {blogPost && (
+                <>
+                  <h3>Pinned blog post:</h3>
+                  <BlogPost
+                    post={blogPost}
+                    userInfo={userInfo}
+                    deleteBlogPost={deleteBlogPost}
+                    getSingleBlogPost={getSingleBlogPost}
+                    showPostOverlay={false}
+                    resetBlogPost={resetBlogPost}
+                  />
+                </>
+              )}
+              {loadingComment && (
+                <div className="d-flex justify-content-center mb-3">
+                  <Spinner />
+                </div>
+              )}
+              {errorUserComment && (
+                <ListGroup className="mb-3">
+                  <ListGroup.Item variant="danger">
+                    {errorUserComment}
+                  </ListGroup.Item>
+                </ListGroup>
+              )}
+              {!loadingComment && !errorUserComment && (
+                <>
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <h3 className="mt-1">
+                      An overview of all your submitted comments:
+                    </h3>
+                    <div>
+                      <Button variant="link" onClick={sortByTitleFunction}>
+                        Sort by title {titleSortOrder === "asc" ? "▲" : "▼"}
+                      </Button>
+                      <Button variant="link" onClick={sortByDateFunction}>
+                        Sort by date {dateSortOrder === "asc" ? "▲" : "▼"}
+                      </Button>
+                    </div>
+                  </div>
+                  {userCommentInfo
+                    .sort((a, b) => {
+                      if (sortByTitle) {
+                        return (
+                          (titleSortOrder === "asc" ? 1 : -1) *
+                          a.blog.title.localeCompare(b.blog.title)
+                        );
+                      }
+                      return (
+                        (dateSortOrder === "asc" ? 1 : -1) *
+                        (new Date(b.createdAt) - new Date(a.createdAt))
+                      );
+                    })
+                    .map(comment => (
+                      <Card key={comment._id} className="mb-3">
+                        <Card.Body>
+                          <Card.Title>{comment.blog.title}</Card.Title>
+                          <Card.Subtitle className="mb-2 text-muted">
+                            {new Date(comment.createdAt).toLocaleString()}
+                          </Card.Subtitle>
+                          <Card.Text>{comment.comment}</Card.Text>
+                        </Card.Body>
+                      </Card>
+                    ))}
+                </>
+              )}
             </>
           )}
         </Row>

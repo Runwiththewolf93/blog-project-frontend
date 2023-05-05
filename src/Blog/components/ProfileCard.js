@@ -11,7 +11,7 @@ const ProfileCard = ({ userProfile, userInfo }) => {
           <Card.Img variant="top" src={userProfile.picture?.large} />
           <Card.Body>
             <Card.Title>
-              {userInfo.name ||
+              {userInfo?.name ||
                 userProfile.name?.first + userProfile.name?.last}
             </Card.Title>
             <Card.Text>
@@ -23,7 +23,7 @@ const ProfileCard = ({ userProfile, userInfo }) => {
           </Card.Body>
           <ListGroup className="list-group-flush">
             <ListGroup.Item>
-              {userInfo.email || userProfile.email}
+              {userInfo?.email || userProfile.email}
             </ListGroup.Item>
             <ListGroup.Item>{userProfile.location?.city}</ListGroup.Item>
             <ListGroup.Item>{userProfile.phone}</ListGroup.Item>
