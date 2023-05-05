@@ -110,7 +110,10 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
                     deleteCommentBlogPost={deleteCommentBlogPost}
                     userInfo={userInfo}
                   />
-                  <CommentForm blogId={post._id} />
+                  <CommentForm
+                    blogId={post._id}
+                    getAllComments={getAllComments}
+                  />
                 </Card>
               </React.Fragment>
             ))

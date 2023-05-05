@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ListGroup, Form, Button } from "react-bootstrap";
 import { useCommentContext } from "./store/commentContext";
 import Spinner from "./Spinner";
@@ -11,12 +11,16 @@ const CommentList = ({
   userInfo,
 }) => {
   const { isLoadingComment, commentInfo, errorComment } = useCommentContext();
-  const commentsPerBlogPost = commentInfo.filter(
-    comment => comment.blog === blogId
-  );
   const [editCommentId, setEditCommentId] = useState(null);
   const [editedComment, setEditedComment] = useState("");
-  const [sortedComments, setSortedComments] = useState(commentsPerBlogPost);
+  const [sortedComments, setSortedComments] = useState([]);
+
+  useEffect(() => {
+    const commentsPerBlogPost = commentInfo.filter(
+      comment => comment.blog === blogId
+    );
+    setSortedComments(commentsPerBlogPost);
+  }, [commentInfo, blogId]);
 
   const handleEditComment = commentId => {
     setEditCommentId(commentId);
