@@ -11,6 +11,7 @@ const BlogPost = ({
   getSingleBlogPost,
   showPostOverlay,
   resetBlogPost,
+  deleteAllCommentsBlogPost,
 }) => {
   return (
     <Card className="mb-1">
@@ -55,7 +56,10 @@ const BlogPost = ({
                   <Button
                     variant="light"
                     className="ms-3"
-                    onClick={() => deleteBlogPost(post._id)}
+                    onClick={() => {
+                      deleteBlogPost(post._id);
+                      deleteAllCommentsBlogPost(post._id);
+                    }}
                   >
                     Delete Post
                   </Button>

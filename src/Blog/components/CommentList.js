@@ -22,6 +22,8 @@ const CommentList = ({
     setSortedComments(commentsPerBlogPost);
   }, [commentInfo, blogId]);
 
+  console.log(sortedComments);
+
   const handleEditComment = commentId => {
     setEditCommentId(commentId);
   };

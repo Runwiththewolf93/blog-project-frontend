@@ -17,6 +17,9 @@ import {
   DELETE_COMMENT_BLOG_POST_BEGIN,
   DELETE_COMMENT_BLOG_POST_SUCCESS,
   DELETE_COMMENT_BLOG_POST_ERROR,
+  DELETE_ALL_COMMENTS_BLOG_POST_BEGIN,
+  DELETE_ALL_COMMENTS_BLOG_POST_SUCCESS,
+  DELETE_ALL_COMMENTS_BLOG_POST_ERROR,
   RESET_COMMENT_ERROR,
   LOGOUT_USER,
 } from "./actions";
@@ -124,6 +127,25 @@ const commentReducer = (state, action) => {
     };
   }
   if (action.type === DELETE_COMMENT_BLOG_POST_ERROR) {
+    return { ...state, isLoadingComment: false, errorComment: action.payload };
+  }
+  // delete comments from an existing blog post
+  if (action.type === DELETE_ALL_COMMENTS_BLOG_POST_BEGIN) {
+    return { ...state, isLoadingComment: true };
+  }
+  if (action.type === DELETE_ALL_COMMENTS_BLOG_POST_SUCCESS) {
+    const id = action.payload;
+    const updatedComments = state.commentInfo.filter(
+      comment => comment.blog !== id
+    );
+    return {
+      ...state,
+      isLoadingComment: false,
+      commentInfo: updatedComments,
+      errorComment: null,
+    };
+  }
+  if (action.type === DELETE_ALL_COMMENTS_BLOG_POST_ERROR) {
     return { ...state, isLoadingComment: false, errorComment: action.payload };
   }
   // reset error comment

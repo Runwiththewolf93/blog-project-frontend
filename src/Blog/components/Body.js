@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Container, Row, Col, Card, ListGroup, Alert } from "react-bootstrap";
 import { useAppContext } from "./store/appContext";
 import BlogPost from "./BlogPost";
@@ -16,42 +16,24 @@ const scrollToBlogPost = postId => {
 
 const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
   const { getSingleBlogPost, isLoadingBlog, errorBlog } = useAppContext();
-  const { getAllComments, editCommentBlogPost, deleteCommentBlogPost } =
-    useCommentContext();
-  const [shouldReload, setShouldReload] = useState(false);
+  const {
+    getAllComments,
+    editCommentBlogPost,
+    deleteCommentBlogPost,
+    deleteAllCommentsBlogPost,
+  } = useCommentContext();
 
   useEffect(() => {
     getAllComments();
     // eslint-disable-next-line
   }, []);
 
-  // temporary hack to prevent application from hanging
-  useEffect(() => {
-    if (isLoadingBlog || blogDataToShow === 0) {
-      const timer = setTimeout(() => {
-        setShouldReload(true);
-      }, 3000);
-      return () => clearTimeout(timer);
-    } else {
-      setShouldReload(false);
-    }
-  }, [isLoadingBlog, blogDataToShow]);
-
-  if (shouldReload) {
+  if (!userInfo) {
     return (
       <div className="d-flex justify-content-center mb-3">
-        <Alert variant="warning" className="fs-5">
-          Something went wrong. Reloading...
-          {window.location.reload()}
+        <Alert variant="info" className="fs-5">
+          Please log in to view available blog posts
         </Alert>
-      </div>
-    );
-  }
-
-  if (isLoadingBlog) {
-    return (
-      <div className="d-flex justify-content-center mb-3">
-        <Spinner />
       </div>
     );
   }
@@ -64,6 +46,22 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
     );
   }
 
+  if (isLoadingBlog || !blogDataToShow) {
+    return (
+      <div className="d-flex justify-content-center mb-3">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (blogDataToShow.length === 0) {
+    return (
+      <div className="d-flex justify-content-center mb-3">
+        <Alert variant="danger">No blog posts match your query</Alert>
+      </div>
+    );
+  }
+
   return (
     <Container>
       <Row className="my-3" id={`category1`}>
@@ -71,53 +69,45 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
           <Card>
             <Card.Header as="h5">Blog Sections</Card.Header>
             <ListGroup variant="flush">
-              {userInfo &&
-                blogDataToShow.map(post => (
-                  <React.Fragment key={post._id}>
-                    <ListGroup.Item
-                      onClick={() => scrollToBlogPost(post._id)}
-                      style={{ cursor: "pointer" }}
-                    >
-                      {post.title}
-                    </ListGroup.Item>
-                  </React.Fragment>
-                ))}
+              {blogDataToShow.map(post => (
+                <React.Fragment key={post._id}>
+                  <ListGroup.Item
+                    onClick={() => scrollToBlogPost(post._id)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {post.title}
+                  </ListGroup.Item>
+                </React.Fragment>
+              ))}
             </ListGroup>
           </Card>
         </Col>
         <Col md={10}>
-          {!userInfo ? (
-            <Alert variant="info" className="fs-5">
-              Please log in to view available blog posts
-            </Alert>
-          ) : blogDataToShow.length === 0 ? (
-            <Alert variant="danger">No blog posts match your query</Alert>
-          ) : (
-            blogDataToShow.map(post => (
-              <React.Fragment key={post._id}>
-                <div id={post._id}></div>
-                <BlogPost
-                  post={post}
+          {blogDataToShow.map(post => (
+            <React.Fragment key={post._id}>
+              <div id={post._id}></div>
+              <BlogPost
+                post={post}
+                userInfo={userInfo}
+                deleteBlogPost={deleteBlogPost}
+                getSingleBlogPost={getSingleBlogPost}
+                showPostOverlay={true}
+                deleteAllCommentsBlogPost={deleteAllCommentsBlogPost}
+              />
+              <Card className="mb-3">
+                <CommentList
+                  blogId={post._id}
+                  editCommentBlogPost={editCommentBlogPost}
+                  deleteCommentBlogPost={deleteCommentBlogPost}
                   userInfo={userInfo}
-                  deleteBlogPost={deleteBlogPost}
-                  getSingleBlogPost={getSingleBlogPost}
-                  showPostOverlay={true}
                 />
-                <Card className="mb-3">
-                  <CommentList
-                    blogId={post._id}
-                    editCommentBlogPost={editCommentBlogPost}
-                    deleteCommentBlogPost={deleteCommentBlogPost}
-                    userInfo={userInfo}
-                  />
-                  <CommentForm
-                    blogId={post._id}
-                    getAllComments={getAllComments}
-                  />
-                </Card>
-              </React.Fragment>
-            ))
-          )}
+                <CommentForm
+                  blogId={post._id}
+                  getAllComments={getAllComments}
+                />
+              </Card>
+            </React.Fragment>
+          ))}
         </Col>
       </Row>
     </Container>
@@ -160,3 +150,23 @@ export default Body;
 // useEffect(() => {
 //   console.log(isLoadingBlog);
 // }, [isLoadingBlog]);
+
+// temporary hack to prevent application from hanging
+// useEffect(() => {
+//   if (isLoadingBlog || blogDataToShow === 0) {
+//     const timer = setTimeout(() => {
+//       setShouldReload(true);
+//     }, 3000);
+//     return () => clearTimeout(timer);
+//   } else {
+//     setShouldReload(false);
+//   }
+// }, [isLoadingBlog, blogDataToShow]);
+
+// useEffect(() => {
+//   if (shouldReload) {
+//     window.location.reload();
+//   }
+// }, [shouldReload]);
+
+// const [shouldReload, setShouldReload] = useState(false);

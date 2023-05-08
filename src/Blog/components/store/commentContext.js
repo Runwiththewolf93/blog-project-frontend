@@ -21,6 +21,9 @@ import {
   DELETE_COMMENT_BLOG_POST_BEGIN,
   DELETE_COMMENT_BLOG_POST_SUCCESS,
   DELETE_COMMENT_BLOG_POST_ERROR,
+  DELETE_ALL_COMMENTS_BLOG_POST_BEGIN,
+  DELETE_ALL_COMMENTS_BLOG_POST_SUCCESS,
+  DELETE_ALL_COMMENTS_BLOG_POST_ERROR,
   RESET_COMMENT_ERROR,
   LOGOUT_USER,
 } from "./actions";
@@ -155,7 +158,7 @@ const CommentProvider = ({ children }) => {
     dispatch({ type: EDIT_COMMENT_BLOG_POST_BEGIN });
 
     try {
-      const { data } = await axios.patch(
+      const { data } = await authFetch.patch(
         `/comment/blogId/${blogId}/commentId/${commentId}`,
         editedComment
       );
@@ -180,7 +183,9 @@ const CommentProvider = ({ children }) => {
     dispatch({ type: DELETE_COMMENT_BLOG_POST_BEGIN });
 
     try {
-      await axios.delete(`/comment/blogId/${blogId}/commentId/${commentId}`);
+      await authFetch.delete(
+        `/comment/blogId/${blogId}/commentId/${commentId}`
+      );
 
       dispatch({ type: DELETE_COMMENT_BLOG_POST_SUCCESS, payload: commentId });
 
@@ -192,6 +197,31 @@ const CommentProvider = ({ children }) => {
       if (error.response) {
         dispatch({
           type: DELETE_COMMENT_BLOG_POST_ERROR,
+          payload: error.response.data.msg,
+        });
+      }
+    }
+  };
+
+  const deleteAllCommentsBlogPost = async blogId => {
+    dispatch({ type: DELETE_ALL_COMMENTS_BLOG_POST_BEGIN });
+
+    try {
+      await authFetch.delete(`/comment/blogId/${blogId}`);
+
+      dispatch({
+        type: DELETE_ALL_COMMENTS_BLOG_POST_SUCCESS,
+        payload: blogId,
+      });
+
+      const updatedCommentInfo = commentInfoFromLocalStorage.filter(
+        comment => comment.blog !== blogId
+      );
+      localStorage.setItem("commentInfo", JSON.stringify(updatedCommentInfo));
+    } catch (error) {
+      if (error.response) {
+        dispatch({
+          type: DELETE_ALL_COMMENTS_BLOG_POST_ERROR,
           payload: error.response.data.msg,
         });
       }
@@ -219,6 +249,7 @@ const CommentProvider = ({ children }) => {
         editCommentBlogPost,
         deleteCommentBlogPost,
         resetCommentError,
+        deleteAllCommentsBlogPost,
       }}
     >
       {children}
