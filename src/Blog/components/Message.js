@@ -8,6 +8,7 @@ import {
   Button,
 } from "react-bootstrap";
 import ModalAdd from "./modals/ModalAdd";
+import { capitalizeName } from "../utils/helper";
 
 function Message({ userInfo, getAllBlogPosts, toggleShowMyPosts }) {
   const [showCard, setShowCard] = useState(false);
@@ -31,10 +32,7 @@ function Message({ userInfo, getAllBlogPosts, toggleShowMyPosts }) {
               <div className="d-flex justify-content-between">
                 <Card.Title>
                   {userInfo && userInfo.name
-                    ? `Welcome back, ${
-                        userInfo.name.charAt(0).toUpperCase() +
-                        userInfo.name.slice(1).toLowerCase()
-                      }`
+                    ? `Welcome back, ${capitalizeName(userInfo.name)}`
                     : "See what's new"}
                 </Card.Title>
                 <div className="d-flex justify-content-end">
@@ -80,32 +78,3 @@ function Message({ userInfo, getAllBlogPosts, toggleShowMyPosts }) {
 }
 
 export default Message;
-
-// const handleAddPost = (title, text) => {
-//   const newBlogData = [
-//     ...blogData,
-//     {
-//       id: blogData.length + 1,
-//       title: title,
-//       date: new Date().toLocaleString(),
-//       avatar: { id: 1, src: placeholderImage, alt: "Avatar Image" },
-//       content: text,
-//       images: [
-//         { id: 1, src: placeholderImage, alt: "Image 1" },
-//         { id: 2, src: placeholderImage, alt: "Image 2" },
-//         { id: 3, src: placeholderImage, alt: "Image 3" },
-//       ],
-//     },
-//   ];
-//   setBlogData(newBlogData);
-//   localStorage.setItem("blogData", JSON.stringify(newBlogData));
-// };
-
-// previously a part of ModalAdd props
-// onAddPost={handleAddPost}
-
-// previously an import for the above object
-// import placeholderImage from "../images/images.png";
-
-// previously props of the component, passed down from home page
-// blogData, setBlogData,

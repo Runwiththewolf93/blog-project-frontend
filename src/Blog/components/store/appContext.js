@@ -9,6 +9,9 @@ import {
   LOGIN_USER_BEGIN,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_ERROR,
+  GET_ALL_USERS_BEGIN,
+  GET_ALL_USERS_SUCCESS,
+  GET_ALL_USERS_ERROR,
   LOGOUT_USER,
   RESET_BLOG_POST,
   RESET_USER_ERROR,
@@ -43,6 +46,7 @@ const initialState = {
   isLoading: false,
   userInfo: userInfoFromLocalStorage,
   error: null,
+  users: [],
   success: false,
   isLoadingBlog: false,
   blogInfo: blogInfoFromLocalStorage,
@@ -124,6 +128,22 @@ const AppProvider = ({ children }) => {
       if (error.response) {
         dispatch({
           type: LOGIN_USER_ERROR,
+          payload: error.response.data.msg,
+        });
+      }
+    }
+  };
+
+  const getAllUsers = async () => {
+    dispatch({ type: GET_ALL_USERS_BEGIN });
+
+    try {
+      const { data } = await authFetch.get("auth/users");
+      dispatch({ type: GET_ALL_USERS_SUCCESS, payload: data });
+    } catch (error) {
+      if (error.response) {
+        dispatch({
+          type: GET_ALL_USERS_ERROR,
           payload: error.response.data.msg,
         });
       }
@@ -255,6 +275,7 @@ const AppProvider = ({ children }) => {
         // dispatch functions
         registerUser,
         loginUser,
+        getAllUsers,
         logoutUser,
         resetBlogPost,
         resetUserError,

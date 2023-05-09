@@ -1,51 +1,45 @@
 import { ProgressBar, Card } from "react-bootstrap";
+import { capitalizeName } from "../utils/helper";
+import { shuffle } from "lodash";
 
-const Progress = ({ userProfile }) => {
+const Progress = ({ userProfile, userInfo }) => {
+  const getRandomNumber = () => Math.floor(Math.random() * 81) + 20;
+
+  const labels = [
+    "Security Audit",
+    "Debugging Code",
+    "Security Testing",
+    "Product Infrastructure",
+    "Network Security",
+  ];
+
+  const variants = ["danger", "light", "warning", "success", "info"];
+
+  const shuffledLabels = shuffle(labels);
+  const shuffledVariants = shuffle(variants);
+
   return (
     <Card>
       <Card.Title>
-        {userProfile.name?.first} {userProfile.name?.last} spends most of{" "}
-        {userProfile.gender === "male" ? "his" : "her"} time on:
+        {capitalizeName(userInfo?.name) ||
+          `${userProfile.name?.first} ${userProfile.name?.last}`}{" "}
+        spends most of {userProfile.gender === "male" ? "his" : "her"} work time
+        on:
       </Card.Title>
       <div
         className="d-flex flex-column justify-content-between"
         style={{ gap: "0.5rem" }}
       >
-        <ProgressBar
-          striped
-          label="Security Audit Outsourcing"
-          variant="danger"
-          now={100}
-          style={{ height: "120%", fontSize: "1rem" }}
-        />
-        <ProgressBar
-          striped
-          label="Debugging"
-          variant="light"
-          now={80}
-          style={{ height: "120%", fontSize: "1rem" }}
-        />
-        <ProgressBar
-          striped
-          label="Security Testing"
-          variant="warning"
-          now={60}
-          style={{ height: "120%", fontSize: "1rem" }}
-        />
-        <ProgressBar
-          striped
-          label="Product Infrastructure"
-          variant="success"
-          now={40}
-          style={{ height: "120%", fontSize: "1rem" }}
-        />
-        <ProgressBar
-          striped
-          label="Network Security"
-          variant="info"
-          now={20}
-          style={{ height: "120%", fontSize: "1rem" }}
-        />
+        {shuffledLabels.map((label, index) => (
+          <ProgressBar
+            key={index}
+            striped
+            label={label}
+            variant={shuffledVariants[index]}
+            now={getRandomNumber()}
+            style={{ height: "120%", fontSize: "1rem" }}
+          />
+        ))}
       </div>
     </Card>
   );

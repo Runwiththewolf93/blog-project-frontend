@@ -1,8 +1,11 @@
 import { CardGroup, Card, Image } from "react-bootstrap";
 import useRandomUsers from "./hooks/useRandomUsers";
+import { getLatestAvatar } from "../utils/helper";
 
-const Relationships = ({ userProfile }) => {
+const Relationships = ({ userProfile, allUsers, userInfo, blogInfo }) => {
   const { users } = useRandomUsers();
+
+  const avatar = getLatestAvatar(blogInfo, userInfo);
 
   return (
     <Card className="mt-4">

@@ -29,9 +29,12 @@ const BlogPost = ({
           <Col xs={11} className="d-flex justify-content-between">
             <div className="d-flex align-items-center">
               <div>
-                <Card.Title>{post.title}</Card.Title>
-                <Card.Subtitle className="mb-2 text-muted">
+                <Card.Title className="mb-1">{post.title}</Card.Title>
+                <Card.Subtitle className="text-muted mt-0 mb-1">
                   {post.date.slice(0, 10)}
+                </Card.Subtitle>
+                <Card.Subtitle className="text-muted">
+                  {post.user.name}
                 </Card.Subtitle>
               </div>
               {showPostOverlay ? (
@@ -41,7 +44,7 @@ const BlogPost = ({
                 />
               ) : (
                 <Button
-                  className="ms-3 mb-1"
+                  className="ms-3 mb-2"
                   variant="light"
                   onClick={resetBlogPost}
                 >

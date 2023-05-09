@@ -1,12 +1,19 @@
-const extractIds = data => {
-  const ids = [];
-  data.forEach(post => {
-    ids.push(post.avatar.match(/[^/]*$/)[0].split("?")[0]);
-    post.images.forEach(image => {
-      ids.push(image.match(/[^/]*$/)[0].split("?")[0]);
-    });
-  });
-  return ids;
+const capitalizeName = name => {
+  const namesArray = name?.split(" ");
+  const capitalizedNames = namesArray?.map(
+    name => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
+  );
+  return capitalizedNames?.join(" ");
 };
 
-export { extractIds };
+const getLatestAvatar = (blogInfo, userInfo) => {
+  // Filter blog posts by user id and get the latest one
+  const latestBlogPost = blogInfo
+    ?.filter(post => post.user._id === userInfo?._id)
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
+
+  // Extract avatar from latest blog post
+  return latestBlogPost?.avatar;
+};
+
+export { capitalizeName, getLatestAvatar };

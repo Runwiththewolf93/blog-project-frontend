@@ -113,28 +113,3 @@ const ModalEdit = ({ post }) => {
 };
 
 export default ModalEdit;
-
-// previous state values
-// const [title, setTitle] = useState(post.title);
-// const [text, setText] = useState(post.content);
-
-// previous handle submit code
-// const postIndex = blogData.findIndex(item => item.id === post.id);
-
-//     const newPost = {
-//       ...post,
-//       title: title,
-//       content: text,
-//     };
-
-//     const newBlogData = [...blogData];
-//     newBlogData[postIndex] = newPost;
-
-//     setBlogData(newBlogData);
-
-// previously imported from parent component
-// { post, blogData, setBlogData }
-
-// No need for setting the initialValues, since we are editing
-// setValues(initialState);
-// import { initialState } from "./ModalAdd";

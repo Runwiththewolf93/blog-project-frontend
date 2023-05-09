@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { Container, Row, Col, Card, ListGroup, Alert } from "react-bootstrap";
 import { useAppContext } from "./store/appContext";
+import { useCommentContext } from "./store/commentContext";
 import BlogPost from "./BlogPost";
 import Spinner from "./Spinner";
 import CommentList from "./CommentList";
 import CommentForm from "./CommentForm";
-import { useCommentContext } from "./store/commentContext";
+import ScrollToTopPopup from "./ButtonOverlay";
 
 const scrollToBlogPost = postId => {
   const blogPostElement = document.getElementById(postId);
@@ -24,9 +25,22 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
   } = useCommentContext();
 
   useEffect(() => {
-    getAllComments();
+    userInfo && getAllComments();
     // eslint-disable-next-line
   }, []);
+
+  // When isLoadingBlog gets stuck
+  useEffect(() => {
+    let timeoutId;
+    if (userInfo && isLoadingBlog) {
+      timeoutId = setTimeout(() => {
+        window.location.reload();
+      }, 3000);
+    }
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [isLoadingBlog, userInfo]);
 
   if (!userInfo) {
     return (
@@ -108,6 +122,9 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
               </Card>
             </React.Fragment>
           ))}
+          <div className="d-flex justify-content-end">
+            <ScrollToTopPopup />
+          </div>
         </Col>
       </Row>
     </Container>
@@ -115,58 +132,3 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
 };
 
 export default Body;
-
-// no longer being passed into ModalEdit
-// blogData={blogData}
-// setBlogData={setBlogData}
-
-// no longer being passed down from parent
-// blogData,
-// setBlogData,
-
-// deletion now done on the backend, no need for it anymore
-// const handleDeletePost = postId => {
-//   const updatedBlogPost = blogData.filter(post => post.id !== postId);
-//   setBlogData(updatedBlogPost);
-//   localStorage.removeItem("blogData");
-// };
-
-// previously imported for the blog post
-// import placeholderImage from "../images/images.png";
-// import ModalEdit from "./modals/ModalEdit";
-// import PostOverlay from "./PostOverlay";
-// Image,
-// Button,
-
-// const commentsByBlogPost = {};
-// commentInfo.forEach(comment => {
-//   const blogId = comment.blog;
-//   if (!commentsByBlogPost[blogId]) {
-//     commentsByBlogPost[blogId] = [];
-//   }
-//   commentsByBlogPost[blogId].push(comment);
-// });
-
-// useEffect(() => {
-//   console.log(isLoadingBlog);
-// }, [isLoadingBlog]);
-
-// temporary hack to prevent application from hanging
-// useEffect(() => {
-//   if (isLoadingBlog || blogDataToShow === 0) {
-//     const timer = setTimeout(() => {
-//       setShouldReload(true);
-//     }, 3000);
-//     return () => clearTimeout(timer);
-//   } else {
-//     setShouldReload(false);
-//   }
-// }, [isLoadingBlog, blogDataToShow]);
-
-// useEffect(() => {
-//   if (shouldReload) {
-//     window.location.reload();
-//   }
-// }, [shouldReload]);
-
-// const [shouldReload, setShouldReload] = useState(false);

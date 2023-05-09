@@ -5,6 +5,9 @@ import {
   LOGIN_USER_BEGIN,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_ERROR,
+  GET_ALL_USERS_BEGIN,
+  GET_ALL_USERS_SUCCESS,
+  GET_ALL_USERS_ERROR,
   LOGOUT_USER,
   RESET_BLOG_POST,
   RESET_USER_ERROR,
@@ -69,6 +72,25 @@ const reducer = (state, action) => {
       isLoading: false,
       error: action.payload,
       success: false,
+    };
+  }
+  // get all users reducer
+  if (action.type === GET_ALL_USERS_BEGIN) {
+    return { ...state, isLoading: true };
+  }
+  if (action.type === GET_ALL_USERS_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      users: action.payload,
+      error: null,
+    };
+  }
+  if (action.type === GET_ALL_USERS_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      error: action.payload,
     };
   }
   // logout reducer

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { useAppContext } from "../store/appContext";
+import { getLatestAvatar } from "../../utils/helper";
 
 export const initialState = {
   title: "",
@@ -12,7 +13,7 @@ export const initialState = {
 const ModalAdd = () => {
   const [show, setShow] = useState(false);
   const [values, setValues] = useState(initialState);
-  const { addBlogPost } = useAppContext();
+  const { addBlogPost, blogInfo, userInfo } = useAppContext();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -37,6 +38,8 @@ const ModalAdd = () => {
     window.location.reload();
   };
 
+  const avatar = getLatestAvatar(blogInfo, userInfo);
+
   return (
     <>
       <Button variant="light" onClick={handleShow} className="mt-3">
@@ -60,11 +63,13 @@ const ModalAdd = () => {
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="AvatarInput">
-              <Form.Label>Avatar - Profile Image</Form.Label>
+              <Form.Label>
+                Profile Image - latest submitted image will appear here
+              </Form.Label>
               <Form.Control
                 type="text"
                 placeholder="URL to profile image"
-                value={values.avatar}
+                value={avatar || values.avatar}
                 onChange={handleChange}
                 name="avatar"
               />
@@ -114,21 +119,3 @@ const ModalAdd = () => {
 };
 
 export default ModalAdd;
-
-// imported from parent
-// { onAddPost }
-
-// part of state in component
-// const [title, setTitle] = useState("");
-// const [text, setText] = useState("");
-
-// part of handleSubmit
-// onAddPost(title, text);
-// setTitle("");
-// setText("");
-
-// part of formControl
-// value={title}
-// onChange={e => setTitle(e.target.value)}
-// value={text}
-// onChange={e => setText(e.target.value)}

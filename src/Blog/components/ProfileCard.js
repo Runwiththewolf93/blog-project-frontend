@@ -2,23 +2,33 @@ import { Card, ListGroup } from "react-bootstrap";
 import Spinner from "./Spinner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook, faInstagram } from "@fortawesome/free-brands-svg-icons";
+import { capitalizeName, getLatestAvatar } from "../utils/helper";
 
-const ProfileCard = ({ userProfile, userInfo }) => {
+const ProfileCard = ({ userProfile, userInfo, blogInfo, userCommentInfo }) => {
+  const sortedComments = userCommentInfo?.sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
+
+  const avatar = getLatestAvatar(blogInfo, userInfo);
+
   return (
     <Card>
       {userProfile ? (
         <>
-          <Card.Img variant="top" src={userProfile.picture?.large} />
+          <Card.Img variant="top" src={avatar || userProfile.picture?.large} />
           <Card.Body>
-            <Card.Title>
-              {userInfo?.name ||
+            <Card.Title className="mb-3">
+              {capitalizeName(userInfo?.name) ||
                 userProfile.name?.first + userProfile.name?.last}
             </Card.Title>
+            <Card.Subtitle className="text-muted mb-1">
+              Your most recent comment:
+            </Card.Subtitle>
             <Card.Text>
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iure
-              voluptates doloribus quasi inventore provident. Saepe reiciendis
-              doloremque consectetur distinctio sit facilis iste aut voluptas
-              quae!
+              {sortedComments.length > 0 &&
+              sortedComments[0]?.comment.length > 200
+                ? sortedComments[0]?.comment.slice(0, 200) + "..."
+                : sortedComments[0]?.comment}
             </Card.Text>
           </Card.Body>
           <ListGroup className="list-group-flush">
