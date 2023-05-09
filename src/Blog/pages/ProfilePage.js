@@ -44,8 +44,6 @@ const ProfilePage = () => {
     // eslint-disable-next-line
   }, []);
 
-  console.log(users);
-
   return (
     <Layout>
       <Container className="mt-5">

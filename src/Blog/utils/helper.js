@@ -16,4 +16,22 @@ const getLatestAvatar = (blogInfo, userInfo) => {
   return latestBlogPost?.avatar;
 };
 
-export { capitalizeName, getLatestAvatar };
+const processUsers = (allUsers, userInfo, blogInfo) => {
+  const filteredUsers = allUsers?.filter(user => user._id !== userInfo?._id);
+
+  const latestBlogPost = filteredUsers?.reduce((acc, user) => {
+    const latestPost = blogInfo
+      .filter(post => post.user._id === user._id)
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
+    return { ...acc, [user._id]: latestPost };
+  }, {});
+
+  const userAvatars = filteredUsers?.reduce((acc, user) => {
+    const latestPost = latestBlogPost[user._id];
+    return { ...acc, [user._id]: latestPost ? latestPost.avatar : null };
+  }, {});
+
+  return { filteredUsers, latestBlogPost, userAvatars };
+};
+
+export { capitalizeName, getLatestAvatar, processUsers };
