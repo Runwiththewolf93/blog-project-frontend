@@ -1,9 +1,8 @@
 import { Row, Col, Card, Image } from "react-bootstrap";
 import useUnsplashImages from "./hooks/useUnsplash";
+import { capitalizeFirstLetter, concatAndSliceData } from "../utils/helper";
 
 function Pictures({ userProfile, userInfo, blogInfo }) {
-  const images = useUnsplashImages("nature", 9);
-
   // filter blogInfo to only include objects that belong to logged in user
   const userBlogInfo = blogInfo.filter(blog => blog.user._id === userInfo._id);
 
@@ -12,10 +11,9 @@ function Pictures({ userProfile, userInfo, blogInfo }) {
     blog.images.map(image => ({ image, content: blog.content }))
   );
 
-  const displayedImages =
-    userImages?.length > 0 ? userImages.slice(0, 9) : images;
-
-  console.log(images);
+  const numAdditionalImages = Math.max(0, 9 - userImages.length);
+  const additionalImages = useUnsplashImages("nature", numAdditionalImages);
+  const images = concatAndSliceData(userImages, additionalImages, 9);
 
   return (
     <Card className="mt-4">
@@ -24,7 +22,7 @@ function Pictures({ userProfile, userInfo, blogInfo }) {
         include:
       </Card.Title>
       <Row md={3} className="g-3 mb-3 mx-1 me-3">
-        {displayedImages.map(image => (
+        {images.map(image => (
           <Col key={image.image || image.blur_hash}>
             <Card>
               <Image
@@ -35,9 +33,8 @@ function Pictures({ userProfile, userInfo, blogInfo }) {
               {image.content ? (
                 <Card.Text>{`${image.content.slice(0, 22)}...`}</Card.Text>
               ) : (
-                <Card.Text>{`${image.alt_description.slice(
-                  0,
-                  22
+                <Card.Text>{`${capitalizeFirstLetter(
+                  image.alt_description.slice(0, 22)
                 )}...`}</Card.Text>
               )}
             </Card>

@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const useRandomUsers = (gender = "male") => {
+const useRandomUsers = (gender = "male", results = 7) => {
   const [users, setUsers] = useState([]);
   const [userProfile, setUserProfile] = useState({});
 
   useEffect(() => {
     axios
-      .get("https://randomuser.me/api/?results=7")
+      .get(`https://randomuser.me/api/?results=${results}`)
       .then(({ data }) => setUsers(data.results));
-  }, []);
+  }, [results]);
 
   useEffect(() => {
     axios

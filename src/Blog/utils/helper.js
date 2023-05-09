@@ -1,3 +1,7 @@
+const capitalizeFirstLetter = str => {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+};
+
 const capitalizeName = name => {
   const namesArray = name?.split(" ");
   const capitalizedNames = namesArray?.map(
@@ -34,4 +38,18 @@ const processUsers = (allUsers, userInfo, blogInfo) => {
   return { filteredUsers, latestBlogPost, userAvatars };
 };
 
-export { capitalizeName, getLatestAvatar, processUsers };
+const concatAndSliceData = (data, additionalData, maxLength) => {
+  const numAdditionalData = Math.max(0, maxLength - data?.length);
+  const concatenatedData = data.concat(
+    additionalData?.slice(0, numAdditionalData)
+  );
+  return concatenatedData.slice(0, maxLength);
+};
+
+export {
+  capitalizeFirstLetter,
+  capitalizeName,
+  getLatestAvatar,
+  processUsers,
+  concatAndSliceData,
+};
