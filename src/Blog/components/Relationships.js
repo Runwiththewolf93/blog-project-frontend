@@ -27,7 +27,7 @@ const Relationships = ({ userProfile, allUsers, userInfo, blogInfo }) => {
           <Card key={user._id || user.id} className="text-center">
             <Image
               variant="top"
-              src={userAvatars?.[user._id] || user.picture.thumbnail}
+              src={userAvatars?.[user._id] || user.picture?.thumbnail}
               roundedCircle
               className="ms-2 me-2"
               style={{ objectFit: "cover", height: "70px", width: "70px" }}
