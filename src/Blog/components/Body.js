@@ -89,7 +89,9 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
                     onClick={() => scrollToBlogPost(post._id)}
                     style={{ cursor: "pointer" }}
                   >
-                    {post.title}
+                    {post.title.length > 20
+                      ? `${post.title.slice(0, 20)}...`
+                      : post.title}
                   </ListGroup.Item>
                 </React.Fragment>
               ))}
@@ -132,3 +134,5 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
 };
 
 export default Body;
+
+// see for tomorrow to move comments somewhere else /blogPost/:id

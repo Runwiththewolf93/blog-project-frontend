@@ -12,6 +12,7 @@ import {
   RESET_BLOG_POST,
   RESET_USER_ERROR,
   RESET_USER_SUCCESS,
+  RESET_BLOG_ERROR,
   GET_ALL_BLOG_POSTS_BEGIN,
   GET_ALL_BLOG_POSTS_SUCCESS,
   GET_ALL_BLOG_POSTS_ERROR,
@@ -116,9 +117,12 @@ const reducer = (state, action) => {
   if (action.type === RESET_USER_SUCCESS) {
     return { ...state, success: false };
   }
+  if (action.type === RESET_BLOG_ERROR) {
+    return { ...state, errorBlog: null };
+  }
   // list available blog posts
   if (action.type === GET_ALL_BLOG_POSTS_BEGIN) {
-    return { ...state, isLoadingBlog: true };
+    return { ...state, isLoadingBlog: true, errorBlog: null };
   }
   if (action.type === GET_ALL_BLOG_POSTS_SUCCESS) {
     return {

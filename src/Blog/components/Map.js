@@ -4,7 +4,7 @@ import { Icon } from "leaflet";
 import Spinner from "./Spinner";
 import "leaflet/dist/leaflet.css";
 
-const Map = ({ userProfile }) => {
+const Map = ({ userProfile, userInfo }) => {
   const position =
     userProfile && userProfile.location && userProfile.location.coordinates
       ? [
@@ -12,6 +12,8 @@ const Map = ({ userProfile }) => {
           parseFloat(userProfile.location.coordinates.longitude),
         ]
       : null;
+
+  console.log(userProfile);
 
   return (
     <div className="map" id="map">
@@ -34,7 +36,10 @@ const Map = ({ userProfile }) => {
                 })
               }
             >
-              <Popup>{userProfile.name.first} lives here!</Popup>
+              <Popup>
+                {userInfo.name.split(" ")[0] || userProfile.name.first} lives
+                here!
+              </Popup>
             </Marker>
           )}
         </MapContainer>

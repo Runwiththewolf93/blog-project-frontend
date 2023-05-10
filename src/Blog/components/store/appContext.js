@@ -16,6 +16,7 @@ import {
   RESET_BLOG_POST,
   RESET_USER_ERROR,
   RESET_USER_SUCCESS,
+  RESET_BLOG_ERROR,
   GET_ALL_BLOG_POSTS_BEGIN,
   GET_ALL_BLOG_POSTS_SUCCESS,
   GET_ALL_BLOG_POSTS_ERROR,
@@ -168,6 +169,10 @@ const AppProvider = ({ children }) => {
     dispatch({ type: RESET_USER_SUCCESS });
   };
 
+  const resetBlogError = () => {
+    dispatch({ type: RESET_BLOG_ERROR });
+  };
+
   const getAllBlogPosts = async () => {
     dispatch({ type: GET_ALL_BLOG_POSTS_BEGIN });
 
@@ -280,6 +285,7 @@ const AppProvider = ({ children }) => {
         resetBlogPost,
         resetUserError,
         resetUserSuccess,
+        resetBlogError,
         getAllBlogPosts,
         getSingleBlogPost,
         addBlogPost,

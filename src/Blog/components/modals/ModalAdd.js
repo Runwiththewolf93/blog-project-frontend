@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Alert, Button, Form, Modal, Spinner } from "react-bootstrap";
 import { useAppContext } from "../store/appContext";
 import { getLatestAvatar } from "../../utils/helper";
 
@@ -13,7 +13,8 @@ export const initialState = {
 const ModalAdd = () => {
   const [show, setShow] = useState(false);
   const [values, setValues] = useState(initialState);
-  const { addBlogPost, blogInfo, userInfo } = useAppContext();
+  const { isLoadingBlog, addBlogPost, errorBlog, blogInfo, userInfo } =
+    useAppContext();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -31,11 +32,17 @@ const ModalAdd = () => {
   const handleSubmit = e => {
     e.preventDefault();
 
+    if (!values.avatar && avatar) {
+      values.avatar = avatar;
+    }
+
     addBlogPost(values);
     setValues(initialState);
 
-    handleClose();
-    window.location.reload();
+    if (!isLoadingBlog && !errorBlog) {
+      handleClose();
+      window.location.reload();
+    }
   };
 
   const avatar = getLatestAvatar(blogInfo, userInfo);
@@ -104,13 +111,25 @@ const ModalAdd = () => {
               </Form.Group>
             ))}
           </Modal.Body>
-          <Modal.Footer className="d-flex justify-content-between">
-            <Button type="button" variant="secondary" onClick={handleClose}>
-              Close
-            </Button>
-            <Button type="submit" variant="secondary">
-              Add Post
-            </Button>
+          <Modal.Footer className="d-block">
+            {isLoadingBlog ? (
+              <div className="d-flex justify-content-center">
+                <Spinner animation="border" size="sm" />
+              </div>
+            ) : errorBlog ? (
+              <div className="d-flex justify-content-center">
+                <Alert variant="danger">{errorBlog}</Alert>
+              </div>
+            ) : (
+              <div className="d-flex justify-content-between">
+                <Button type="button" variant="secondary" onClick={handleClose}>
+                  Close
+                </Button>
+                <Button type="submit" variant="secondary">
+                  Add Post
+                </Button>
+              </div>
+            )}
           </Modal.Footer>
         </Form>
       </Modal>

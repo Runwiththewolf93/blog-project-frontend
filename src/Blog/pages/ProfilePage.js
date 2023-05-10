@@ -71,7 +71,7 @@ const ProfilePage = () => {
             />
           </Col>
           <Col>
-            <Map userProfile={userProfile} />
+            <Map userProfile={userProfile} userInfo={userInfo} />
             <Information userProfile={userProfile} />
           </Col>
         </Row>
