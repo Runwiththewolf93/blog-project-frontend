@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
+import { Modal, Button, Form, Spinner, Alert } from "react-bootstrap";
 import { useAppContext } from "../store/appContext";
 
 const ModalEdit = ({ post }) => {
   const [show, setShow] = useState(false);
   const [values, setValues] = useState(post);
-  const { editBlogPost } = useAppContext();
+  const { isLoadingBlog, editBlogPost, errorBlog } = useAppContext();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -32,8 +32,10 @@ const ModalEdit = ({ post }) => {
 
     editBlogPost({ id: values._id, updatedValues });
 
-    handleClose();
-    window.location.reload();
+    if (!isLoadingBlog && !errorBlog) {
+      handleClose();
+      window.location.reload();
+    }
   };
 
   return (
@@ -98,13 +100,25 @@ const ModalEdit = ({ post }) => {
               </Form.Group>
             ))}
           </Modal.Body>
-          <Modal.Footer className="d-flex justify-content-between">
-            <Button type="button" variant="secondary" onClick={handleClose}>
-              Cancel
-            </Button>
-            <Button type="submit" variant="secondary">
-              Post
-            </Button>
+          <Modal.Footer className="d-block">
+            {isLoadingBlog ? (
+              <div className="d-flex justify-content-center">
+                <Spinner animation="border" size="sm" />
+              </div>
+            ) : errorBlog ? (
+              <div className="d-flex justify-content-center">
+                <Alert variant="danger">{errorBlog}</Alert>
+              </div>
+            ) : (
+              <div className="d-flex justify-content-between">
+                <Button type="button" variant="secondary" onClick={handleClose}>
+                  Cancel
+                </Button>
+                <Button type="submit" variant="secondary">
+                  Edit Post
+                </Button>
+              </div>
+            )}
           </Modal.Footer>
         </Form>
       </Modal>

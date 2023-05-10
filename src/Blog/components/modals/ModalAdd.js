@@ -123,7 +123,7 @@ const ModalAdd = () => {
             ) : (
               <div className="d-flex justify-content-between">
                 <Button type="button" variant="secondary" onClick={handleClose}>
-                  Close
+                  Cancel
                 </Button>
                 <Button type="submit" variant="secondary">
                   Add Post
