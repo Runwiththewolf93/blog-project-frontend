@@ -117,6 +117,7 @@ const reducer = (state, action) => {
   if (action.type === RESET_USER_SUCCESS) {
     return { ...state, success: false };
   }
+  // reset blog error
   if (action.type === RESET_BLOG_ERROR) {
     return { ...state, errorBlog: null };
   }

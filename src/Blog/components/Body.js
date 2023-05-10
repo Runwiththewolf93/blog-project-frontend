@@ -22,6 +22,7 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
     editCommentBlogPost,
     deleteCommentBlogPost,
     deleteAllCommentsBlogPost,
+    commentInfo,
   } = useCommentContext();
 
   useEffect(() => {
@@ -109,6 +110,7 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
                 getSingleBlogPost={getSingleBlogPost}
                 showPostOverlay={true}
                 deleteAllCommentsBlogPost={deleteAllCommentsBlogPost}
+                commentInfo={commentInfo}
               />
               <Card className="mb-3">
                 <CommentList

@@ -12,6 +12,7 @@ const BlogPost = ({
   showPostOverlay,
   resetBlogPost,
   deleteAllCommentsBlogPost,
+  commentInfo,
 }) => {
   return (
     <Card className="mb-1">
@@ -61,7 +62,9 @@ const BlogPost = ({
                     className="ms-3"
                     onClick={() => {
                       deleteBlogPost(post._id);
-                      deleteAllCommentsBlogPost(post._id);
+                      if (commentInfo.blog === post._id) {
+                        deleteAllCommentsBlogPost(post._id);
+                      }
                     }}
                   >
                     Delete Post
