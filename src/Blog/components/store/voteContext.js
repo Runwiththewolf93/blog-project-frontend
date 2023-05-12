@@ -96,11 +96,10 @@ const VoteProvider = ({ children }) => {
 
       // Parse the data received from the backend
       const { vote, totalVotes } = data;
-      localStorage.setItem("singleBlogVote", JSON.stringify(vote));
 
       // Get the existing vote object from the voteInfo array
       const existingVote = state.voteInfo.find(
-        v => v.post === vote.post && v.user._id === vote.user
+        v => v.post === vote.post && v.user === vote.user
       );
 
       // Update the totalVotes property of the blogInfo object
@@ -250,5 +249,3 @@ const useVoteContext = () => {
 };
 
 export { VoteProvider, initialState, useVoteContext };
-
-// For tomorrow, check if the two functions work

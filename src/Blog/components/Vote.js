@@ -5,13 +5,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 
 const Vote = ({ postId }) => {
-  const { blogInfo } = useAppContext();
+  const { userInfo, blogInfo } = useAppContext();
   const { voteInfo, updateBlogVoteCount } = useVoteContext();
 
   const blogPost = blogInfo?.find(post => post._id === postId);
+
+  // Find the Vote object for the logged-in user
+  const currentUserVote = voteInfo?.filter(
+    vote => vote.post === blogPost._id && vote.user === userInfo._id
+  );
+  const currVote = currentUserVote?.reduce((acc, curr) => acc + curr.vote, 0);
+
   const postVotes = voteInfo?.filter(vote => vote.post === blogPost._id);
   const totalVotes = postVotes?.reduce((acc, curr) => acc + curr.vote, 0);
-  const [currentVote, setCurrentVote] = useState(0);
+  const [currentVote, setCurrentVote] = useState(currVote);
 
   const handleUpVoteClick = () => {
     if (currentVote === 1) {
@@ -32,6 +39,8 @@ const Vote = ({ postId }) => {
       setCurrentVote(-1);
     }
   };
+
+  console.log(currVote);
 
   return (
     <div className="d-flex align-items-center">
