@@ -3,6 +3,7 @@ import { Card, Image, Row, Col, Button } from "react-bootstrap";
 import placeholderImage from "../images/placeholder-image.png";
 import PostOverlay from "./PostOverlay";
 import ModalEdit from "./modals/ModalEdit";
+import Vote from "./Vote";
 
 const BlogPost = ({
   post,
@@ -18,6 +19,12 @@ const BlogPost = ({
     <Card className="mb-1">
       <Card.Body>
         <Row>
+          <Col
+            xs={1}
+            className="d-flex justify-content-center align-items-center"
+          >
+            <Vote postId={post._id} />
+          </Col>
           <Col xs={1}>
             <Image
               style={{ width: "60px", height: "60px", objectFit: "cover" }}
@@ -27,7 +34,7 @@ const BlogPost = ({
               rounded
             />
           </Col>
-          <Col xs={11} className="d-flex justify-content-between">
+          <Col xs={10} className="d-flex justify-content-between">
             <div className="d-flex align-items-center">
               <div>
                 <Card.Title className="mb-1">{post.title}</Card.Title>

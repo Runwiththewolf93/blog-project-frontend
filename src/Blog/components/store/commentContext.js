@@ -1,6 +1,6 @@
 import React, { useReducer, useContext } from "react";
 
-import commentReducer from "./commentReducers";
+import commentReducer from "./commentReducer";
 import axios from "axios";
 import {
   GET_ALL_COMMENTS_BLOG_POST_BEGIN,
@@ -29,15 +29,15 @@ import {
 } from "./actions";
 import { userInfoFromLocalStorage } from "./appContext";
 
-const commentInfoFromLocalStorage =
+export const commentInfoFromLocalStorage =
   JSON.parse(localStorage.getItem("commentInfo")) || [];
 
 const initialState = {
+  userInfo: userInfoFromLocalStorage,
   isLoadingComment: false,
   commentInfo: commentInfoFromLocalStorage,
-  errorComment: null,
-  userInfo: userInfoFromLocalStorage,
   blogCommentInfo: [],
+  errorComment: null,
   isLoadingUserComment: false,
   userCommentInfo: [],
   errorUserComment: null,

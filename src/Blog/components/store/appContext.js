@@ -1,6 +1,6 @@
 import React, { useReducer, useContext } from "react";
 
-import reducer from "./reducers";
+import appReducer from "./appReducer";
 import axios from "axios";
 import {
   REGISTER_USER_BEGIN,
@@ -37,28 +37,25 @@ import {
 export const userInfoFromLocalStorage =
   JSON.parse(localStorage.getItem("userInfo")) || null;
 
-const blogInfoFromLocalStorage =
+export const blogInfoFromLocalStorage =
   JSON.parse(localStorage.getItem("blogInfo")) || [];
-
-const blogPostFromLocalStorage =
-  JSON.parse(localStorage.getItem("blogPost")) || null;
 
 const initialState = {
   isLoading: false,
   userInfo: userInfoFromLocalStorage,
-  error: null,
   users: [],
+  error: null,
   success: false,
   isLoadingBlog: false,
   blogInfo: blogInfoFromLocalStorage,
+  blogPost: {},
   errorBlog: null,
-  blogPost: blogPostFromLocalStorage,
 };
 
 const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(appReducer, initialState);
 
   // axios
   const authFetch = axios.create({
@@ -198,7 +195,6 @@ const AppProvider = ({ children }) => {
       const { data } = await axios.get(`/api/v1/blog/${id}`);
 
       dispatch({ type: GET_SINGLE_BLOG_POST_SUCCESS, payload: data });
-      localStorage.setItem("blogPost", JSON.stringify(data));
     } catch (error) {
       if (error.response) {
         dispatch({

@@ -32,7 +32,7 @@ import {
 
 import { initialState } from "./appContext";
 
-const reducer = (state, action) => {
+const appReducer = (state, action) => {
   // register reducer
   if (action.type === REGISTER_USER_BEGIN) {
     return { ...state, isLoading: true };
@@ -194,4 +194,4 @@ const reducer = (state, action) => {
   return state;
 };
 
-export default reducer;
+export default appReducer;

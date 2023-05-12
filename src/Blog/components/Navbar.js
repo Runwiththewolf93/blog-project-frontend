@@ -51,11 +51,11 @@ function Navigation({ handleSearch }) {
                 Information
               </Link>
               {userInfo ? (
-                <Link href="#" className="nav-link" onClick={logoutUser}>
+                <Link to="/" className="nav-link" onClick={logoutUser}>
                   Logout
                 </Link>
               ) : (
-                <Link to="#" className="nav-link" onClick={handleLoginClick}>
+                <Link to="/" className="nav-link" onClick={handleLoginClick}>
                   Login
                 </Link>
               )}

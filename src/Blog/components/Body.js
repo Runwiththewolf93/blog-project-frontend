@@ -7,6 +7,7 @@ import Spinner from "./Spinner";
 import CommentList from "./CommentList";
 import CommentForm from "./CommentForm";
 import ScrollToTopPopup from "./ButtonOverlay";
+import { useVoteContext } from "./store/voteContext";
 
 const scrollToBlogPost = postId => {
   const blogPostElement = document.getElementById(postId);
@@ -24,9 +25,10 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
     deleteAllCommentsBlogPost,
     commentInfo,
   } = useCommentContext();
+  const { getAllVotes } = useVoteContext();
 
   useEffect(() => {
-    userInfo && getAllComments();
+    userInfo && getAllComments() && getAllVotes();
     // eslint-disable-next-line
   }, []);
 
@@ -119,10 +121,7 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
                   deleteCommentBlogPost={deleteCommentBlogPost}
                   userInfo={userInfo}
                 />
-                <CommentForm
-                  blogId={post._id}
-                  getAllComments={getAllComments}
-                />
+                <CommentForm blogId={post._id} />
               </Card>
             </React.Fragment>
           ))}
