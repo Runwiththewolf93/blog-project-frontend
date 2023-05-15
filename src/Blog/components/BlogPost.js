@@ -1,108 +1,70 @@
 import React from "react";
-import { Card, Image, Row, Col, Button } from "react-bootstrap";
-import placeholderImage from "../images/placeholder-image.png";
-import PostOverlay from "./PostOverlay";
-import ModalEdit from "./modals/ModalEdit";
+import { Card, Row, Col } from "react-bootstrap";
 import Vote from "./Vote";
+import Avatar from "./Avatar";
+import UserInfo from "./UserInfo";
+import PostButton from "./PostButton";
+import UserActions from "./UserActions";
+import PostImages from "./PostImages";
+import BlogPostWrapper from "./BlogPostWrapper";
 
 const BlogPost = ({
   post,
   userInfo,
+  blogInfo,
+  commentInfo,
+  voteInfo,
   deleteBlogPost,
   getSingleBlogPost,
   showPostOverlay,
   resetBlogPost,
   deleteAllCommentsBlogPost,
-  commentInfo,
+  updateBlogVoteCount,
 }) => {
   return (
-    <Card className="mb-1">
-      <Card.Body>
-        <Row>
-          <Col
-            xs={1}
-            className="d-flex justify-content-center align-items-center"
-          >
-            <Vote postId={post._id} />
-          </Col>
-          <Col xs={1}>
-            <Image
-              style={{ width: "60px", height: "60px", objectFit: "cover" }}
-              src={post.avatar || placeholderImage}
-              alt={`${post.title} Image 1`}
-              fluid
-              rounded
+    <BlogPostWrapper>
+      <Row>
+        <Col
+          xs={1}
+          className="d-flex justify-content-center align-items-center"
+        >
+          <Vote
+            postId={post._id}
+            userInfo={userInfo}
+            blogInfo={blogInfo}
+            voteInfo={voteInfo}
+            updateBlogVoteCount={updateBlogVoteCount}
+          />
+        </Col>
+        <Col xs={1}>
+          <Avatar src={post.avatar} alt={`${post.title} Image 1`} />
+        </Col>
+        <Col xs={10} className="d-flex justify-content-between">
+          <div className="d-flex align-items-center">
+            <UserInfo
+              title={post.title}
+              date={post.date}
+              name={post.user.name}
             />
-          </Col>
-          <Col xs={10} className="d-flex justify-content-between">
-            <div className="d-flex align-items-center">
-              <div>
-                <Card.Title className="mb-1">{post.title}</Card.Title>
-                <Card.Subtitle className="text-muted mt-0 mb-1">
-                  {post.date.slice(0, 10)}
-                </Card.Subtitle>
-                <Card.Subtitle className="text-muted">
-                  {post.user.name}
-                </Card.Subtitle>
-              </div>
-              {showPostOverlay ? (
-                <PostOverlay
-                  getSingleBlogPost={getSingleBlogPost}
-                  postId={post._id}
-                />
-              ) : (
-                <Button
-                  className="ms-3 mb-2"
-                  variant="light"
-                  onClick={resetBlogPost}
-                >
-                  Unpin Post
-                </Button>
-              )}
-            </div>
-            <div className="d-flex align-items-center">
-              {userInfo._id === post.user._id && (
-                <>
-                  <ModalEdit post={post} />
-                  <Button
-                    variant="light"
-                    className="ms-3"
-                    onClick={() => {
-                      deleteBlogPost(post._id);
-                      if (commentInfo.blog === post._id) {
-                        deleteAllCommentsBlogPost(post._id);
-                      }
-                    }}
-                  >
-                    Delete Post
-                  </Button>
-                </>
-              )}
-            </div>
-          </Col>
-        </Row>
-        <Card.Text className="mt-3">{post.content}</Card.Text>
-        {post.images && (
-          <Row>
-            {post.images.map((image, idx) => (
-              <Col key={idx} xs={12} md={4} className="text-center">
-                <Image
-                  src={image || placeholderImage}
-                  alt={`${post.title} Image ${idx + 2}`}
-                  fluid
-                  rounded
-                  style={{
-                    width: "100px",
-                    height: "100px",
-                    objectFit: "cover",
-                  }}
-                />
-              </Col>
-            ))}
-          </Row>
-        )}
-      </Card.Body>
-    </Card>
+            <PostButton
+              showPostOverlay={showPostOverlay}
+              getSingleBlogPost={getSingleBlogPost}
+              postId={post._id}
+              resetBlogPost={resetBlogPost}
+            />
+          </div>
+          <UserActions
+            userInfo={userInfo}
+            post={post}
+            deleteBlogPost={deleteBlogPost}
+            commentInfo={commentInfo}
+            deleteAllCommentsBlogPost={deleteAllCommentsBlogPost}
+          />
+        </Col>
+      </Row>
+      <Card.Text className="mt-3">{post.content}</Card.Text>
+      {post.images && <PostImages images={post.images} title={post.title} />}
+    </BlogPostWrapper>
   );
 };
 

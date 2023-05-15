@@ -1,23 +1,16 @@
 import React, { useEffect } from "react";
-import { Container, Row, Col, Card, ListGroup, Alert } from "react-bootstrap";
+import { Container, Row, Col, Alert } from "react-bootstrap";
 import { useAppContext } from "./store/appContext";
 import { useCommentContext } from "./store/commentContext";
-import BlogPost from "./BlogPost";
-import Spinner from "./Spinner";
-import CommentList from "./CommentList";
-import CommentForm from "./CommentForm";
-import ScrollToTopPopup from "./ButtonOverlay";
 import { useVoteContext } from "./store/voteContext";
-
-const scrollToBlogPost = postId => {
-  const blogPostElement = document.getElementById(postId);
-  if (blogPostElement) {
-    blogPostElement.scrollIntoView({ behavior: "smooth" });
-  }
-};
+import BlogSections from "./BlogSections";
+import BlogPosts from "./BlogPosts";
+import Spinner from "./Spinner";
+import ScrollToTopPopup from "./ButtonOverlay";
 
 const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
-  const { getSingleBlogPost, isLoadingBlog, errorBlog } = useAppContext();
+  const { blogInfo, getSingleBlogPost, isLoadingBlog, errorBlog } =
+    useAppContext();
   const {
     getAllComments,
     editCommentBlogPost,
@@ -25,7 +18,7 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
     deleteAllCommentsBlogPost,
     commentInfo,
   } = useCommentContext();
-  const { getAllVotes } = useVoteContext();
+  const { voteInfo, getAllVotes, updateBlogVoteCount } = useVoteContext();
 
   useEffect(() => {
     userInfo && getAllComments() && getAllVotes();
@@ -83,48 +76,22 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
     <Container>
       <Row className="my-3" id={`category1`}>
         <Col md={2}>
-          <Card>
-            <Card.Header as="h5">Blog Sections</Card.Header>
-            <ListGroup variant="flush">
-              {blogDataToShow.map(post => (
-                <React.Fragment key={post._id}>
-                  <ListGroup.Item
-                    onClick={() => scrollToBlogPost(post._id)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    {post.title.length > 20
-                      ? `${post.title.slice(0, 20)}...`
-                      : post.title}
-                  </ListGroup.Item>
-                </React.Fragment>
-              ))}
-            </ListGroup>
-          </Card>
+          <BlogSections blogDataToShow={blogDataToShow} />
         </Col>
         <Col md={10}>
-          {blogDataToShow.map(post => (
-            <React.Fragment key={post._id}>
-              <div id={post._id}></div>
-              <BlogPost
-                post={post}
-                userInfo={userInfo}
-                deleteBlogPost={deleteBlogPost}
-                getSingleBlogPost={getSingleBlogPost}
-                showPostOverlay={true}
-                deleteAllCommentsBlogPost={deleteAllCommentsBlogPost}
-                commentInfo={commentInfo}
-              />
-              <Card className="mb-3">
-                <CommentList
-                  blogId={post._id}
-                  editCommentBlogPost={editCommentBlogPost}
-                  deleteCommentBlogPost={deleteCommentBlogPost}
-                  userInfo={userInfo}
-                />
-                <CommentForm blogId={post._id} />
-              </Card>
-            </React.Fragment>
-          ))}
+          <BlogPosts
+            blogDataToShow={blogDataToShow}
+            blogInfo={blogInfo}
+            userInfo={userInfo}
+            commentInfo={commentInfo}
+            voteInfo={voteInfo}
+            deleteBlogPost={deleteBlogPost}
+            getSingleBlogPost={getSingleBlogPost}
+            deleteAllCommentsBlogPost={deleteAllCommentsBlogPost}
+            updateBlogVoteCount={updateBlogVoteCount}
+            editCommentBlogPost={editCommentBlogPost}
+            deleteCommentBlogPost={deleteCommentBlogPost}
+          />
           <div className="d-flex justify-content-end">
             <ScrollToTopPopup />
           </div>

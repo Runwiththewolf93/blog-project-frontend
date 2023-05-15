@@ -40,6 +40,7 @@ const voteReducer = (state, action) => {
   if (action.type === UPDATE_BLOG_VOTE_COUNT_SUCCESS) {
     return {
       ...state,
+      isLoadingVote: false,
       voteInfo: action.payload.updatedVoteInfo,
       blogInfo: action.payload.updatedBlogInfo,
       errorVote: false,
@@ -55,6 +56,7 @@ const voteReducer = (state, action) => {
   if (action.type === UPDATE_COMMENT_VOTE_COUNT_SUCCESS) {
     return {
       ...state,
+      isLoadingVote: false,
       voteInfo: action.payload.updatedVoteInfo,
       commentInfo: action.payload.updatedCommentInfo,
       errorVote: false,

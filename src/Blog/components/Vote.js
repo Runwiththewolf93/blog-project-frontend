@@ -1,13 +1,17 @@
 import React, { useState } from "react";
-import { useAppContext } from "./store/appContext";
 import { useVoteContext } from "./store/voteContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { Alert, Spinner } from "react-bootstrap";
 
-const Vote = ({ postId }) => {
-  const { userInfo, blogInfo } = useAppContext();
-  const { voteInfo, updateBlogVoteCount } = useVoteContext();
-
+const Vote = ({
+  postId,
+  userInfo,
+  blogInfo,
+  voteInfo,
+  updateBlogVoteCount,
+}) => {
+  const { isLoadingVote, errorVote } = useVoteContext();
   const blogPost = blogInfo?.find(post => post._id === postId);
 
   // Find the Vote object for the logged-in user
@@ -42,7 +46,11 @@ const Vote = ({ postId }) => {
 
   console.log(currVote);
 
-  return (
+  return isLoadingVote ? (
+    <Spinner />
+  ) : errorVote ? (
+    <Alert variant="danger">Error</Alert>
+  ) : (
     <div className="d-flex align-items-center">
       <FontAwesomeIcon
         icon={faArrowUp}
