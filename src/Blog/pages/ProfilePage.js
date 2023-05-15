@@ -20,7 +20,6 @@ const ProfilePage = () => {
     userInfo,
     blogInfo,
     users,
-    deleteBlogPost,
     getSingleBlogPost,
     resetBlogPost,
     getAllUsers,
@@ -78,7 +77,6 @@ const ProfilePage = () => {
         <UserComments
           userInfo={userInfo}
           blogPost={blogPost}
-          deleteBlogPost={deleteBlogPost}
           getSingleBlogPost={getSingleBlogPost}
           resetBlogPost={resetBlogPost}
           loadingComment={loadingComment}

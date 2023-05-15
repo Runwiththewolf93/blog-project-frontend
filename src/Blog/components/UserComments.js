@@ -1,116 +1,78 @@
 import { useState } from "react";
-import { Alert, ListGroup, Button, Card, Row, Col } from "react-bootstrap";
-import BlogPost from "./BlogPost";
+import { Link } from "react-router-dom";
+import { Alert, ListGroup } from "react-bootstrap";
 import Spinner from "./Spinner";
-import CardWrapper from "./BlogPostWrapper";
-import Avatar from "./Avatar";
-import UserInfo from "./UserInfo";
-import PostButton from "./PostButton";
-import PostImages from "./PostImages";
+import PinnedBlogPost from "./PinnedBlogPost";
+import CommentsOverview from "./CommentsOverview";
 
 const UserComments = ({
   userInfo,
   blogPost,
-  deleteBlogPost,
   getSingleBlogPost,
   resetBlogPost,
   loadingComment,
   errorUserComment,
   userCommentInfo,
 }) => {
-  const [sortByTitle, setSortByTitle] = useState(false);
-  const [sortByDate, setSortByDate] = useState(false);
+  const [sortType, setSortType] = useState("date");
   const [titleSortOrder, setTitleSortOrder] = useState("asc");
   const [dateSortOrder, setDateSortOrder] = useState("asc");
 
   const sortByTitleFunction = () => {
-    setSortByDate(false);
-    setSortByTitle(!sortByTitle);
     setTitleSortOrder(titleSortOrder === "asc" ? "desc" : "asc");
+    setSortType("title");
   };
 
   const sortByDateFunction = () => {
-    setSortByTitle(false);
-    setSortByDate(!sortByDate);
     setDateSortOrder(dateSortOrder === "asc" ? "desc" : "asc");
+    setSortType("date");
   };
+
+  if (!userInfo) {
+    return (
+      <Alert variant="info" className="fs-5 text-center mb-4">
+        Please log in to view available blog posts and comments
+      </Alert>
+    );
+  }
 
   return (
     <>
-      {!userInfo && (
-        <Alert variant="info" className="fs-5 text-center mb-4">
-          Please log in to view available blog posts and comments
-        </Alert>
+      {!blogPost === {} ? (
+        <div className="mb-5">
+          <PinnedBlogPost {...{ blogPost, getSingleBlogPost, resetBlogPost }} />
+        </div>
+      ) : (
+        <ListGroup className="mb-3">
+          <ListGroup.Item variant="primary" className="fs-5">
+            No favorite blog post? Got to the home page to pick one out{" "}
+            <Link to="/">now</Link>!
+          </ListGroup.Item>
+        </ListGroup>
       )}
-      {userInfo && (
-        <>
-          {blogPost && (
-            <>
-              <h3>Pinned blog post:</h3>
-              <BlogPost
-                post={blogPost}
-                userInfo={userInfo}
-                deleteBlogPost={deleteBlogPost}
-                getSingleBlogPost={getSingleBlogPost}
-                showPostOverlay={false}
-                resetBlogPost={resetBlogPost}
-              />
-            </>
-          )}
-          {loadingComment && (
-            <div className="d-flex justify-content-center mb-3">
-              <Spinner />
-            </div>
-          )}
-          {errorUserComment && (
-            <ListGroup className="mb-3">
-              <ListGroup.Item variant="danger">
-                {errorUserComment}
-              </ListGroup.Item>
-            </ListGroup>
-          )}
-          {!loadingComment && !errorUserComment && (
-            <>
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <h3 className="mt-3">
-                  An overview of all your submitted comments:
-                </h3>
-                <div className="mt-3">
-                  <Button variant="link" onClick={sortByTitleFunction}>
-                    Sort by title {titleSortOrder === "asc" ? "▲" : "▼"}
-                  </Button>
-                  <Button variant="link" onClick={sortByDateFunction}>
-                    Sort by date {dateSortOrder === "asc" ? "▲" : "▼"}
-                  </Button>
-                </div>
-              </div>
-              {userCommentInfo
-                .sort((a, b) => {
-                  if (sortByTitle) {
-                    return (
-                      (titleSortOrder === "asc" ? 1 : -1) *
-                      a.blog.title.localeCompare(b.blog.title)
-                    );
-                  }
-                  return (
-                    (dateSortOrder === "asc" ? 1 : -1) *
-                    (new Date(b.createdAt) - new Date(a.createdAt))
-                  );
-                })
-                .map(comment => (
-                  <Card key={comment._id} className="mb-3">
-                    <Card.Body>
-                      <Card.Title>{comment.blog?.title}</Card.Title>
-                      <Card.Subtitle className="mb-3 text-muted">
-                        {new Date(comment?.createdAt).toLocaleString()}
-                      </Card.Subtitle>
-                      <Card.Text>{comment?.comment}</Card.Text>
-                    </Card.Body>
-                  </Card>
-                ))}
-            </>
-          )}
-        </>
+      {loadingComment && (
+        <div className="d-flex justify-content-center mb-3">
+          <Spinner />
+        </div>
+      )}
+      {errorUserComment && (
+        <ListGroup className="mb-3">
+          <ListGroup.Item variant="danger" className="fs-5">
+            {errorUserComment}
+          </ListGroup.Item>
+        </ListGroup>
+      )}
+      {!loadingComment && !errorUserComment && (
+        <CommentsOverview
+          {...{
+            userCommentInfo,
+            sortType,
+            titleSortOrder,
+            dateSortOrder,
+            sortByTitleFunction,
+            sortByDateFunction,
+          }}
+        />
       )}
     </>
   );

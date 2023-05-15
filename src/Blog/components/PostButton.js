@@ -13,7 +13,7 @@ const PostButton = ({
     );
   } else {
     return (
-      <Button className="ms-3 mb-2" variant="light" onClick={resetBlogPost}>
+      <Button className="ms-3" variant="light" onClick={resetBlogPost}>
         Unpin Post
       </Button>
     );

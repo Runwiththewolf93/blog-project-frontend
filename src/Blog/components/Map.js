@@ -13,8 +13,6 @@ const Map = ({ userProfile, userInfo }) => {
         ]
       : null;
 
-  console.log(userProfile);
-
   return (
     <div className="map" id="map">
       {!position ? (
