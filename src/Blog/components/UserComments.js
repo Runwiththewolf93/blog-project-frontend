@@ -1,7 +1,12 @@
 import { useState } from "react";
-import { Alert, ListGroup, Button, Card } from "react-bootstrap";
+import { Alert, ListGroup, Button, Card, Row, Col } from "react-bootstrap";
 import BlogPost from "./BlogPost";
 import Spinner from "./Spinner";
+import CardWrapper from "./BlogPostWrapper";
+import Avatar from "./Avatar";
+import UserInfo from "./UserInfo";
+import PostButton from "./PostButton";
+import PostImages from "./PostImages";
 
 const UserComments = ({
   userInfo,

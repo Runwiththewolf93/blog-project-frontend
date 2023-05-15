@@ -40,6 +40,9 @@ export const userInfoFromLocalStorage =
 export const blogInfoFromLocalStorage =
   JSON.parse(localStorage.getItem("blogInfo")) || [];
 
+const blogPostFromLocalStorage =
+  JSON.parse(localStorage.getItem("blogPost")) || {};
+
 const initialState = {
   isLoading: false,
   userInfo: userInfoFromLocalStorage,
@@ -48,7 +51,7 @@ const initialState = {
   success: false,
   isLoadingBlog: false,
   blogInfo: blogInfoFromLocalStorage,
-  blogPost: {},
+  blogPost: blogPostFromLocalStorage,
   errorBlog: null,
 };
 
@@ -195,6 +198,7 @@ const AppProvider = ({ children }) => {
       const { data } = await axios.get(`/api/v1/blog/${id}`);
 
       dispatch({ type: GET_SINGLE_BLOG_POST_SUCCESS, payload: data });
+      localStorage.setItem("blogPost", JSON.stringify(data));
     } catch (error) {
       if (error.response) {
         dispatch({
