@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
-import { Alert, Spinner } from "react-bootstrap";
+import {
+  faArrowUp,
+  faArrowDown,
+  faExclamationCircle,
+} from "@fortawesome/free-solid-svg-icons";
+import { Spinner } from "react-bootstrap";
 
 const Vote = ({ itemId, userInfo, info, voteInfo, updateVoteCount }) => {
   const item = info?.find(post => post._id === itemId);
@@ -31,7 +35,7 @@ const Vote = ({ itemId, userInfo, info, voteInfo, updateVoteCount }) => {
         setCurrentVote(1);
       }
     } catch (error) {
-      setError(error);
+      setError(error.message);
     } finally {
       setIsLoading(false);
     }
@@ -49,16 +53,27 @@ const Vote = ({ itemId, userInfo, info, voteInfo, updateVoteCount }) => {
         setCurrentVote(-1);
       }
     } catch (error) {
-      setError(error);
+      setError(error.message);
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleDismissError = () => {
+    setError(null);
+  };
+
   return isLoading ? (
     <Spinner />
   ) : error ? (
-    <Alert variant="danger">{error}</Alert>
+    <FontAwesomeIcon
+      icon={faExclamationCircle}
+      className="text-danger"
+      size="2x"
+      onClick={handleDismissError}
+      cursor="pointer"
+      title={error}
+    />
   ) : (
     <div className="d-flex align-items-center">
       <FontAwesomeIcon

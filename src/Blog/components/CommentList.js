@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ListGroup, Form, Button } from "react-bootstrap";
+import { ListGroup, Form, Button, Alert } from "react-bootstrap";
 import { useCommentContext } from "./store/commentContext";
 import Spinner from "./Spinner";
 import CommentSort from "./CommentSort";
@@ -13,10 +13,13 @@ const CommentList = ({
   voteInfo,
   updateCommentVoteCount,
 }) => {
-  const { isLoadingComment, commentInfo, errorComment } = useCommentContext();
+  const { commentInfo } = useCommentContext();
   const [editCommentId, setEditCommentId] = useState(null);
   const [editedComment, setEditedComment] = useState("");
   const [sortedComments, setSortedComments] = useState([]);
+  const [loadingCommentId, setLoadingCommentId] = useState(null);
+  const [errorCommentId, setErrorCommentId] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const commentsPerBlogPost = commentInfo.filter(
@@ -34,8 +37,21 @@ const CommentList = ({
     setEditedComment("");
   };
 
-  const handleSaveComment = (commentId, editedComment) => {
-    editCommentBlogPost(blogId, commentId, { editedComment });
+  const handleDismissError = () => {
+    setErrorCommentId(null);
+    setErrorMessage("");
+  };
+
+  const handleSaveComment = async (commentId, editedComment) => {
+    setLoadingCommentId(commentId);
+    try {
+      await editCommentBlogPost(blogId, commentId, { editedComment });
+    } catch (error) {
+      setErrorCommentId(commentId);
+      setErrorMessage(error.message);
+    } finally {
+      setLoadingCommentId(null);
+    }
     setEditCommentId(null);
     setEditedComment("");
   };
@@ -50,12 +66,6 @@ const CommentList = ({
 
   return (
     <>
-      {isLoadingComment && <Spinner />}
-      {errorComment && (
-        <ListGroup className="mb-1">
-          <ListGroup.Item variant="danger">{errorComment}</ListGroup.Item>
-        </ListGroup>
-      )}
       {sortedComments.length === 0 ? (
         <ListGroup className="mb-1">
           <ListGroup.Item>
@@ -84,7 +94,18 @@ const CommentList = ({
                     <p className="mb-1">{comment.comment}</p>
                   </div>
                 </div>
-                {editCommentId === comment._id ? (
+                {loadingCommentId === comment._id ? (
+                  <Spinner />
+                ) : errorCommentId === comment._id ? (
+                  <Alert
+                    variant="danger"
+                    dismissible
+                    onClose={handleDismissError}
+                    style={{ maxWidth: "400px" }}
+                  >
+                    {errorMessage}
+                  </Alert>
+                ) : editCommentId === comment._id ? (
                   <Form className="mx-3" key={blogId}>
                     <Form.Label className="mb-0">Edit a comment</Form.Label>
                     <Form.Control
@@ -150,5 +171,3 @@ const CommentList = ({
 };
 
 export default CommentList;
-
-// Figure out why the voting is constantly increasing for the comments.
