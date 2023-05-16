@@ -36,8 +36,6 @@ const UserComments = ({
     );
   }
 
-  console.log(blogPost);
-
   return (
     <>
       {Object.keys(blogPost).length !== 0 ? (

@@ -1,11 +1,9 @@
-import React, { useState } from "react";
-import { useVoteContext } from "./store/voteContext";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { Alert, Spinner } from "react-bootstrap";
 
 const Vote = ({ itemId, userInfo, info, voteInfo, updateVoteCount }) => {
-  const { isLoadingVote, errorVote } = useVoteContext();
   const item = info?.find(post => post._id === itemId);
 
   // Find the Vote object for the logged-in user
@@ -18,31 +16,49 @@ const Vote = ({ itemId, userInfo, info, voteInfo, updateVoteCount }) => {
   const itemVotes = voteInfo?.filter(vote => vote.post === item._id);
   const totalVotes = itemVotes?.reduce((acc, curr) => acc + curr.vote, 0);
   const [currentVote, setCurrentVote] = useState(currVote);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleUpVoteClick = () => {
-    if (currentVote === 1) {
-      updateVoteCount(itemId, 0);
-      setCurrentVote(0);
-    } else {
-      updateVoteCount(itemId, 1);
-      setCurrentVote(1);
+  const handleUpVoteClick = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      if (currentVote === 1) {
+        await updateVoteCount(itemId, 0);
+        setCurrentVote(0);
+      } else {
+        await updateVoteCount(itemId, 1);
+        setCurrentVote(1);
+      }
+    } catch (error) {
+      setError(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleDownVoteClick = () => {
-    if (currentVote === -1) {
-      updateVoteCount(itemId, 0);
-      setCurrentVote(0);
-    } else {
-      updateVoteCount(itemId, -1);
-      setCurrentVote(-1);
+  const handleDownVoteClick = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      if (currentVote === -1) {
+        await updateVoteCount(itemId, 0);
+        setCurrentVote(0);
+      } else {
+        await updateVoteCount(itemId, -1);
+        setCurrentVote(-1);
+      }
+    } catch (error) {
+      setError(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  return isLoadingVote ? (
+  return isLoading ? (
     <Spinner />
-  ) : errorVote ? (
-    <Alert variant="danger">Error</Alert>
+  ) : error ? (
+    <Alert variant="danger">{error}</Alert>
   ) : (
     <div className="d-flex align-items-center">
       <FontAwesomeIcon
