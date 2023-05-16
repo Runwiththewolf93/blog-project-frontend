@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import { ListGroup, Form, Button, Alert } from "react-bootstrap";
+import { ListGroup } from "react-bootstrap";
 import { useCommentContext } from "./store/commentContext";
-import Spinner from "./Spinner";
 import CommentSort from "./CommentSort";
-import Vote from "./Vote";
+import CommentItem from "./CommentItem";
 
 const CommentList = ({
   blogId,
@@ -79,90 +78,27 @@ const CommentList = ({
             setSortedComments={handleSortComments}
           />
           {sortedComments.map(comment => (
-            <ListGroup.Item key={comment._id}>
-              <div>
-                <div className="d-flex align-items-center">
-                  <Vote
-                    itemId={comment._id}
-                    userInfo={userInfo}
-                    info={commentInfo}
-                    voteInfo={voteInfo}
-                    updateVoteCount={updateCommentVoteCount}
-                  />
-                  <div className="ms-3">
-                    <h5>{comment.user.name || userInfo.name}</h5>
-                    <p className="mb-1">{comment.comment}</p>
-                  </div>
-                </div>
-                {loadingCommentId === comment._id ? (
-                  <Spinner />
-                ) : errorCommentId === comment._id ? (
-                  <Alert
-                    variant="danger"
-                    dismissible
-                    onClose={handleDismissError}
-                    style={{ maxWidth: "400px" }}
-                  >
-                    {errorMessage}
-                  </Alert>
-                ) : editCommentId === comment._id ? (
-                  <Form className="mx-3" key={blogId}>
-                    <Form.Label className="mb-0">Edit a comment</Form.Label>
-                    <Form.Control
-                      as="textarea"
-                      rows={3}
-                      value={editedComment}
-                      onChange={event => setEditedComment(event.target.value)}
-                      style={{ backgroundColor: "#D0D0D0" }}
-                    />
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      className="my-2"
-                      onClick={() =>
-                        handleSaveComment(comment._id, editedComment)
-                      }
-                    >
-                      Save
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      className="my-2 mx-2"
-                      onClick={handleCancelEditComment}
-                    >
-                      Cancel
-                    </Button>
-                  </Form>
-                ) : (
-                  <>
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      className="my-2"
-                      onClick={() => handleEditComment(comment._id)}
-                    >
-                      Edit Comment
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      className="my-2 ms-2"
-                      onClick={() => handleDeleteComment(comment._id)}
-                    >
-                      Delete Comment
-                    </Button>
-                  </>
-                )}
-              </div>
-              <small>
-                createdAt: {new Date(comment.createdAt).toLocaleString()}
-              </small>
-              <br />
-              <small>
-                updatedAt: {new Date(comment.updatedAt).toLocaleString()}
-              </small>
-            </ListGroup.Item>
+            <CommentItem
+              key={comment._id}
+              {...{
+                comment,
+                loadingCommentId,
+                errorCommentId,
+                editCommentId,
+                handleSaveComment,
+                handleCancelEditComment,
+                handleDismissError,
+                handleEditComment,
+                handleDeleteComment,
+                userInfo,
+                commentInfo,
+                voteInfo,
+                updateCommentVoteCount,
+                editedComment,
+                setEditedComment,
+                errorMessage,
+              }}
+            />
           ))}
         </ListGroup>
       )}
