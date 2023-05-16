@@ -4,47 +4,40 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { Alert, Spinner } from "react-bootstrap";
 
-const Vote = ({
-  postId,
-  userInfo,
-  blogInfo,
-  voteInfo,
-  updateBlogVoteCount,
-}) => {
+const Vote = ({ itemId, userInfo, info, voteInfo, updateVoteCount }) => {
   const { isLoadingVote, errorVote } = useVoteContext();
-  const blogPost = blogInfo?.find(post => post._id === postId);
+  const item = info?.find(post => post._id === itemId);
 
   // Find the Vote object for the logged-in user
   const currentUserVote = voteInfo?.filter(
-    vote => vote.post === blogPost._id && vote.user === userInfo._id
+    vote => vote.post === item._id && vote.user === userInfo._id
   );
   const currVote = currentUserVote?.reduce((acc, curr) => acc + curr.vote, 0);
 
-  const postVotes = voteInfo?.filter(vote => vote.post === blogPost._id);
-  const totalVotes = postVotes?.reduce((acc, curr) => acc + curr.vote, 0);
+  // Calculate the totalVotes per blog / comment
+  const itemVotes = voteInfo?.filter(vote => vote.post === item._id);
+  const totalVotes = itemVotes?.reduce((acc, curr) => acc + curr.vote, 0);
   const [currentVote, setCurrentVote] = useState(currVote);
 
   const handleUpVoteClick = () => {
     if (currentVote === 1) {
-      updateBlogVoteCount(postId, 0);
+      updateVoteCount(itemId, 0);
       setCurrentVote(0);
     } else {
-      updateBlogVoteCount(postId, 1);
+      updateVoteCount(itemId, 1);
       setCurrentVote(1);
     }
   };
 
   const handleDownVoteClick = () => {
     if (currentVote === -1) {
-      updateBlogVoteCount(postId, 0);
+      updateVoteCount(itemId, 0);
       setCurrentVote(0);
     } else {
-      updateBlogVoteCount(postId, -1);
+      updateVoteCount(itemId, -1);
       setCurrentVote(-1);
     }
   };
-
-  console.log(currVote);
 
   return isLoadingVote ? (
     <Spinner />

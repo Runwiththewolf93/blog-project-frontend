@@ -44,7 +44,7 @@ const UserComments = ({
         </div>
       ) : (
         <ListGroup className="mb-3">
-          <ListGroup.Item variant="primary" className="fs-5">
+          <ListGroup.Item variant="secondary" className="fs-5">
             No favorite blog post? Got to the home page to pick one out{" "}
             <Link to="/">now</Link>!
           </ListGroup.Item>

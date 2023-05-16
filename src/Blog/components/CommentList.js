@@ -3,12 +3,15 @@ import { ListGroup, Form, Button } from "react-bootstrap";
 import { useCommentContext } from "./store/commentContext";
 import Spinner from "./Spinner";
 import CommentSort from "./CommentSort";
+import Vote from "./Vote";
 
 const CommentList = ({
   blogId,
   editCommentBlogPost,
   deleteCommentBlogPost,
   userInfo,
+  voteInfo,
+  updateCommentVoteCount,
 }) => {
   const { isLoadingComment, commentInfo, errorComment } = useCommentContext();
   const [editCommentId, setEditCommentId] = useState(null);
@@ -68,7 +71,19 @@ const CommentList = ({
           {sortedComments.map(comment => (
             <ListGroup.Item key={comment._id}>
               <div>
-                <h5>{comment.user.name || userInfo.name}</h5>
+                <div className="d-flex align-items-center">
+                  <Vote
+                    itemId={comment._id}
+                    userInfo={userInfo}
+                    info={commentInfo}
+                    voteInfo={voteInfo}
+                    updateVoteCount={updateCommentVoteCount}
+                  />
+                  <div className="ms-3">
+                    <h5>{comment.user.name || userInfo.name}</h5>
+                    <p className="mb-1">{comment.comment}</p>
+                  </div>
+                </div>
                 {editCommentId === comment._id ? (
                   <Form className="mx-3" key={blogId}>
                     <Form.Label className="mb-0">Edit a comment</Form.Label>
@@ -100,7 +115,6 @@ const CommentList = ({
                   </Form>
                 ) : (
                   <>
-                    <p className="mb-1">{comment.comment}</p>
                     <Button
                       type="button"
                       variant="secondary"
@@ -136,3 +150,5 @@ const CommentList = ({
 };
 
 export default CommentList;
+
+// Figure out why the voting is constantly increasing for the comments.

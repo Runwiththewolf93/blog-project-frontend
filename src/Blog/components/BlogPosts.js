@@ -6,14 +6,15 @@ import CommentForm from "./CommentForm";
 
 const BlogPosts = ({
   blogDataToShow,
-  blogInfo,
   userInfo,
+  blogInfo,
   commentInfo,
   voteInfo,
   deleteBlogPost,
   getSingleBlogPost,
   deleteAllCommentsBlogPost,
   updateBlogVoteCount,
+  updateCommentVoteCount,
   editCommentBlogPost,
   deleteCommentBlogPost,
 }) => {
@@ -38,6 +39,8 @@ const BlogPosts = ({
           editCommentBlogPost={editCommentBlogPost}
           deleteCommentBlogPost={deleteCommentBlogPost}
           userInfo={userInfo}
+          voteInfo={voteInfo}
+          updateCommentVoteCount={updateCommentVoteCount}
         />
         <CommentForm blogId={post._id} />
       </Card>

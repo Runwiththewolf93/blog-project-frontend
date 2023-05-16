@@ -29,11 +29,11 @@ const BlogPost = ({
           className="d-flex justify-content-center align-items-center"
         >
           <Vote
-            postId={post._id}
+            itemId={post._id}
             userInfo={userInfo}
-            blogInfo={blogInfo}
+            info={blogInfo}
             voteInfo={voteInfo}
-            updateBlogVoteCount={updateBlogVoteCount}
+            updateVoteCount={updateBlogVoteCount}
           />
         </Col>
         <Col xs={1}>

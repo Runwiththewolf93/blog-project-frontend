@@ -18,7 +18,8 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
     deleteAllCommentsBlogPost,
     commentInfo,
   } = useCommentContext();
-  const { voteInfo, getAllVotes, updateBlogVoteCount } = useVoteContext();
+  const { voteInfo, getAllVotes, updateBlogVoteCount, updateCommentVoteCount } =
+    useVoteContext();
 
   useEffect(() => {
     userInfo && getAllComments() && getAllVotes();
@@ -42,7 +43,7 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
     return (
       <div className="d-flex justify-content-center mb-3">
         <Alert variant="info" className="fs-5">
-          Please log in to view available blog posts
+          Session expired, please log in to view available blog posts
         </Alert>
       </div>
     );
@@ -80,17 +81,20 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
         </Col>
         <Col md={10}>
           <BlogPosts
-            blogDataToShow={blogDataToShow}
-            blogInfo={blogInfo}
-            userInfo={userInfo}
-            commentInfo={commentInfo}
-            voteInfo={voteInfo}
-            deleteBlogPost={deleteBlogPost}
-            getSingleBlogPost={getSingleBlogPost}
-            deleteAllCommentsBlogPost={deleteAllCommentsBlogPost}
-            updateBlogVoteCount={updateBlogVoteCount}
-            editCommentBlogPost={editCommentBlogPost}
-            deleteCommentBlogPost={deleteCommentBlogPost}
+            {...{
+              blogDataToShow,
+              userInfo,
+              blogInfo,
+              commentInfo,
+              voteInfo,
+              deleteBlogPost,
+              getSingleBlogPost,
+              deleteAllCommentsBlogPost,
+              updateBlogVoteCount,
+              updateCommentVoteCount,
+              editCommentBlogPost,
+              deleteCommentBlogPost,
+            }}
           />
           <div className="d-flex justify-content-end">
             <ScrollToTopPopup />

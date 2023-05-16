@@ -168,7 +168,7 @@ const VoteProvider = ({ children }) => {
 
       // Get the existing vote object from the voteInfo array
       const existingVote = state.voteInfo.find(
-        v => v.post === vote.post && v.user._id === vote.user
+        v => v.post === vote.post && v.user === vote.user
       );
 
       // Update the totalVotes property of the blogInfo object
@@ -190,7 +190,7 @@ const VoteProvider = ({ children }) => {
           v === existingVote ? { ...v, ...vote } : v
         );
 
-        // Add updated blogInfo and voteInfo objects to state
+        // Add updated commentInfo and voteInfo objects to state
         dispatch({
           type: UPDATE_COMMENT_VOTE_COUNT_SUCCESS,
           payload: { updatedCommentInfo, updatedVoteInfo },
@@ -202,7 +202,7 @@ const VoteProvider = ({ children }) => {
         // Add new vote to existing voteInfo object
         const updatedVoteInfo = [...state.voteInfo, vote];
 
-        // Add updated blogInfo and voteInfo objects to state
+        // Add updated commentInfo and voteInfo objects to state
         dispatch({
           type: UPDATE_COMMENT_VOTE_COUNT_SUCCESS,
           payload: { updatedCommentInfo, updatedVoteInfo },
@@ -212,8 +212,8 @@ const VoteProvider = ({ children }) => {
         localStorage.setItem("voteInfo", JSON.stringify(updatedVoteInfo));
       }
 
-      // Save the updated blogInfo to localStorage
-      localStorage.setItem("blogInfo", JSON.stringify(updatedCommentInfo));
+      // Save the updated commentInfo to localStorage
+      localStorage.setItem("commentInfo", JSON.stringify(updatedCommentInfo));
     } catch (error) {
       if (error.response) {
         dispatch({
