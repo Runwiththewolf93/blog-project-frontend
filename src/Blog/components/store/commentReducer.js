@@ -163,7 +163,7 @@ const commentReducer = (state, action) => {
       errorUserComment: null,
     };
   }
-  return state;
+  return {...state, isLoadingComment: false};
 };
 
 export default commentReducer;

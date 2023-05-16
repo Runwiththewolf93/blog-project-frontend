@@ -107,7 +107,7 @@ const appReducer = (state, action) => {
   }
   // reset blogPost state
   if (action.type === RESET_BLOG_POST) {
-    return { ...state, blogPost: null };
+    return { ...state, blogPost: {} };
   }
   // reset error state
   if (action.type === RESET_USER_ERROR) {
@@ -191,7 +191,7 @@ const appReducer = (state, action) => {
   if (action.type === DELETE_BLOG_POST_ERROR) {
     return { ...state, isLoadingBlog: false, errorBlog: action.payload };
   }
-  return state;
+  return { ...state, isLoadingBlog: false };
 };
 
 export default appReducer;

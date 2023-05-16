@@ -36,7 +36,7 @@ const BlogPost = ({
             updateVoteCount={updateBlogVoteCount}
           />
         </Col>
-        <Col xs={1}>
+        <Col xs={1} className="text-end">
           <Avatar src={post.avatar} alt={`${post.title} Image 1`} />
         </Col>
         <Col xs={10} className="d-flex justify-content-between">

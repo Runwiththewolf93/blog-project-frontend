@@ -36,9 +36,11 @@ const UserComments = ({
     );
   }
 
+  console.log(blogPost);
+
   return (
     <>
-      {!blogPost === {} ? (
+      {Object.keys(blogPost).length !== 0 ? (
         <div className="mb-5">
           <PinnedBlogPost {...{ blogPost, getSingleBlogPost, resetBlogPost }} />
         </div>
