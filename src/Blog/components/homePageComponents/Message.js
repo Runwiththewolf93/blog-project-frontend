@@ -7,8 +7,8 @@ import {
   CloseButton,
   Button,
 } from "react-bootstrap";
-import ModalAdd from "./modals/ModalAdd";
-import { capitalizeName } from "../utils/helper";
+import ModalAdd from "../modals/ModalAdd";
+import { capitalizeName } from "../../utils/helper";
 
 function Message({ userInfo, getAllBlogPosts, toggleShowMyPosts }) {
   const [showCard, setShowCard] = useState(false);

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Alert, Button, Form, Modal, Spinner } from "react-bootstrap";
-import { useAppContext } from "../store/appContext";
+import { useAppContext } from "../../store/appContext";
 import { getLatestAvatar } from "../../utils/helper";
 
 export const initialState = {

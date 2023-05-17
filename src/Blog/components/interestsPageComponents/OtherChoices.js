@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Accordion } from "react-bootstrap";
-import useUnsplashImages from "./hooks/useUnsplash";
+import useUnsplashImages from "../../hooks/useUnsplash";
 
 function OtherChoices() {
   const [activeItem, setActiveItem] = useState("0");

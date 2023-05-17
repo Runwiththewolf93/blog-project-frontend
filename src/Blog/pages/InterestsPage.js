@@ -1,7 +1,7 @@
-import Layout from "../components/Layout";
-import CarouselComponent from "../components/Carousel";
-import EditorsChoice from "../components/EditorsChoice";
-import OtherChoices from "../components/OtherChoices";
+import Layout from "../components/shared/Layout";
+import CarouselComponent from "../components/interestsPageComponents/Carousel";
+import EditorsChoice from "../components/interestsComponents/EditorsChoice";
+import OtherChoices from "../components/interestsComponents/OtherChoices";
 import { Row, Col } from "react-bootstrap";
 
 const InterestsPage = () => {

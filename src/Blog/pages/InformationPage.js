@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Container, Row, Col, ListGroup } from "react-bootstrap";
-import Layout from "../components/Layout";
-import Exchange from "../components/informationComponents/Exchange";
-import Geolocation from "../components/informationComponents/Geolocation";
-import Holiday from "../components/informationComponents/Holiday";
-import useGeolocation from "../components/hooks/useGeolocation";
+import Layout from "../components/shared/Layout";
+import Exchange from "../components/informationPageComponents/Exchange";
+import Geolocation from "../components/informationPageComponents/Geolocation";
+import Holiday from "../components/informationPageComponents/Holiday";
+import useGeolocation from "../hooks/useGeolocation";
 
 const InformationPage = () => {
   const apiKey = process.env.REACT_APP_ABSTRACT_LOCATION_API_KEY;

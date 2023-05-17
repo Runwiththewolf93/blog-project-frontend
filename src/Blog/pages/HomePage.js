@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import Message from "../components/Message";
-import Body from "../components/Body";
-import Layout from "../components/Layout";
-import { useAppContext } from "../components/store/appContext";
+import Message from "../components/homePageComponents/Message";
+import Body from "../components/homePageComponents/Body";
+import Layout from "../components/shared/Layout";
+import { useAppContext } from "../store/appContext";
 
 const HomePage = () => {
   const { getAllBlogPosts, deleteBlogPost, blogInfo, userInfo } =

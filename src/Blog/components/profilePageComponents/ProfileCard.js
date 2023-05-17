@@ -1,8 +1,8 @@
 import { Card, ListGroup } from "react-bootstrap";
-import Spinner from "./Spinner";
+import Spinner from "../shared/Spinner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook, faInstagram } from "@fortawesome/free-brands-svg-icons";
-import { capitalizeName, getLatestAvatar } from "../utils/helper";
+import { capitalizeName, getLatestAvatar } from "../../utils/helper";
 
 const ProfileCard = ({ userProfile, userInfo, blogInfo, userCommentInfo }) => {
   const sortedComments = userCommentInfo?.sort(

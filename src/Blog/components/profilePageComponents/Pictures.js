@@ -1,6 +1,6 @@
 import { Row, Col, Card, Image } from "react-bootstrap";
-import useUnsplashImages from "./hooks/useUnsplash";
-import { capitalizeFirstLetter, concatAndSliceData } from "../utils/helper";
+import useUnsplashImages from "../../hooks/useUnsplash";
+import { capitalizeFirstLetter, concatAndSliceData } from "../../utils/helper";
 
 function Pictures({ userProfile, userInfo, blogInfo }) {
   // filter blogInfo to only include objects that belong to logged in user

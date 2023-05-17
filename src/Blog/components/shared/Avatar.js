@@ -1,5 +1,5 @@
 import { Image } from "react-bootstrap";
-import placeholderImage from "../images/placeholder-image.png";
+import placeholderImage from "../../images/placeholder-image.png";
 
 const Avatar = ({ src, alt, size = 60 }) => (
   <Image

@@ -1,4 +1,4 @@
-import ModalEdit from "./modals/ModalEdit";
+import ModalEdit from "../modals/ModalEdit";
 import { Button } from "react-bootstrap";
 
 const UserActions = ({

@@ -1,12 +1,12 @@
 import React from "react";
 import { Card, Row, Col } from "react-bootstrap";
-import Vote from "./Vote";
-import Avatar from "./Avatar";
-import UserInfo from "./UserInfo";
-import PostButton from "./PostButton";
-import UserActions from "./UserActions";
-import PostImages from "./PostImages";
-import BlogPostWrapper from "./BlogPostWrapper";
+import Vote from "../shared/Vote";
+import Avatar from "../shared/Avatar";
+import UserInfo from "../shared/UserInfo";
+import PostButton from "../shared/PostButton";
+import UserActions from "../shared/UserActions";
+import PostImages from "../shared/PostImages";
+import BlogPostWrapper from "../shared/BlogPostWrapper";
 
 const BlogPost = ({
   post,

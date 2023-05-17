@@ -8,9 +8,9 @@ import {
   Button,
   Alert,
 } from "react-bootstrap";
-import CarouselLogin from "../components/CarouselLogin";
-import { useAppContext } from "../components/store/appContext";
-import { useCommentContext } from "../components/store/commentContext";
+import CarouselLogin from "../components/loginPageComponents/CarouselLogin";
+import { useAppContext } from "../store/appContext";
+import { useCommentContext } from "../store/commentContext";
 
 const initialState = {
   name: "",

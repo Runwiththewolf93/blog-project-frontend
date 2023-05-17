@@ -1,7 +1,7 @@
 import { Card, Badge } from "react-bootstrap";
 import ToastComponent from "./Toast";
 import TabbedInterface from "./TabbedInterface";
-import useUnsplashImages from "../hooks/useUnsplash";
+import useUnsplashImages from "../../hooks/useUnsplash";
 
 const Geolocation = ({ locationData }) => {
   const images = useUnsplashImages(locationData.city, 12);

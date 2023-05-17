@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Modal, Button, Form, Spinner, Alert } from "react-bootstrap";
-import { useAppContext } from "../store/appContext";
+import { useAppContext } from "../../store/appContext";
 
 const ModalEdit = ({ post }) => {
   const [show, setShow] = useState(false);

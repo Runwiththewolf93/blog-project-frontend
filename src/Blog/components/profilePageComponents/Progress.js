@@ -1,5 +1,5 @@
 import { ProgressBar, Card } from "react-bootstrap";
-import { capitalizeName } from "../utils/helper";
+import { capitalizeName } from "../../utils/helper";
 import { shuffle } from "lodash";
 
 const Progress = ({ userProfile, userInfo }) => {

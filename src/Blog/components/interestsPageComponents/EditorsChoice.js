@@ -1,5 +1,5 @@
 import { Card, CardGroup } from "react-bootstrap";
-import useUnsplashImages from "./hooks/useUnsplash";
+import useUnsplashImages from "../../hooks/useUnsplash";
 
 const EditorsChoice = () => {
   const images = useUnsplashImages("random", 3);

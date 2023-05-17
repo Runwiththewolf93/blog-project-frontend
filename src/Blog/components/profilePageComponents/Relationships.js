@@ -1,6 +1,6 @@
 import { CardGroup, Card, Image } from "react-bootstrap";
-import useRandomUsers from "./hooks/useRandomUsers";
-import { processUsers, concatAndSliceData } from "../utils/helper";
+import useRandomUsers from "../../hooks/useRandomUsers";
+import { processUsers, concatAndSliceData } from "../../utils/helper";
 
 const Relationships = ({ userProfile, allUsers, userInfo, blogInfo }) => {
   const { filteredUsers, latestBlogPost, userAvatars } = processUsers(

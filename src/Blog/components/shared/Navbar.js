@@ -8,8 +8,8 @@ import {
   Button,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import LoginPage from "../pages/LoginPage";
-import { useAppContext } from "./store/appContext";
+import LoginPage from "../../pages/LoginPage";
+import { useAppContext } from "../../store/appContext";
 
 function Navigation({ handleSearch }) {
   const [showLoginModal, setShowLoginModal] = useState(false);

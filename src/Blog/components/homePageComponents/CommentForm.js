@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Form, Button, ListGroup } from "react-bootstrap";
-import { useCommentContext } from "./store/commentContext";
+import { useCommentContext } from "../../store/commentContext";
 
 const CommentForm = ({ blogId }) => {
   const [comment, setComment] = useState("");

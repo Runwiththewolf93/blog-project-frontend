@@ -1,7 +1,7 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import { Icon } from "leaflet";
-import Spinner from "./Spinner";
+import Spinner from "../shared/Spinner";
 import "leaflet/dist/leaflet.css";
 
 const Map = ({ userProfile, userInfo }) => {

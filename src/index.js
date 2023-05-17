@@ -3,9 +3,9 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import "./bootstrap.min.css";
 import App from "./App";
-import { AppProvider } from "./Blog/components/store/appContext";
-import { CommentProvider } from "./Blog/components/store/commentContext";
-import { VoteProvider } from "./Blog/components/store/voteContext";
+import { AppProvider } from "./Blog/store/appContext";
+import { CommentProvider } from "./Blog/store/commentContext";
+import { VoteProvider } from "./Blog/store/voteContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

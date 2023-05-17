@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ListGroup } from "react-bootstrap";
-import { useCommentContext } from "./store/commentContext";
+import { useCommentContext } from "../../store/commentContext";
 import CommentSort from "./CommentSort";
 import CommentItem from "./CommentItem";
 

@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { useAppContext } from "../components/store/appContext";
+import { useAppContext } from "../store/appContext";
 
 const ProtectedRoute = ({ children }) => {
   const { userInfo } = useAppContext();

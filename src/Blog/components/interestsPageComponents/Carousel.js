@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Row, Col, Carousel, ListGroup, Card } from "react-bootstrap";
-import useUnsplashImages from "./hooks/useUnsplash";
+import useUnsplashImages from "../../hooks/useUnsplash";
 
 const CarouselComponent = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);

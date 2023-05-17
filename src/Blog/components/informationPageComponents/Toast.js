@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Toast from "react-bootstrap/Toast";
 import moment from "moment";
-import Spinner from "../Spinner";
+import Spinner from "../shared/Spinner";
 
 const ToastComponent = ({ locationIpAddress, locationIsVpn }) => {
   const [showToast, setShowToast] = useState(true);

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Alert, ListGroup } from "react-bootstrap";
-import Spinner from "./Spinner";
+import Spinner from "../shared/Spinner";
 import PinnedBlogPost from "./PinnedBlogPost";
 import CommentsOverview from "./CommentsOverview";
 

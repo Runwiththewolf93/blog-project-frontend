@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
-import Spinner from "../Spinner";
+import Spinner from "../shared/Spinner";
 import axios from "axios";
 
 const Holiday = ({ locationData }) => {

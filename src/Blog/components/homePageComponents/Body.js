@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { Container, Row, Col, Alert } from "react-bootstrap";
-import { useAppContext } from "./store/appContext";
-import { useCommentContext } from "./store/commentContext";
-import { useVoteContext } from "./store/voteContext";
+import { useAppContext } from "../../store/appContext";
+import { useCommentContext } from "../../store/commentContext";
+import { useVoteContext } from "../../store/voteContext";
 import BlogSections from "./BlogSections";
 import BlogPosts from "./BlogPosts";
-import Spinner from "./Spinner";
+import Spinner from "../shared/Spinner";
 import ScrollToTopPopup from "./ButtonOverlay";
 
 const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {

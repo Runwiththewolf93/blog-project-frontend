@@ -1,9 +1,9 @@
 import { Row, Col, Card } from "react-bootstrap";
-import BlogPostWrapper from "./BlogPostWrapper";
-import Avatar from "./Avatar";
-import UserInfo from "./UserInfo";
-import PostButton from "./PostButton";
-import PostImages from "./PostImages";
+import BlogPostWrapper from "../shared/BlogPostWrapper";
+import Avatar from "../shared/Avatar";
+import UserInfo from "../shared/UserInfo";
+import PostButton from "../shared/PostButton";
+import PostImages from "../shared/PostImages";
 
 const PinnedBlogPost = ({ blogPost, getSingleBlogPost, resetBlogPost }) => (
   <>

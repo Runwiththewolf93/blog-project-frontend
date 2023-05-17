@@ -1,5 +1,5 @@
 import { Carousel, Image } from "react-bootstrap";
-import useUnsplashImages from "./hooks/useUnsplash";
+import useUnsplashImages from "../../hooks/useUnsplash";
 
 const CarouselLogin = () => {
   const images = useUnsplashImages("blog", 3);

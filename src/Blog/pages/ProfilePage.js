@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import Layout from "../components/Layout";
+import Layout from "../components/shared/Layout";
 import { Container, Row, Col } from "react-bootstrap";
-import ProfileCard from "../components/ProfileCard";
-import Progress from "../components/Progress";
-import Relationships from "../components/Relationships";
-import Pictures from "../components/Pictures";
-import Map from "../components/Map";
-import Information from "../components/Information";
-import useRandomUsers from "../components/hooks/useRandomUsers";
-import { useAppContext } from "../components/store/appContext";
-import { useCommentContext } from "../components/store/commentContext";
-import UserComments from "../components/UserComments";
+import ProfileCard from "../components/profilePageComponents/ProfileCard";
+import Progress from "../components/profilePageComponents/Progress";
+import Relationships from "../components/profilePageComponents/Relationships";
+import Pictures from "../components/profilePageComponents/Pictures";
+import Map from "../components/profilePageComponents/Map";
+import Information from "../components/profilePageComponents/Information";
+import useRandomUsers from "../hooks/useRandomUsers";
+import { useAppContext } from "../store/appContext";
+import { useCommentContext } from "../store/commentContext";
+import UserComments from "../components/profilePageComponents/UserComments";
 
 const ProfilePage = () => {
   // added gender for single user
