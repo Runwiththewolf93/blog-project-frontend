@@ -1,12 +1,8 @@
 import { Card, ListGroup } from "react-bootstrap";
+import { useAppContext } from "../../store/appContext";
 
 const BlogSections = ({ blogDataToShow }) => {
-  const scrollToBlogPost = postId => {
-    const blogPostElement = document.getElementById(postId);
-    if (blogPostElement) {
-      blogPostElement.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  const { scrollToBlogPost } = useAppContext();
 
   return (
     <Card>

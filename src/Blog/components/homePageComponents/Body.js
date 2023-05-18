@@ -25,19 +25,6 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
     // eslint-disable-next-line
   }, []);
 
-  // When isLoadingBlog gets stuck
-  useEffect(() => {
-    let timeoutId;
-    if (userInfo && isLoadingBlog) {
-      timeoutId = setTimeout(() => {
-        window.location.reload();
-      }, 3000);
-    }
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [isLoadingBlog, userInfo]);
-
   if (!userInfo) {
     return (
       <div className="d-flex justify-content-center mb-3">
@@ -104,5 +91,3 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
 };
 
 export default Body;
-
-// see for tomorrow to move comments somewhere else /blogPost/:id

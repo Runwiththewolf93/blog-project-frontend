@@ -17,6 +17,7 @@ import {
   RESET_USER_ERROR,
   RESET_USER_SUCCESS,
   RESET_BLOG_ERROR,
+  RESET_BLOG_LOADING,
   GET_ALL_BLOG_POSTS_BEGIN,
   GET_ALL_BLOG_POSTS_SUCCESS,
   GET_ALL_BLOG_POSTS_ERROR,
@@ -181,6 +182,8 @@ const AppProvider = ({ children }) => {
 
       dispatch({ type: GET_ALL_BLOG_POSTS_SUCCESS, payload: data });
       localStorage.setItem("blogInfo", JSON.stringify(data));
+
+      return data;
     } catch (error) {
       if (error.response) {
         dispatch({
@@ -188,6 +191,8 @@ const AppProvider = ({ children }) => {
           payload: error.response.data.msg,
         });
       }
+    } finally {
+      dispatch({ type: RESET_BLOG_LOADING });
     }
   };
 
@@ -273,6 +278,13 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const scrollToBlogPost = postId => {
+    const blogPostElement = document.getElementById(postId);
+    if (blogPostElement) {
+      blogPostElement.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -294,6 +306,7 @@ const AppProvider = ({ children }) => {
         // state functions
         postUpdated,
         setPostUpdated,
+        scrollToBlogPost,
       }}
     >
       {children}

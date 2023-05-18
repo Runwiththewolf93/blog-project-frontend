@@ -13,6 +13,7 @@ import {
   RESET_USER_ERROR,
   RESET_USER_SUCCESS,
   RESET_BLOG_ERROR,
+  RESET_BLOG_LOADING,
   GET_ALL_BLOG_POSTS_BEGIN,
   GET_ALL_BLOG_POSTS_SUCCESS,
   GET_ALL_BLOG_POSTS_ERROR,
@@ -120,6 +121,10 @@ const appReducer = (state, action) => {
   // reset blog error
   if (action.type === RESET_BLOG_ERROR) {
     return { ...state, errorBlog: null };
+  }
+  // reset blog loading
+  if (action.type === RESET_BLOG_LOADING) {
+    return { ...state, isLoadingBlog: false };
   }
   // list available blog posts
   if (action.type === GET_ALL_BLOG_POSTS_BEGIN) {

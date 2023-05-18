@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Message from "../components/homePageComponents/Message";
 import Body from "../components/homePageComponents/Body";
 import Layout from "../components/shared/Layout";
@@ -15,35 +15,46 @@ const HomePage = () => {
   } = useAppContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [showMyPosts, setShowMyPosts] = useState(false);
+  const [blogDataToShow, setBlogDataToShow] = useState([]);
+  const searchTimeout = useRef();
 
-  const handleSearch = event => {
+  const debouncedHandleSearch = event => {
     event.preventDefault();
     const searchQuery = event.target.value.trim().toLowerCase();
-    setSearchQuery(searchQuery);
+    if (searchTimeout.current) clearTimeout(searchTimeout.current);
+    searchTimeout.current = setTimeout(() => setSearchQuery(searchQuery), 500);
   };
-
-  const filteredBlogData = blogInfo.filter(post =>
-    post.title?.toLowerCase().includes(searchQuery)
-  );
-
-  const filteredMyPosts = blogInfo.filter(
-    post => post.user?._id === userInfo?._id
-  );
 
   const toggleShowMyPosts = () => {
     setShowMyPosts(!showMyPosts);
   };
 
   useEffect(() => {
-    getAllBlogPosts();
-    setPostUpdated(false);
-    // eslint-disable-next-line
-  }, [postUpdated]);
+    const fetchBlogPosts = async () => {
+      await getAllBlogPosts();
 
-  const blogDataToShow = showMyPosts ? filteredMyPosts : filteredBlogData;
+      if (showMyPosts) {
+        setBlogDataToShow(
+          blogInfo.filter(post => post.user?._id === userInfo?._id)
+        );
+      } else {
+        setBlogDataToShow(
+          blogInfo.filter(post =>
+            post.title?.toLowerCase().includes(searchQuery)
+          )
+        );
+      }
+      setPostUpdated(false);
+    };
+
+    fetchBlogPosts();
+    // eslint-disable-next-line
+  }, [postUpdated, searchQuery, showMyPosts, userInfo?._id]);
+
+  console.log(blogDataToShow);
 
   return (
-    <Layout handleSearch={blogDataToShow === filteredBlogData && handleSearch}>
+    <Layout handleSearch={debouncedHandleSearch}>
       <Message
         userInfo={userInfo}
         getAllBlogPosts={getAllBlogPosts}

@@ -5,18 +5,26 @@ import { useAppContext } from "../../store/appContext";
 const ModalEdit = ({ post }) => {
   const [show, setShow] = useState(false);
   const [values, setValues] = useState(post);
-  const { isLoadingBlog, editBlogPost, errorBlog, setPostUpdated } =
-    useAppContext();
+  const [editSuccessful, setEditSuccessful] = useState(false);
+  const {
+    isLoadingBlog,
+    editBlogPost,
+    errorBlog,
+    setPostUpdated,
+    scrollToBlogPost,
+  } = useAppContext();
 
   useEffect(() => {
     setValues(post);
   }, [post]);
 
   useEffect(() => {
-    if (!isLoadingBlog && !errorBlog) {
+    if (editSuccessful && !isLoadingBlog && !errorBlog) {
       handleClose();
+      scrollToBlogPost(values._id);
+      setEditSuccessful(false);
     }
-  }, [isLoadingBlog, errorBlog]);
+  }, [isLoadingBlog, errorBlog, scrollToBlogPost, values._id, editSuccessful]);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -43,6 +51,7 @@ const ModalEdit = ({ post }) => {
 
     editBlogPost({ id: values._id, updatedValues });
     setPostUpdated(true);
+    setEditSuccessful(true);
   };
 
   return (
