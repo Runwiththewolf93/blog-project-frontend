@@ -9,8 +9,13 @@ import Spinner from "../shared/Spinner";
 import ScrollToTopPopup from "./ButtonOverlay";
 
 const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
-  const { blogInfo, getSingleBlogPost, isLoadingBlog, errorBlog } =
-    useAppContext();
+  const {
+    blogInfo,
+    getSingleBlogPost,
+    isLoadingBlog,
+    errorBlog,
+    wasLoggedOut,
+  } = useAppContext();
   const {
     getAllComments,
     editCommentBlogPost,
@@ -29,7 +34,9 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
     return (
       <div className="d-flex justify-content-center mb-3">
         <Alert variant="info" className="fs-5">
-          Session expired, please log in to view available blog posts
+          {wasLoggedOut
+            ? "Please log in to view available blog posts"
+            : "Session expired, please log in to view available blog posts"}
         </Alert>
       </div>
     );

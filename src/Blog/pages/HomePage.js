@@ -8,7 +8,6 @@ const HomePage = () => {
   const {
     getAllBlogPosts,
     deleteBlogPost,
-    blogInfo,
     userInfo,
     postUpdated,
     setPostUpdated,
@@ -31,15 +30,15 @@ const HomePage = () => {
 
   useEffect(() => {
     const fetchBlogPosts = async () => {
-      await getAllBlogPosts();
+      const fetchedBlogInfo = await getAllBlogPosts();
 
       if (showMyPosts) {
         setBlogDataToShow(
-          blogInfo.filter(post => post.user?._id === userInfo?._id)
+          fetchedBlogInfo?.filter(post => post.user?._id === userInfo?._id)
         );
       } else {
         setBlogDataToShow(
-          blogInfo.filter(post =>
+          fetchedBlogInfo?.filter(post =>
             post.title?.toLowerCase().includes(searchQuery)
           )
         );
@@ -50,8 +49,6 @@ const HomePage = () => {
     fetchBlogPosts();
     // eslint-disable-next-line
   }, [postUpdated, searchQuery, showMyPosts, userInfo?._id]);
-
-  console.log(blogDataToShow);
 
   return (
     <Layout handleSearch={debouncedHandleSearch}>

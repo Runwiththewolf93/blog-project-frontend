@@ -18,6 +18,7 @@ import {
   RESET_USER_SUCCESS,
   RESET_BLOG_ERROR,
   RESET_BLOG_LOADING,
+  RESET_WAS_LOGGED_OUT,
   GET_ALL_BLOG_POSTS_BEGIN,
   GET_ALL_BLOG_POSTS_SUCCESS,
   GET_ALL_BLOG_POSTS_ERROR,
@@ -54,6 +55,7 @@ const initialState = {
   blogInfo: blogInfoFromLocalStorage,
   blogPost: blogPostFromLocalStorage,
   errorBlog: null,
+  wasLoggedOut: false,
 };
 
 const AppContext = React.createContext();
@@ -126,6 +128,9 @@ const AppProvider = ({ children }) => {
 
       dispatch({ type: LOGIN_USER_SUCCESS, payload: data });
       localStorage.setItem("userInfo", JSON.stringify(data));
+
+      // Reset the wasLoggedOut flag
+      dispatch({ type: RESET_WAS_LOGGED_OUT });
     } catch (error) {
       if (error.response) {
         dispatch({
@@ -152,8 +157,8 @@ const AppProvider = ({ children }) => {
     }
   };
 
-  const logoutUser = () => {
-    dispatch({ type: LOGOUT_USER });
+  const logoutUser = (manualLogout = false) => {
+    dispatch({ type: LOGOUT_USER, manualLogout });
     localStorage.clear();
   };
 

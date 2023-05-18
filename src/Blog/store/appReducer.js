@@ -14,6 +14,7 @@ import {
   RESET_USER_SUCCESS,
   RESET_BLOG_ERROR,
   RESET_BLOG_LOADING,
+  RESET_WAS_LOGGED_OUT,
   GET_ALL_BLOG_POSTS_BEGIN,
   GET_ALL_BLOG_POSTS_SUCCESS,
   GET_ALL_BLOG_POSTS_ERROR,
@@ -104,6 +105,7 @@ const appReducer = (state, action) => {
       isLoadingBlog: false,
       error: null,
       errorBlog: null,
+      wasLoggedOut: action.manualLogout,
     };
   }
   // reset blogPost state
@@ -125,6 +127,10 @@ const appReducer = (state, action) => {
   // reset blog loading
   if (action.type === RESET_BLOG_LOADING) {
     return { ...state, isLoadingBlog: false };
+  }
+  // reset wasLoggedOut state
+  if (action.type === RESET_WAS_LOGGED_OUT) {
+    return { ...state, wasLoggedOut: false };
   }
   // list available blog posts
   if (action.type === GET_ALL_BLOG_POSTS_BEGIN) {

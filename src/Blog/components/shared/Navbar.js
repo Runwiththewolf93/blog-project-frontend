@@ -51,7 +51,11 @@ function Navigation({ handleSearch }) {
                 Information
               </Link>
               {userInfo ? (
-                <Link to="/" className="nav-link" onClick={logoutUser}>
+                <Link
+                  to="/"
+                  className="nav-link"
+                  onClick={() => logoutUser(true)}
+                >
                   Logout
                 </Link>
               ) : (
