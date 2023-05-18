@@ -1,4 +1,4 @@
-import React, { useReducer, useContext } from "react";
+import React, { useReducer, useContext, useState } from "react";
 
 import appReducer from "./appReducer";
 import axios from "axios";
@@ -59,6 +59,7 @@ const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
+  const [postUpdated, setPostUpdated] = useState(false);
 
   // axios
   const authFetch = axios.create({
@@ -290,6 +291,9 @@ const AppProvider = ({ children }) => {
         addBlogPost,
         editBlogPost,
         deleteBlogPost,
+        // state functions
+        postUpdated,
+        setPostUpdated,
       }}
     >
       {children}

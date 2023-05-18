@@ -1,11 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Button, Form, Spinner, Alert } from "react-bootstrap";
 import { useAppContext } from "../../store/appContext";
 
 const ModalEdit = ({ post }) => {
   const [show, setShow] = useState(false);
   const [values, setValues] = useState(post);
-  const { isLoadingBlog, editBlogPost, errorBlog } = useAppContext();
+  const { isLoadingBlog, editBlogPost, errorBlog, setPostUpdated } =
+    useAppContext();
+
+  useEffect(() => {
+    setValues(post);
+  }, [post]);
+
+  useEffect(() => {
+    if (!isLoadingBlog && !errorBlog) {
+      handleClose();
+    }
+  }, [isLoadingBlog, errorBlog]);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -31,11 +42,7 @@ const ModalEdit = ({ post }) => {
     };
 
     editBlogPost({ id: values._id, updatedValues });
-
-    if (!isLoadingBlog && !errorBlog) {
-      handleClose();
-      window.location.reload();
-    }
+    setPostUpdated(true);
   };
 
   return (

@@ -5,8 +5,14 @@ import Layout from "../components/shared/Layout";
 import { useAppContext } from "../store/appContext";
 
 const HomePage = () => {
-  const { getAllBlogPosts, deleteBlogPost, blogInfo, userInfo } =
-    useAppContext();
+  const {
+    getAllBlogPosts,
+    deleteBlogPost,
+    blogInfo,
+    userInfo,
+    postUpdated,
+    setPostUpdated,
+  } = useAppContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [showMyPosts, setShowMyPosts] = useState(false);
 
@@ -30,8 +36,9 @@ const HomePage = () => {
 
   useEffect(() => {
     getAllBlogPosts();
+    setPostUpdated(false);
     // eslint-disable-next-line
-  }, []);
+  }, [postUpdated]);
 
   const blogDataToShow = showMyPosts ? filteredMyPosts : filteredBlogData;
 
