@@ -1,4 +1,5 @@
 import UserComment from "./UserComment";
+import CustomListGroup from "../shared/CustomListGroup";
 
 const CommentsList = ({
   userCommentInfo,
@@ -7,22 +8,29 @@ const CommentsList = ({
   dateSortOrder,
 }) => (
   <>
-    {userCommentInfo
-      .sort((a, b) => {
-        if (sortType === "title") {
+    {userCommentInfo.length > 0 ? (
+      userCommentInfo
+        .sort((a, b) => {
+          const titleA = a.blog.title ? a.blog.title.toLowerCase() : "";
+          const titleB = b.blog.title ? b.blog.title.toLowerCase() : "";
+
+          if (sortType === "title") {
+            return (
+              (titleSortOrder === "asc" ? 1 : -1) * titleA.localeCompare(titleB)
+            );
+          }
           return (
-            (titleSortOrder === "asc" ? 1 : -1) *
-            a.blog.title.toLowerCase().localeCompare(b.blog.title.toLowerCase())
+            (dateSortOrder === "asc" ? 1 : -1) *
+            (new Date(b.createdAt) - new Date(a.createdAt))
           );
-        }
-        return (
-          (dateSortOrder === "asc" ? 1 : -1) *
-          (new Date(b.createdAt) - new Date(a.createdAt))
-        );
-      })
-      .map(comment => (
-        <UserComment key={comment._id} comment={comment} />
-      ))}
+        })
+        .map(comment => <UserComment key={comment._id} comment={comment} />)
+    ) : (
+      <CustomListGroup
+        mb={5}
+        text="No comments yet? Go to the home page and create one"
+      />
+    )}
   </>
 );
 

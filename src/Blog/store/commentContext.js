@@ -101,6 +101,7 @@ const CommentProvider = ({ children }) => {
     try {
       const { data } = await authFetch.get("/comment/user");
 
+      console.log(data);
       dispatch({ type: GET_ALL_COMMENTS_USER_SUCCESS, payload: data });
     } catch (error) {
       if (error.response) {

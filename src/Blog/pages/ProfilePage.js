@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Layout from "../components/shared/Layout";
 import { Container, Row, Col } from "react-bootstrap";
 import ProfileCard from "../components/profilePageComponents/ProfileCard";
@@ -31,17 +31,13 @@ const ProfilePage = () => {
     getAllCommentsUser,
   } = useCommentContext();
 
-  const [loadingComment, setLoadingComment] = useState(isLoadingUserComment);
-
   useEffect(() => {
     getAllCommentsUser();
     getAllUsers();
-    // to resolve isLoadingUserComment not resetting to false
-    setTimeout(() => {
-      setLoadingComment(false);
-    }, 3000);
     // eslint-disable-next-line
   }, []);
+
+  console.log(userCommentInfo);
 
   return (
     <Layout>
@@ -79,7 +75,7 @@ const ProfilePage = () => {
           blogPost={blogPost}
           getSingleBlogPost={getSingleBlogPost}
           resetBlogPost={resetBlogPost}
-          loadingComment={loadingComment}
+          isLoadingUserComment={isLoadingUserComment}
           errorUserComment={errorUserComment}
           userCommentInfo={userCommentInfo}
         />

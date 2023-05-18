@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { Alert, ListGroup } from "react-bootstrap";
 import Spinner from "../shared/Spinner";
 import PinnedBlogPost from "./PinnedBlogPost";
 import CommentsOverview from "./CommentsOverview";
+import CustomListGroup from "../shared/CustomListGroup";
 
 const UserComments = ({
   userInfo,
   blogPost,
   getSingleBlogPost,
   resetBlogPost,
-  loadingComment,
+  isLoadingUserComment,
   errorUserComment,
   userCommentInfo,
 }) => {
@@ -43,14 +43,12 @@ const UserComments = ({
           <PinnedBlogPost {...{ blogPost, getSingleBlogPost, resetBlogPost }} />
         </div>
       ) : (
-        <ListGroup className="mb-3">
-          <ListGroup.Item variant="secondary" className="fs-5">
-            No favorite blog post? Got to the home page to pick one out{" "}
-            <Link to="/">now</Link>!
-          </ListGroup.Item>
-        </ListGroup>
+        <CustomListGroup
+          mb={3}
+          text="No favorite blog post? Got to the home page to pick one out"
+        />
       )}
-      {loadingComment && (
+      {isLoadingUserComment && (
         <div className="d-flex justify-content-center mb-3">
           <Spinner />
         </div>
@@ -62,7 +60,7 @@ const UserComments = ({
           </ListGroup.Item>
         </ListGroup>
       )}
-      {!loadingComment && !errorUserComment && (
+      {!isLoadingUserComment && !errorUserComment && (
         <CommentsOverview
           {...{
             userCommentInfo,

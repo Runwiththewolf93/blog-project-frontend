@@ -3,6 +3,7 @@ import Spinner from "../shared/Spinner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook, faInstagram } from "@fortawesome/free-brands-svg-icons";
 import { capitalizeName, getLatestAvatar } from "../../utils/helper";
+import { Link } from "react-router-dom";
 
 const ProfileCard = ({ userProfile, userInfo, blogInfo, userCommentInfo }) => {
   const sortedComments = userCommentInfo?.sort(
@@ -21,15 +22,23 @@ const ProfileCard = ({ userProfile, userInfo, blogInfo, userCommentInfo }) => {
               {capitalizeName(userInfo?.name) ||
                 userProfile.name?.first + userProfile.name?.last}
             </Card.Title>
-            <Card.Subtitle className="text-muted mb-1">
-              Your most recent comment:
-            </Card.Subtitle>
-            <Card.Text>
-              {sortedComments.length > 0 &&
-              sortedComments[0]?.comment.length > 200
-                ? sortedComments[0]?.comment.slice(0, 200) + "..."
-                : sortedComments[0]?.comment}
-            </Card.Text>
+            {sortedComments.length > 0 ? (
+              <>
+                <Card.Subtitle className="text-muted mb-1">
+                  Your most recent comment:
+                </Card.Subtitle>
+                <Card.Text>
+                  {sortedComments.length > 0 &&
+                  sortedComments[0]?.comment.length > 200
+                    ? sortedComments[0]?.comment.slice(0, 200) + "..."
+                    : sortedComments[0]?.comment}
+                </Card.Text>
+              </>
+            ) : (
+              <Card.Text>
+                You have no comments yet. <Link to="/">Add some</Link>
+              </Card.Text>
+            )}
           </Card.Body>
           <ListGroup className="list-group-flush">
             <ListGroup.Item>
