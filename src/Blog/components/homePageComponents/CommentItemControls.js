@@ -1,4 +1,5 @@
 import { Spinner, Alert, Form, Button } from "react-bootstrap";
+import { useVoteContext } from "../../store/voteContext";
 
 const CommentItemControls = ({
   comment,
@@ -14,6 +15,8 @@ const CommentItemControls = ({
   setEditedComment,
   errorMessage,
 }) => {
+  const { deleteCommentVoteCount } = useVoteContext();
+
   return loadingCommentId === comment._id ? (
     <Spinner />
   ) : errorCommentId === comment._id ? (
@@ -66,7 +69,10 @@ const CommentItemControls = ({
         type="button"
         variant="secondary"
         className="my-2 ms-2"
-        onClick={() => handleDeleteComment(comment._id)}
+        onClick={() => {
+          deleteCommentVoteCount(comment._id);
+          handleDeleteComment(comment._id);
+        }}
       >
         Delete Comment
       </Button>
@@ -75,5 +81,3 @@ const CommentItemControls = ({
 };
 
 export default CommentItemControls;
-
-// need to make two controllers on the backend - one for deleting all votes relating to a comment, second one for deleting all votes relating to a blog post. When deleting a blog post, we also have to delete the vote comments object as well. Sort components per page, to messy.

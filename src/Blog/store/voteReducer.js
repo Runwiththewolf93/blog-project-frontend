@@ -8,6 +8,15 @@ import {
   UPDATE_COMMENT_VOTE_COUNT_BEGIN,
   UPDATE_COMMENT_VOTE_COUNT_SUCCESS,
   UPDATE_COMMENT_VOTE_COUNT_ERROR,
+  DELETE_BLOG_VOTE_COUNT_BEGIN,
+  DELETE_BLOG_VOTE_COUNT_SUCCESS,
+  DELETE_BLOG_VOTE_COUNT_ERROR,
+  DELETE_COMMENT_VOTE_COUNT_BEGIN,
+  DELETE_COMMENT_VOTE_COUNT_SUCCESS,
+  DELETE_COMMENT_VOTE_COUNT_ERROR,
+  DELETE_ALL_COMMENT_VOTES_FOR_BLOG_POST_BEGIN,
+  DELETE_ALL_COMMENT_VOTES_FOR_BLOG_POST_SUCCESS,
+  DELETE_ALL_COMMENT_VOTES_FOR_BLOG_POST_ERROR,
   LOGOUT_USER,
 } from "./actions";
 
@@ -65,6 +74,62 @@ const voteReducer = (state, action) => {
   if (action.type === UPDATE_COMMENT_VOTE_COUNT_ERROR) {
     return { ...state, isLoadingVote: false, errorVote: action.payload };
   }
+  // delete vote and blog vote count
+  if (action.type === DELETE_BLOG_VOTE_COUNT_BEGIN) {
+    return { ...state, isLoadingVote: true };
+  }
+  if (action.type === DELETE_BLOG_VOTE_COUNT_SUCCESS) {
+    return {
+      ...state,
+      isLoadingVote: false,
+      voteInfo: action.payload.updatedVoteInfo,
+      blogInfo: action.payload.updatedBlogInfo,
+      errorVote: false,
+    };
+  }
+  if (action.type === DELETE_BLOG_VOTE_COUNT_ERROR) {
+    return { ...state, isLoadingVote: false, errorVote: action.payload };
+  }
+  // delete vote and comment vote count
+  if (action.type === DELETE_COMMENT_VOTE_COUNT_BEGIN) {
+    return { ...state, isLoadingVote: true };
+  }
+  if (action.type === DELETE_COMMENT_VOTE_COUNT_SUCCESS) {
+    return {
+      ...state,
+      isLoadingVote: false,
+      voteInfo: action.payload.updatedVoteInfo,
+      commentInfo: action.payload.updatedCommentInfo,
+      errorVote: false,
+    };
+  }
+  if (action.type === DELETE_COMMENT_VOTE_COUNT_ERROR) {
+    return {
+      ...state,
+      isLoadingVote: false,
+      errorVote: action.payload,
+    };
+  }
+  // delete all comment vote objects for a blog post
+  if (action.type === DELETE_ALL_COMMENT_VOTES_FOR_BLOG_POST_BEGIN) {
+    return { ...state, isLoadingVote: true };
+  }
+  if (action.type === DELETE_ALL_COMMENT_VOTES_FOR_BLOG_POST_SUCCESS) {
+    return {
+      ...state,
+      isLoadingVote: false,
+      voteInfo: action.payload.updatedVoteInfo,
+      errorVote: false,
+    };
+  }
+  if (action.type === DELETE_ALL_COMMENT_VOTES_FOR_BLOG_POST_ERROR) {
+    return {
+      ...state,
+      isLoadingVote: false,
+      errorVote: action.payload,
+    };
+  }
+  // logout user vote
   if (action.type === LOGOUT_USER) {
     return {
       ...initialState,

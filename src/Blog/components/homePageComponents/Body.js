@@ -16,7 +16,6 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
     editCommentBlogPost,
     deleteCommentBlogPost,
     deleteAllCommentsBlogPost,
-    commentInfo,
   } = useCommentContext();
   const { voteInfo, getAllVotes, updateBlogVoteCount, updateCommentVoteCount } =
     useVoteContext();
@@ -85,7 +84,6 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
               blogDataToShow,
               userInfo,
               blogInfo,
-              commentInfo,
               voteInfo,
               deleteBlogPost,
               getSingleBlogPost,

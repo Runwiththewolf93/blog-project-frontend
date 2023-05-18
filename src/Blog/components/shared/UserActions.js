@@ -1,32 +1,76 @@
+import { useState } from "react";
 import ModalEdit from "../modals/ModalEdit";
-import { Button } from "react-bootstrap";
+import { Button, Tooltip, OverlayTrigger } from "react-bootstrap";
+import { useVoteContext } from "../../store/voteContext";
 
 const UserActions = ({
   userInfo,
   post,
   deleteBlogPost,
-  commentInfo,
   deleteAllCommentsBlogPost,
-}) => (
-  <div className="d-flex align-items-center">
-    {userInfo._id === post.user._id && (
-      <>
-        <ModalEdit post={post} />
-        <Button
-          variant="light"
-          className="ms-3"
-          onClick={() => {
-            deleteBlogPost(post._id);
-            if (commentInfo.blog === post._id) {
-              deleteAllCommentsBlogPost(post._id);
-            }
-          }}
-        >
-          Delete Post
-        </Button>
-      </>
-    )}
-  </div>
-);
+}) => {
+  const { deleteBlogVoteCount, deleteAllCommentVotesForBlogPost } =
+    useVoteContext();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const deletePost = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      await deleteAllCommentVotesForBlogPost(post._id);
+      await deleteAllCommentsBlogPost(post._id);
+      await deleteBlogVoteCount(post._id);
+      await deleteBlogPost(post._id);
+    } catch (err) {
+      setError(err.message);
+    }
+    setIsLoading(false);
+  };
+
+  const renderTooltip = props => (
+    <Tooltip id="button-tooltip" {...props}>
+      {error}
+    </Tooltip>
+  );
+
+  return (
+    <div className="d-flex align-items-center">
+      {userInfo._id === post.user._id && (
+        <>
+          <ModalEdit post={post} />
+          {error ? (
+            <OverlayTrigger
+              placement="bottom"
+              delay={{ show: 250, hide: 400 }}
+              overlay={renderTooltip}
+            >
+              <span className="d-inline-block">
+                <Button
+                  variant="light"
+                  className="ms-3"
+                  disabled={isLoading}
+                  onClick={deletePost}
+                >
+                  {isLoading ? "Deleting..." : "Delete Post"}
+                </Button>
+              </span>
+            </OverlayTrigger>
+          ) : (
+            <Button
+              variant="light"
+              className="ms-3"
+              disabled={isLoading}
+              onClick={deletePost}
+            >
+              {isLoading ? "Deleting..." : "Delete Post"}
+            </Button>
+          )}
+        </>
+      )}
+    </div>
+  );
+};
 
 export default UserActions;

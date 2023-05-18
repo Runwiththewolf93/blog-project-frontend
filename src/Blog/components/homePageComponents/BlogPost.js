@@ -12,7 +12,6 @@ const BlogPost = ({
   post,
   userInfo,
   blogInfo,
-  commentInfo,
   voteInfo,
   deleteBlogPost,
   getSingleBlogPost,
@@ -57,7 +56,6 @@ const BlogPost = ({
             userInfo={userInfo}
             post={post}
             deleteBlogPost={deleteBlogPost}
-            commentInfo={commentInfo}
             deleteAllCommentsBlogPost={deleteAllCommentsBlogPost}
           />
         </Col>

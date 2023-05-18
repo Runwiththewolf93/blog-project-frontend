@@ -8,7 +8,6 @@ const BlogPosts = ({
   blogDataToShow,
   userInfo,
   blogInfo,
-  commentInfo,
   voteInfo,
   deleteBlogPost,
   getSingleBlogPost,
@@ -25,7 +24,6 @@ const BlogPosts = ({
         post={post}
         userInfo={userInfo}
         blogInfo={blogInfo}
-        commentInfo={commentInfo}
         voteInfo={voteInfo}
         deleteBlogPost={deleteBlogPost}
         getSingleBlogPost={getSingleBlogPost}

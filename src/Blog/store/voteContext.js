@@ -12,6 +12,15 @@ import {
   UPDATE_COMMENT_VOTE_COUNT_BEGIN,
   UPDATE_COMMENT_VOTE_COUNT_SUCCESS,
   UPDATE_COMMENT_VOTE_COUNT_ERROR,
+  DELETE_BLOG_VOTE_COUNT_BEGIN,
+  DELETE_BLOG_VOTE_COUNT_SUCCESS,
+  DELETE_BLOG_VOTE_COUNT_ERROR,
+  DELETE_COMMENT_VOTE_COUNT_BEGIN,
+  DELETE_COMMENT_VOTE_COUNT_SUCCESS,
+  DELETE_COMMENT_VOTE_COUNT_ERROR,
+  DELETE_ALL_COMMENT_VOTES_FOR_BLOG_POST_BEGIN,
+  DELETE_ALL_COMMENT_VOTES_FOR_BLOG_POST_SUCCESS,
+  DELETE_ALL_COMMENT_VOTES_FOR_BLOG_POST_ERROR,
   LOGOUT_USER,
 } from "./actions";
 import {
@@ -60,7 +69,6 @@ const VoteProvider = ({ children }) => {
     },
     error => {
       if (error.response && error.response.status === 401) {
-        alert("Session expired, please log in again to view the blog.");
         logoutUser();
         window.location.href = "/";
       }
@@ -224,6 +232,124 @@ const VoteProvider = ({ children }) => {
     }
   };
 
+  const deleteBlogVoteCount = async blogId => {
+    dispatch({ type: DELETE_BLOG_VOTE_COUNT_BEGIN });
+
+    try {
+      const { data } = await authFetch.delete(`/vote/blogId/${blogId}`);
+
+      // Parse the data received from the backend
+      const { vote, totalVotes } = data;
+
+      // Update the totalVotes property of the blogInfo object
+      const updatedBlogInfo = state.blogInfo.map(blog => {
+        if (blog._id === blogId) {
+          return { ...blog, totalVotes };
+        }
+        return blog;
+      });
+
+      // Remove the deleted vote from the voteInfo array
+      const updatedVoteInfo = state.voteInfo.filter(
+        v => !(v.post === vote.post && v.user === vote.user)
+      );
+
+      // Add updated blogInfo and voteInfo objects to state
+      dispatch({
+        type: DELETE_BLOG_VOTE_COUNT_SUCCESS,
+        payload: { updatedBlogInfo, updatedVoteInfo },
+      });
+
+      // Save the updated voteInfo to localStorage
+      localStorage.setItem("voteInfo", JSON.stringify(updatedVoteInfo));
+
+      // Save the updated blogInfo to localStorage
+      localStorage.setItem("blogInfo", JSON.stringify(updatedBlogInfo));
+    } catch (error) {
+      if (error.response) {
+        dispatch({
+          type: DELETE_BLOG_VOTE_COUNT_ERROR,
+          payload: error.response.data.msg,
+        });
+      }
+    }
+  };
+
+  const deleteCommentVoteCount = async commentId => {
+    dispatch({ type: DELETE_COMMENT_VOTE_COUNT_BEGIN });
+
+    try {
+      const { data } = await authFetch.delete(`/vote/commentId/${commentId}`);
+
+      // Parse the data received from the backend
+      const { vote, totalVotes } = data;
+
+      // Update the totalVotes property of the commentInfo object
+      const updatedCommentInfo = state.commentInfo.map(comment => {
+        if (comment._id === commentId) {
+          return { ...comment, totalVotes };
+        }
+        return comment;
+      });
+
+      // Remove the deleted vote from the voteInfo array
+      const updatedVoteInfo = state.voteInfo.filter(
+        v => !(v.post === vote.post && v.user === vote.user)
+      );
+
+      // Add updated commentInfo and voteInfo objects to state
+      dispatch({
+        type: DELETE_COMMENT_VOTE_COUNT_SUCCESS,
+        payload: { updatedCommentInfo, updatedVoteInfo },
+      });
+
+      // Save the updated voteInfo to localStorage
+      localStorage.setItem("voteInfo", JSON.stringify(updatedVoteInfo));
+
+      // Save the updated commentInfo to localStorage
+      localStorage.setItem("commentInfo", JSON.stringify(updatedCommentInfo));
+    } catch (error) {
+      if (error.response) {
+        dispatch({
+          type: DELETE_COMMENT_VOTE_COUNT_ERROR,
+          payload: error.response.data.msg,
+        });
+      }
+    }
+  };
+
+  const deleteAllCommentVotesForBlogPost = async blogId => {
+    dispatch({ type: DELETE_ALL_COMMENT_VOTES_FOR_BLOG_POST_BEGIN });
+
+    try {
+      await authFetch.delete(`/vote/blogId/${blogId}/comments`);
+
+      // Remove the deleted votes from the voteInfo array
+      const updatedVoteInfo = state.voteInfo.filter(vote => {
+        // Only keep the votes that are not related to the deleted blog
+        return !state.commentInfo.some(
+          comment => comment.blog === blogId && comment._id === vote.post
+        );
+      });
+
+      // Add updated voteInfo object to state
+      dispatch({
+        type: DELETE_ALL_COMMENT_VOTES_FOR_BLOG_POST_SUCCESS,
+        payload: { updatedVoteInfo },
+      });
+
+      // Save the updated voteInfo to localStorage
+      localStorage.setItem("voteInfo", JSON.stringify(updatedVoteInfo));
+    } catch (error) {
+      if (error.response) {
+        dispatch({
+          type: DELETE_ALL_COMMENT_VOTES_FOR_BLOG_POST_ERROR,
+          payload: error.response.data.msg,
+        });
+      }
+    }
+  };
+
   const logoutUser = () => {
     dispatch({ type: LOGOUT_USER });
     localStorage.clear();
@@ -237,6 +363,9 @@ const VoteProvider = ({ children }) => {
         getAllVotes,
         updateBlogVoteCount,
         updateCommentVoteCount,
+        deleteBlogVoteCount,
+        deleteCommentVoteCount,
+        deleteAllCommentVotesForBlogPost,
       }}
     >
       {children}
@@ -249,3 +378,5 @@ const useVoteContext = () => {
 };
 
 export { VoteProvider, initialState, useVoteContext };
+
+// test out deleteAllCommentVotesForBlogPost, implement delete func.

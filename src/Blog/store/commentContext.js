@@ -71,7 +71,6 @@ const CommentProvider = ({ children }) => {
     },
     error => {
       if (error.response && error.response.status === 401) {
-        alert("Session expired, please log in again to view the blog.");
         logoutUser();
         window.location.href = "/";
       }
