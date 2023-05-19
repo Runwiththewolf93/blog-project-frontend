@@ -13,7 +13,7 @@ const CarouselComponent = () => {
 
   return (
     <Row className="m-3">
-      <h1 className="mx-0 px-0">Based on your recent interests...</h1>
+      <h1 className="mx-0 px-0">See some of our most upvoted posts</h1>
       <Col md={8} style={{ margin: 0, padding: 0 }}>
         <Carousel fade onSelect={handleSelect}>
           {images.map(image => (

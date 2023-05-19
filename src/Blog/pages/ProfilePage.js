@@ -37,8 +37,6 @@ const ProfilePage = () => {
     // eslint-disable-next-line
   }, []);
 
-  console.log(isLoadingUserComment);
-
   return (
     <Layout>
       <Container className="mt-5">
@@ -67,17 +65,23 @@ const ProfilePage = () => {
           </Col>
           <Col>
             <Map userProfile={userProfile} userInfo={userInfo} />
-            <Information userProfile={userProfile} />
+            <Information
+              userCommentInfo={userCommentInfo}
+              userInfo={userInfo}
+              blogInfo={blogInfo}
+            />
           </Col>
         </Row>
         <UserComments
-          userInfo={userInfo}
-          blogPost={blogPost}
-          getSingleBlogPost={getSingleBlogPost}
-          resetBlogPost={resetBlogPost}
-          isLoadingUserComment={isLoadingUserComment}
-          errorUserComment={errorUserComment}
-          userCommentInfo={userCommentInfo}
+          {...{
+            userInfo,
+            blogPost,
+            getSingleBlogPost,
+            resetBlogPost,
+            isLoadingUserComment,
+            errorUserComment,
+            userCommentInfo,
+          }}
         />
       </Container>
     </Layout>

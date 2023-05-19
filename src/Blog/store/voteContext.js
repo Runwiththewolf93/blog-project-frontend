@@ -174,6 +174,9 @@ const VoteProvider = ({ children }) => {
       // Parse the data received from the backend
       const { vote, totalVotes } = data;
 
+      console.log(vote);
+      console.log(state.voteInfo);
+
       // Get the existing vote object from the voteInfo array
       const existingVote = state.voteInfo.find(
         v => v.post === vote.post && v.user === vote.user

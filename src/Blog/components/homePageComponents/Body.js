@@ -26,9 +26,12 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
     useVoteContext();
 
   useEffect(() => {
-    userInfo && getAllComments() && getAllVotes();
+    if (userInfo) {
+      getAllComments();
+      getAllVotes();
+    }
     // eslint-disable-next-line
-  }, []);
+  }, [userInfo]);
 
   if (!userInfo) {
     return (
