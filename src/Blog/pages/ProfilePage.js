@@ -37,7 +37,7 @@ const ProfilePage = () => {
     // eslint-disable-next-line
   }, []);
 
-  console.log(userCommentInfo);
+  console.log(isLoadingUserComment);
 
   return (
     <Layout>
@@ -85,3 +85,5 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
+
+// see tomorrow if everything works with a user that has comments. add for this one.

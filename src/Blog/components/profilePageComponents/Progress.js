@@ -11,11 +11,16 @@ const Progress = ({ userProfile, userInfo }) => {
     "Security Testing",
     "Product Infrastructure",
     "Network Security",
+    "Database Administration",
+    "Data Analysis",
+    "Mobile App Development",
+    "Machine Learning",
+    "Cybersecurity Analyst",
   ];
 
   const variants = ["danger", "light", "warning", "success", "info"];
 
-  const shuffledLabels = shuffle(labels);
+  const shuffledLabels = shuffle(labels).slice(0, 5);
   const shuffledVariants = shuffle(variants);
 
   return (

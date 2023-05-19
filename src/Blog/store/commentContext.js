@@ -26,6 +26,7 @@ import {
   DELETE_ALL_COMMENTS_BLOG_POST_ERROR,
   RESET_COMMENT_ERROR,
   LOGOUT_USER,
+  RESET_GET_ALL_COMMENTS_USER_LOADING,
 } from "./actions";
 import { userInfoFromLocalStorage } from "./appContext";
 
@@ -110,6 +111,8 @@ const CommentProvider = ({ children }) => {
           payload: error.response.data.msg,
         });
       }
+    } finally {
+      dispatch({ type: RESET_GET_ALL_COMMENTS_USER_LOADING });
     }
   };
 
