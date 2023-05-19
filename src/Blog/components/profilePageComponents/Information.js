@@ -1,34 +1,59 @@
 import { Card, ListGroup } from "react-bootstrap";
+import {
+  findMostPopularItem,
+  truncateContent,
+  countUserVoteObjects,
+} from "../../utils/helper";
+import { useVoteContext } from "../../store/voteContext";
 
 const Information = ({ userCommentInfo, userInfo, blogInfo }) => {
-  console.log(userCommentInfo);
-  console.log(userInfo);
-  console.log(blogInfo);
+  const { voteInfo } = useVoteContext();
+
+  // Filter blogInfo to only include blogs of the current user
+  const userBlogs = blogInfo?.filter(blog => blog.user._id === userInfo._id);
+
+  // Find the most popular (highest or lowest vote count) blog post
+  const mostPopularBlogPost = findMostPopularItem(userBlogs, "totalVotes");
+
+  // Find the most popular (highest or lowest vote count) comment
+  const mostPopularComment = findMostPopularItem(userCommentInfo, "totalVotes");
+
+  // Count the vote objects for each user
+  const userVoteCounts = countUserVoteObjects(voteInfo);
+
+  // Get the vote count of the logged-in user
+  const userVoteCount = userVoteCounts[userInfo._id];
+
+  // Find the maximum vote count among all users
+  const maxVoteCount = Math.max(...Object.values(userVoteCounts));
+
+  let prolificVoterMessage;
+
+  if (userVoteCount === maxVoteCount) {
+    prolificVoterMessage =
+      "Congratulations! You are our most prolific voter! Keep it up!";
+  } else {
+    prolificVoterMessage =
+      "You are not our most prolific voter, but you are getting there. Keep it up!";
+  }
 
   return (
     <Card className="mt-4">
       <Card.Header>Most Popular Blog Post</Card.Header>
       <ListGroup variant="flush">
         <ListGroup.Item>
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptates,
-          porro quisquam nisi alias pariatur esse sequi accusamus libero ratione
-          perferendis ipsam dolorem in, minus itaque quibusdam recusandae ex
-          cumque exercitationem.
+          <h5>{mostPopularBlogPost.title}</h5>
+          <p>{truncateContent(mostPopularBlogPost.content, 100)}</p>
         </ListGroup.Item>
         <Card.Header>Most Popular Comment</Card.Header>
         <ListGroup.Item>
-          {/* {userProfile.location?.city} {userProfile.location?.country} */}
+          <p>{truncateContent(mostPopularComment.comment, 100)}</p>
         </ListGroup.Item>
         <Card.Header>Interesting Fact</Card.Header>
-        <ListGroup.Item>
-          You are our most prolific voter, congratulations! / You are not our
-          most prolific voter, but you are getting there. Keep at it!
-        </ListGroup.Item>
+        <ListGroup.Item>{prolificVoterMessage}</ListGroup.Item>
       </ListGroup>
     </Card>
   );
 };
 
 export default Information;
-
-// I would like to revise my Information component, to make it a bit more dynamic. As far as I'm concerned, we can remake the whole Information component no problem. Below you can find what one of my blogInfo objects looks like, as well as the userInfo object. I'd like to filter through the blogInfo object to find the blogInfo objects of the logged in user. Then, we will find the most popular blog post based on the totalVotes property of the BlogPost. Here we have to keep in mind that popularity goes both ways, so we have to check for both the highest and lowest number of votes for a blog post. E.g., if the highest upvoted post is 2, the highest downvoted post is -3, then the post popular vote is the one with -3. Once we have this blog post, I'd like to display its title and content. How might we do all of this? Relevant code below:

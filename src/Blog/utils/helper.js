@@ -46,10 +46,47 @@ const concatAndSliceData = (data, additionalData, maxLength) => {
   return concatenatedData.slice(0, maxLength);
 };
 
+const findMostPopularItem = (items, voteKey) => {
+  return items?.reduce(
+    (prev, current) => {
+      return Math.abs(current[voteKey]) > Math.abs(prev[voteKey])
+        ? current
+        : prev;
+    },
+    { [voteKey]: 0 }
+  );
+};
+
+const truncateContent = (content, length, ellipsis = "...") => {
+  if (content?.length > length) {
+    return `${content.slice(0, length)}${ellipsis}`;
+  }
+  return content;
+};
+
+const countUserVoteObjects = voteInfo => {
+  const userVoteCounts = {};
+
+  // Count vote objects for each user
+  voteInfo?.forEach(vote => {
+    const { user } = vote;
+    if (userVoteCounts[user]) {
+      userVoteCounts[user]++;
+    } else {
+      userVoteCounts[user] = 1;
+    }
+  });
+
+  return userVoteCounts;
+};
+
 export {
   capitalizeFirstLetter,
   capitalizeName,
   getLatestAvatar,
   processUsers,
   concatAndSliceData,
+  findMostPopularItem,
+  truncateContent,
+  countUserVoteObjects,
 };
