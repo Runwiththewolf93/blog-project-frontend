@@ -32,8 +32,9 @@ const ProfilePage = () => {
   } = useCommentContext();
 
   useEffect(() => {
-    getAllCommentsUser();
-    getAllUsers();
+    getAllUsers().then(() => {
+      getAllCommentsUser();
+    });
     // eslint-disable-next-line
   }, []);
 
@@ -43,10 +44,13 @@ const ProfilePage = () => {
         <Row>
           <Col>
             <ProfileCard
-              userProfile={userProfile}
-              userInfo={userInfo}
-              blogInfo={blogInfo}
-              userCommentInfo={userCommentInfo}
+              {...{
+                userProfile,
+                userInfo,
+                blogInfo,
+                userCommentInfo,
+                isLoadingUserComment,
+              }}
             />
           </Col>
           <Col md={6} className="mb-4">
@@ -89,5 +93,3 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
-
-// see tomorrow if everything works with a user that has comments. add for this one.

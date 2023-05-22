@@ -1,16 +1,59 @@
+import { useEffect } from "react";
 import { Card, ListGroup } from "react-bootstrap";
 import Spinner from "../shared/Spinner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFacebook, faInstagram } from "@fortawesome/free-brands-svg-icons";
-import { capitalizeName, getLatestAvatar } from "../../utils/helper";
+import {
+  faFacebook,
+  faInstagram,
+  faTwitter,
+  faGithub,
+} from "@fortawesome/free-brands-svg-icons";
+import {
+  capitalizeName,
+  getLatestAvatar,
+  truncateContent,
+} from "../../utils/helper";
 import { Link } from "react-router-dom";
+import { useCommentContext } from "../../store/commentContext";
 
-const ProfileCard = ({ userProfile, userInfo, blogInfo, userCommentInfo }) => {
+const ProfileCard = ({
+  userProfile,
+  userInfo,
+  blogInfo,
+  userCommentInfo,
+  isLoadingUserComment,
+}) => {
+  const { getAllCommentsBlogPost, blogCommentInfo } = useCommentContext();
+
+  useEffect(() => {
+    // Find the blog post with the highest absolute totalVotes
+    if (blogInfo && blogInfo.length > 0) {
+      const highestVotedBlog = blogInfo.reduce((prev, current) => {
+        return Math.abs(prev.totalVotes) > Math.abs(current.totalVotes)
+          ? prev
+          : current;
+      });
+
+      // Fetch comments related to the highest voted blog post
+      if (highestVotedBlog && highestVotedBlog._id) {
+        getAllCommentsBlogPost(highestVotedBlog._id);
+      }
+    }
+
+    // eslint-disable-next-line
+  }, [blogInfo]);
+
   const sortedComments = userCommentInfo?.sort(
     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
   );
 
   const avatar = getLatestAvatar(blogInfo, userInfo);
+
+  console.log(blogCommentInfo);
+
+  if (isLoadingUserComment) {
+    return <Spinner />;
+  }
 
   return (
     <Card>
@@ -22,7 +65,7 @@ const ProfileCard = ({ userProfile, userInfo, blogInfo, userCommentInfo }) => {
               {capitalizeName(userInfo?.name) ||
                 userProfile.name?.first + userProfile.name?.last}
             </Card.Title>
-            {sortedComments.length > 0 ? (
+            {sortedComments && sortedComments.length > 0 ? (
               <>
                 <Card.Subtitle className="text-muted mb-1">
                   Your most recent comment:
@@ -44,8 +87,20 @@ const ProfileCard = ({ userProfile, userInfo, blogInfo, userCommentInfo }) => {
             <ListGroup.Item>
               {userInfo?.email || userProfile.email}
             </ListGroup.Item>
-            <ListGroup.Item>{userProfile.location?.city}</ListGroup.Item>
-            <ListGroup.Item>{userProfile.phone}</ListGroup.Item>
+            <ListGroup className="list-group-flush">
+              <ListGroup.Item>
+                Below are the comments of your highest upvoted blog post. Enjoy!
+              </ListGroup.Item>
+              {blogCommentInfo && blogCommentInfo.length > 0 ? (
+                blogCommentInfo.map(comment => (
+                  <ListGroup.Item key={comment._id}>
+                    {truncateContent(comment.comment, 100)}
+                  </ListGroup.Item>
+                ))
+              ) : (
+                <ListGroup.Item>No comments yet.</ListGroup.Item>
+              )}
+            </ListGroup>
           </ListGroup>
           <Card.Body className="d-flex justify-content-around">
             <Card.Link href="https://www.facebook.com/">
@@ -53,6 +108,12 @@ const ProfileCard = ({ userProfile, userInfo, blogInfo, userCommentInfo }) => {
             </Card.Link>
             <Card.Link href="https://www.instagram.com/">
               <FontAwesomeIcon icon={faInstagram} size="2x" />
+            </Card.Link>
+            <Card.Link href="https://twitter.com/">
+              <FontAwesomeIcon icon={faTwitter} size="2x" />
+            </Card.Link>
+            <Card.Link href="https://github.com/">
+              <FontAwesomeIcon icon={faGithub} size="2x" />
             </Card.Link>
           </Card.Body>
         </>
