@@ -1,58 +1,101 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Accordion } from "react-bootstrap";
-import useUnsplashImages from "../../hooks/useUnsplash";
 
-function OtherChoices() {
-  const [activeItem, setActiveItem] = useState("0");
+const OtherChoices = ({ blogInfo = [], commentInfo = [], voteInfo = [] }) => {
+  const setActiveItem = useState(0)[1];
 
-  let query = "city";
-  if (activeItem === "1") query = "sea";
-  if (activeItem === "2") query = "forest";
+  // Calculate the controversial posts
+  const controversialPosts = useMemo(() => {
+    const voteCounts = voteInfo.reduce((acc, curr) => {
+      acc[curr.post] = acc[curr.post] || { upvotes: 0, downvotes: 0 };
+      if (curr.vote === 1) acc[curr.post].upvotes += 1;
+      else if (curr.vote === -1) acc[curr.post].downvotes += 1;
+      return acc;
+    }, {});
 
-  const images = useUnsplashImages(query, 3);
+    const sortedBlogInfo = [...blogInfo].map(post => {
+      const votes = voteCounts[post._id] || { upvotes: 0, downvotes: 0 };
+      return {
+        ...post,
+        controversy:
+          votes.upvotes +
+          votes.downvotes -
+          Math.abs(votes.upvotes - votes.downvotes),
+      };
+    });
+
+    return sortedBlogInfo.sort((a, b) => b.controversy - a.controversy);
+  }, [blogInfo, voteInfo]);
+
+  // Calculate the post with the most comments
+  const mostCommentedPost = useMemo(() => {
+    const commentCounts = commentInfo.reduce((acc, curr) => {
+      acc[curr.blog] = (acc[curr.blog] || 0) + 1;
+      return acc;
+    }, {});
+
+    const mostCommentedPostId = Object.keys(commentCounts).reduce((a, b) =>
+      commentCounts[a] > commentCounts[b] ? a : b
+    );
+    return blogInfo.find(post => post._id === mostCommentedPostId);
+  }, [blogInfo, commentInfo]);
+
+  // Calculate the post with the most votes
+  const mostVotedPost = useMemo(() => {
+    const voteCounts = voteInfo.reduce((acc, curr) => {
+      acc[curr.post] = (acc[curr.post] || 0) + curr.vote;
+      return acc;
+    }, {});
+
+    const mostVotedPostId = Object.keys(voteCounts).reduce((a, b) =>
+      voteCounts[a] > voteCounts[b] ? a : b
+    );
+    return blogInfo.find(post => post._id === mostVotedPostId);
+  }, [blogInfo, voteInfo]);
+
+  const categories = [
+    { post: controversialPosts[0], title: "Most Controversial Post" },
+    { post: mostCommentedPost, title: "Most Commented Post" },
+    { post: mostVotedPost, title: "Most Voted Post" },
+  ];
 
   return (
     <div className="m-3">
       <h1>Other topics that might interest you...</h1>
-      <Accordion defaultActiveKey="0">
-        {[
-          { eventKey: "0", title: "Items of interest #1" },
-          { eventKey: "1", title: "Items of interest #2" },
-          { eventKey: "2", title: "Items of interest #3" },
-        ].map((item, idx) => (
-          <Accordion.Item key={item.eventKey} eventKey={item.eventKey}>
-            <Accordion.Header>{item.title}</Accordion.Header>
-            <Accordion.Body onEnter={() => setActiveItem(idx.toString())}>
-              <div className="row row-cols-1 row-cols-md-3 g-4">
-                {images.map(image => (
-                  <div className="col" key={image.id}>
-                    <div className="card h-100">
-                      <img
-                        src={image.urls.regular}
-                        alt={image.alt_description}
-                        className="card-img-top"
-                        style={{ objectFit: "cover", height: "200px" }}
-                      />
-                      <div className="card-body">
-                        <h5 className="card-title">
-                          {image.alt_description.charAt(0).toUpperCase() +
-                            image.alt_description.slice(1)}
-                        </h5>
-                        <p className="card-text">
-                          {image.description ||
-                            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae, provident!"}
-                        </p>
-                      </div>
-                    </div>
+      <Accordion>
+        {categories.map((category, idx) => (
+          <Accordion.Item key={category.post?._id} eventKey={idx}>
+            <Accordion.Header>{category.title}</Accordion.Header>
+            <Accordion.Body onEnter={() => setActiveItem(idx)}>
+              {category.post ? (
+                <div className="card h-100">
+                  <img
+                    src={category.post.images[0]}
+                    alt={category.post.title}
+                    className="card-img-top"
+                    style={{ objectFit: "cover", height: "200px" }}
+                  />
+                  <div className="card-body">
+                    <h5 className="card-title">{category.post.title}</h5>
+                    <p className="card-text">
+                      {category.post.content.slice(0, 200)}...
+                    </p>
                   </div>
-                ))}
-              </div>
+                  <div className="card-footer">
+                    <small className="text-muted">
+                      Total votes: {category.post.totalVotes}
+                    </small>
+                  </div>
+                </div>
+              ) : (
+                <p>No data available for this category.</p>
+              )}
             </Accordion.Body>
           </Accordion.Item>
         ))}
       </Accordion>
     </div>
   );
-}
+};
 
 export default OtherChoices;

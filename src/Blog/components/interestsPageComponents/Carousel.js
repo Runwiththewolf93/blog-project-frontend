@@ -39,7 +39,7 @@ const CarouselComponent = ({ blogInfo }) => {
       <Col md={8} style={{ margin: 0, padding: 0 }}>
         <Carousel fade activeIndex={currentPostIndex} onSelect={handleSelect}>
           {topPosts.map((post, postIndex) => (
-            <Carousel.Item key={post.id}>
+            <Carousel.Item key={post._id}>
               <img
                 className="d-block w-100"
                 src={post.images[postImageIndices[postIndex]]}
