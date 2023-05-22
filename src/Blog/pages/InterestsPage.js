@@ -4,9 +4,11 @@ import EditorsChoice from "../components/interestsPageComponents/EditorsChoice";
 import OtherChoices from "../components/interestsPageComponents/OtherChoices";
 import { Row, Col } from "react-bootstrap";
 import { useAppContext } from "../store/appContext";
+import { useCommentContext } from "../store/commentContext";
 
 const InterestsPage = () => {
   const { blogInfo } = useAppContext();
+  const { commentInfo } = useCommentContext();
 
   return (
     <Layout>
@@ -18,7 +20,7 @@ const InterestsPage = () => {
       <hr />
       <Row>
         <Col>
-          <EditorsChoice />
+          <EditorsChoice blogInfo={blogInfo} commentInfo={commentInfo} />
         </Col>
       </Row>
       <hr />
