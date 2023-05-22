@@ -49,8 +49,6 @@ const ProfileCard = ({
 
   const avatar = getLatestAvatar(blogInfo, userInfo);
 
-  console.log(blogCommentInfo);
-
   if (isLoadingUserComment) {
     return <Spinner />;
   }
