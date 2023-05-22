@@ -1,26 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Row, Col, Carousel, ListGroup, Card } from "react-bootstrap";
-import { truncateContent } from "../../utils/helper";
+import { truncateContent, sortData } from "../../utils/helper";
+import PostTypeSelector from "./PostTypeSelector";
 
 const CarouselComponent = ({ blogInfo }) => {
   const [currentPostIndex, setCurrentPostIndex] = useState(0);
   const [postImageIndices, setPostImageIndices] = useState([0, 0, 0]);
   const [postType, setPostType] = useState("popular");
+  const [topPosts, setTopPosts] = useState([]);
 
   // Sort the blogInfo by the value of totalVotes and get the top 3 posts
-  let topPosts = [...blogInfo];
-
-  if (postType === "popular") {
-    topPosts = topPosts.sort(
-      (a, b) => Math.abs(b.totalVotes) - Math.abs(a.totalVotes)
-    );
-  } else if (postType === "upvoted") {
-    topPosts = topPosts.sort((a, b) => b.totalVotes - a.totalVotes);
-  } else if (postType === "downvoted") {
-    topPosts = topPosts.sort((a, b) => a.totalVotes - b.totalVotes);
-  }
-
-  topPosts = topPosts.slice(0, 3);
+  useEffect(() => {
+    let sortedPosts = sortData(blogInfo, postType);
+    setTopPosts(sortedPosts.slice(0, 3));
+  }, [blogInfo, postType]);
 
   const handleSelect = eventKey => {
     setCurrentPostIndex(eventKey);
@@ -41,30 +34,7 @@ const CarouselComponent = ({ blogInfo }) => {
     <Row className="m-3">
       <h1 className="mx-0 px-0 mb-3">
         See some of our most{" "}
-        <span
-          style={{ cursor: "pointer" }}
-          onClick={() => setPostType("popular")}
-          className="text-light text-decoration-underline"
-        >
-          popular
-        </span>{" "}
-        /{" "}
-        <span
-          style={{ cursor: "pointer" }}
-          onClick={() => setPostType("upvoted")}
-          className="text-light text-decoration-underline"
-        >
-          upvoted
-        </span>{" "}
-        /{" "}
-        <span
-          style={{ cursor: "pointer" }}
-          onClick={() => setPostType("downvoted")}
-          className="text-light text-decoration-underline"
-        >
-          downvoted
-        </span>{" "}
-        posts
+        <PostTypeSelector setPostType={setPostType} typeText="posts" />
       </h1>
       <Col md={8} style={{ margin: 0, padding: 0 }}>
         <Carousel fade activeIndex={currentPostIndex} onSelect={handleSelect}>

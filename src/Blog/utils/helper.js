@@ -80,6 +80,20 @@ const countUserVoteObjects = voteInfo => {
   return userVoteCounts;
 };
 
+const sortData = (data, postType) => {
+  let sortedData = [...data];
+
+  if (postType === "popular") {
+    sortedData.sort((a, b) => Math.abs(b.totalVotes) - Math.abs(a.totalVotes));
+  } else if (postType === "upvoted") {
+    sortedData.sort((a, b) => b.totalVotes - a.totalVotes);
+  } else if (postType === "downvoted") {
+    sortedData.sort((a, b) => a.totalVotes - b.totalVotes);
+  }
+
+  return sortedData;
+};
+
 export {
   capitalizeFirstLetter,
   capitalizeName,
@@ -89,4 +103,5 @@ export {
   findMostPopularItem,
   truncateContent,
   countUserVoteObjects,
+  sortData,
 };
