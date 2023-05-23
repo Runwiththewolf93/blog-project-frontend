@@ -110,19 +110,3 @@ function TabbedInterface({ locationData, images }) {
 }
 
 export default TabbedInterface;
-
-// continent: locationContinent, done
-// continent_code: locationContinentCode, done
-// postal_code: locationPostalCode, done
-// country: locationCountry, done
-// country_code: locationCountryCode, done
-// city: locationCity, done
-// region: locationRegion, done
-// png: flagPng, not implemented
-// currency_code: locationCurrencyCode, done
-// currency_name: locationCurrencyName, done
-// ip_address: locationIpAddress, no need to implement
-// latitude: locationLatitude, done
-// longitude: locationLongitude, done
-// is_vpn: locationIsVpn, no need to implement
-// current_time: locationCurrentTime, done

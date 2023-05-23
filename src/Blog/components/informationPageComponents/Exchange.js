@@ -9,8 +9,19 @@ import {
   ConversionResult,
 } from "./exchangeComponents/ExchangeElements";
 import { useReducer } from "react";
-import { initialState, exchangeReducer } from "./ExchangeReducer";
-import { Card, Form, Col, Row } from "react-bootstrap";
+import {
+  initialState,
+  exchangeReducer,
+  SET_BASE_AMOUNT,
+  SET_BASE_CURRENCY,
+  SET_TARGET_CURRENCY,
+  SET_DATE,
+  CLEAR_FORM,
+  SET_BASE_EXCHANGE_RATE,
+  HIDE_EXCHANGE_RATE,
+  SHOW_EXCHANGE_RATE,
+} from "./exchangeComponents/ExchangeReducer";
+import { Card, Form, Col, Row, Spinner } from "react-bootstrap";
 import useFetchExchangeRates from "./exchangeComponents/useFetchExchangeRates";
 import useHandleFormSubmit from "./exchangeComponents/useHandleFormSubmit";
 import useCurrencyOptions from "./exchangeComponents/useCurrencyOptions";
@@ -27,8 +38,8 @@ const Exchange = () => {
   const targetCurrencyOptions = useCurrencyOptions(state.exchangeRates);
 
   const handleClear = () => {
-    dispatch({ type: "CLEAR_FORM" });
-    dispatch({ type: "SET_BASE_EXCHANGE_RATE", payload: "EUR" });
+    dispatch({ type: CLEAR_FORM });
+    dispatch({ type: SET_BASE_EXCHANGE_RATE, payload: "EUR" });
   };
 
   const handleSwapCurrencies = () => {
@@ -45,7 +56,7 @@ const Exchange = () => {
             type="number"
             value={state.baseAmount}
             onChange={e =>
-              dispatch({ type: "SET_BASE_AMOUNT", payload: e.target.value })
+              dispatch({ type: SET_BASE_AMOUNT, payload: e.target.value })
             }
           />
           <FormSelect
@@ -53,10 +64,10 @@ const Exchange = () => {
             value={state.baseCurrency}
             onChange={e => {
               dispatch({
-                type: "SET_BASE_CURRENCY",
+                type: SET_BASE_CURRENCY,
                 payload: e.target.value,
               });
-              dispatch({ type: "HIDE_EXCHANGE_RATE" });
+              dispatch({ type: HIDE_EXCHANGE_RATE });
             }}
             options={baseCurrencyOptions}
             baseExchangeRate={state.baseExchangeRate}
@@ -64,7 +75,7 @@ const Exchange = () => {
           <SwapButton
             onClick={() => {
               handleSwapCurrencies();
-              dispatch({ type: "HIDE_EXCHANGE_RATE" });
+              dispatch({ type: HIDE_EXCHANGE_RATE });
             }}
           />
           <FormSelect
@@ -72,10 +83,10 @@ const Exchange = () => {
             value={state.targetCurrency}
             onChange={e => {
               dispatch({
-                type: "SET_TARGET_CURRENCY",
+                type: SET_TARGET_CURRENCY,
                 payload: e.target.value,
               });
-              dispatch({ type: "HIDE_EXCHANGE_RATE" });
+              dispatch({ type: HIDE_EXCHANGE_RATE });
             }}
             options={targetCurrencyOptions}
             baseExchangeRate={state.baseExchangeRate}
@@ -85,21 +96,30 @@ const Exchange = () => {
           <DateInput
             value={state.date}
             onChange={e =>
-              dispatch({ type: "SET_DATE", payload: e.target.value })
+              dispatch({ type: SET_DATE, payload: e.target.value })
             }
           />
-          <ConversionResult
-            baseAmount={state.baseAmount}
-            baseCurrency={state.baseCurrency}
-            convertedAmount={state.convertedAmount}
-            targetCurrency={state.targetCurrency}
-            exchangeRate={state.exchangeRate}
-            showExchangeRate={state.showExchangeRate}
-          />
+          {state.isLoading ? (
+            <div className="d-flex justify-content-center align-items-center">
+              <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            </div>
+          ) : (
+            <ConversionResult
+              baseAmount={state.baseAmount}
+              baseCurrency={state.baseCurrency}
+              convertedAmount={state.convertedAmount}
+              targetCurrency={state.targetCurrency}
+              exchangeRate={state.exchangeRate}
+              showExchangeRate={state.showExchangeRate}
+            />
+          )}
+
           <Col className="d-flex justify-content-end" md={1}>
             <ClearButton onClick={handleClear} />
             <ConvertButton
-              onClick={() => dispatch({ type: "SHOW_EXCHANGE_RATE" })}
+              onClick={() => dispatch({ type: SHOW_EXCHANGE_RATE })}
             />
           </Col>
         </div>
