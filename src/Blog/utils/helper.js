@@ -94,6 +94,19 @@ const sortData = (data, postType) => {
   return sortedData;
 };
 
+const calculateMostPost = (data, countProp, calcCount, blogInfo) => {
+  const counts = data.reduce((acc, curr) => {
+    acc[curr[countProp]] = (acc[curr[countProp]] || 0) + calcCount(curr);
+    return acc;
+  }, {});
+
+  const mostPostId = Object.keys(counts).reduce((a, b) =>
+    counts[a] > counts[b] ? a : b
+  );
+
+  return blogInfo.find(post => post._id === mostPostId);
+};
+
 export {
   capitalizeFirstLetter,
   capitalizeName,
@@ -104,4 +117,5 @@ export {
   truncateContent,
   countUserVoteObjects,
   sortData,
+  calculateMostPost,
 };

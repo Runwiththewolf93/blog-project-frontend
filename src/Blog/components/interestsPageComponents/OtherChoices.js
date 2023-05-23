@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { Accordion } from "react-bootstrap";
+import { calculateMostPost } from "../../utils/helper";
 
 const OtherChoices = ({ blogInfo = [], commentInfo = [], voteInfo = [] }) => {
   const setActiveItem = useState(0)[1];
@@ -29,28 +30,12 @@ const OtherChoices = ({ blogInfo = [], commentInfo = [], voteInfo = [] }) => {
 
   // Calculate the post with the most comments
   const mostCommentedPost = useMemo(() => {
-    const commentCounts = commentInfo.reduce((acc, curr) => {
-      acc[curr.blog] = (acc[curr.blog] || 0) + 1;
-      return acc;
-    }, {});
-
-    const mostCommentedPostId = Object.keys(commentCounts).reduce((a, b) =>
-      commentCounts[a] > commentCounts[b] ? a : b
-    );
-    return blogInfo.find(post => post._id === mostCommentedPostId);
+    return calculateMostPost(commentInfo, "blog", () => 1, blogInfo);
   }, [blogInfo, commentInfo]);
 
   // Calculate the post with the most votes
   const mostVotedPost = useMemo(() => {
-    const voteCounts = voteInfo.reduce((acc, curr) => {
-      acc[curr.post] = (acc[curr.post] || 0) + curr.vote;
-      return acc;
-    }, {});
-
-    const mostVotedPostId = Object.keys(voteCounts).reduce((a, b) =>
-      voteCounts[a] > voteCounts[b] ? a : b
-    );
-    return blogInfo.find(post => post._id === mostVotedPostId);
+    return calculateMostPost(voteInfo, "post", vote => vote.vote, blogInfo);
   }, [blogInfo, voteInfo]);
 
   const categories = [
