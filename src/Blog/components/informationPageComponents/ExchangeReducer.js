@@ -8,6 +8,7 @@ export const initialState = {
   exchangeRates: {},
   baseExchangeRate: "",
   showExchangeRate: true,
+  errorMessage: null,
 };
 
 export const exchangeReducer = (state, action) => {
@@ -73,6 +74,11 @@ export const exchangeReducer = (state, action) => {
       return {
         ...state,
         baseExchangeRate: action.payload,
+      };
+    case "SET_ERROR_MESSAGE":
+      return {
+        ...state,
+        errorMessage: action.payload,
       };
     default:
       break;

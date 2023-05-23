@@ -1,9 +1,10 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useMemo } from "react";
 import { initialState, exchangeReducer } from "./ExchangeReducer";
-import { Card, Form, Col, Row, Button } from "react-bootstrap";
+import { Card, Form, Col, Row, Button, Alert } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import { debounce } from "lodash";
 
 const Exchange = () => {
   const [state, dispatch] = useReducer(exchangeReducer, initialState);
@@ -13,7 +14,7 @@ const Exchange = () => {
   const handleFormSubmit = e => {
     e.preventDefault();
 
-    const fetchExchangeRate = async () => {
+    const fetchExchangeRate = debounce(async () => {
       try {
         const { data } = await axios.get(
           `https://exchange-rates.abstractapi.com/v1/convert?api_key=${abstractAPIKey}&base=${state.baseCurrency}&target=${state.targetCurrency}&date=${state.date}&base_amount=${state.baseAmount}`
@@ -23,11 +24,21 @@ const Exchange = () => {
           payload: data.converted_amount,
         });
         dispatch({ type: "SET_EXCHANGE_RATE", payload: data.exchange_rate });
-        console.log(data);
       } catch (error) {
-        console.log(error);
+        if (error.response && error.response.status === 429) {
+          // Handle rate limit error
+          dispatch({
+            type: "SET_ERROR_MESSAGE",
+            payload: null,
+          });
+        } else {
+          dispatch({
+            type: "SET_ERROR_MESSAGE",
+            payload: error.message,
+          });
+        }
       }
-    };
+    }, 1000);
 
     fetchExchangeRate();
   };
@@ -43,17 +54,48 @@ const Exchange = () => {
         `https://exchange-rates.abstractapi.com/v1/live?api_key=${abstractAPIKey}&base=EUR`
       )
       .then(({ data }) => {
+        console.log(data);
         dispatch({ type: "SET_EXCHANGE_RATES", payload: data.exchange_rates });
         dispatch({
           type: "SET_BASE_EXCHANGE_RATE",
           payload: data.base,
         });
+      })
+      .catch(error => {
+        if (error.response && error.response.status === 429) {
+          // Handle rate limit error
+          dispatch({
+            type: "SET_ERROR_MESSAGE",
+            payload: null,
+          });
+        } else {
+          dispatch({
+            type: "SET_ERROR_MESSAGE",
+            payload: error.message,
+          });
+        }
       });
   }, [abstractAPIKey]);
 
   const handleSwapCurrencies = () => {
     dispatch({ type: "SWAP_CURRENCIES" });
   };
+
+  const baseCurrencyOptions = useMemo(() => {
+    return Object.keys(state.exchangeRates).map(currency => (
+      <option key={currency} value={currency}>
+        {currency}
+      </option>
+    ));
+  }, [state.exchangeRates]);
+
+  const targetCurrencyOptions = useMemo(() => {
+    return Object.keys(state.exchangeRates).map(currency => (
+      <option key={currency} value={currency}>
+        {currency}
+      </option>
+    ));
+  }, [state.exchangeRates]);
 
   return (
     <Card className="mb-3">
@@ -88,11 +130,7 @@ const Exchange = () => {
                 <option value={state.baseExchangeRate}>
                   {state.baseExchangeRate}
                 </option>
-                {Object.keys(state.exchangeRates).map(currency => (
-                  <option key={currency} value={currency}>
-                    {currency}
-                  </option>
-                ))}
+                {baseCurrencyOptions}
               </Form.Select>
             </Form.Group>
           </Col>
@@ -123,11 +161,7 @@ const Exchange = () => {
                 <option value={state.baseExchangeRate}>
                   {state.baseExchangeRate}
                 </option>
-                {Object.keys(state.exchangeRates).map(currency => (
-                  <option key={currency} value={currency}>
-                    {currency}
-                  </option>
-                ))}
+                {targetCurrencyOptions}
               </Form.Select>
             </Form.Group>
           </Col>
@@ -183,6 +217,11 @@ const Exchange = () => {
           </Col>
         </div>
       </Form>
+      {state.errorMessage && (
+        <Alert dismissible variant="danger" className="mb-0">
+          {state.errorMessage}
+        </Alert>
+      )}
     </Card>
   );
 };
