@@ -21,6 +21,7 @@ import {
   SWAP_CURRENCIES,
   HIDE_EXCHANGE_RATE,
   SHOW_EXCHANGE_RATE,
+  CLEAR_ERROR_MESSAGE,
 } from "./exchangeComponents/ExchangeReducer";
 import { Card, Form, Col, Row, Spinner } from "react-bootstrap";
 import useFetchExchangeRates from "./exchangeComponents/useFetchExchangeRates";
@@ -45,6 +46,10 @@ const Exchange = () => {
 
   const handleSwapCurrencies = () => {
     dispatch({ type: SWAP_CURRENCIES });
+  };
+
+  const handleClose = () => {
+    dispatch({ type: CLEAR_ERROR_MESSAGE });
   };
 
   return (
@@ -125,7 +130,7 @@ const Exchange = () => {
             </Col>
           </div>
         </Form>
-        <ErrorMessage message={state.errorMessage} />
+        <ErrorMessage message={state.errorMessage} handleClose={handleClose} />
       </Card>
     </div>
   );

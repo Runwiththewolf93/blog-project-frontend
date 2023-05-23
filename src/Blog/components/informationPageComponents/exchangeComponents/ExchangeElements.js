@@ -62,9 +62,9 @@ const ClearButton = ({ onClick }) => (
 );
 
 // ErrorMessage component
-const ErrorMessage = ({ message }) =>
+const ErrorMessage = ({ message, handleClose }) =>
   message && (
-    <Alert dismissible variant="danger" className="mb-0">
+    <Alert dismissible variant="danger" onClose={handleClose} className="mb-0">
       {message}
     </Alert>
   );

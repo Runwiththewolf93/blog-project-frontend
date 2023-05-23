@@ -3,8 +3,11 @@ import axios from "axios";
 
 const useGeolocation = apiKey => {
   const [locationData, setLocationData] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    setIsLoading(true);
     const randomIPAddress = Array(4)
       .fill(0)
       .map((_, i) => Math.floor(Math.random() * 255) + (i === 0 ? 1 : 0))

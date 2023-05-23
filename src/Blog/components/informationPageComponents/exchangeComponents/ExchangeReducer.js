@@ -12,6 +12,7 @@ export const SHOW_EXCHANGE_RATE = "SHOW_EXCHANGE_RATE";
 export const SET_BASE_EXCHANGE_RATE = "SET_BASE_EXCHANGE_RATE";
 export const SET_LOADING = "SET_LOADING";
 export const SET_ERROR_MESSAGE = "SET_ERROR_MESSAGE";
+export const CLEAR_ERROR_MESSAGE = "CLEAR_ERROR_MESSAGE";
 
 export const initialState = {
   baseCurrency: "USD",
@@ -99,6 +100,11 @@ export const exchangeReducer = (state, action) => {
       return {
         ...state,
         errorMessage: action.payload,
+      };
+    case CLEAR_ERROR_MESSAGE:
+      return {
+        ...state,
+        errorMessage: null,
       };
     default:
       return state;
