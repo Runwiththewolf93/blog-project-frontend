@@ -18,6 +18,7 @@ import {
   SET_DATE,
   CLEAR_FORM,
   SET_BASE_EXCHANGE_RATE,
+  SWAP_CURRENCIES,
   HIDE_EXCHANGE_RATE,
   SHOW_EXCHANGE_RATE,
 } from "./exchangeComponents/ExchangeReducer";
@@ -43,89 +44,90 @@ const Exchange = () => {
   };
 
   const handleSwapCurrencies = () => {
-    dispatch({ type: "SWAP_CURRENCIES" });
+    dispatch({ type: SWAP_CURRENCIES });
   };
 
   return (
-    <Card className="mb-3">
-      <Form className="m-3" onSubmit={handleFormSubmit}>
-        <Row>
-          <FormInput
-            label="Amount"
-            placeholder={`${state.baseCurrency} 1.00`}
-            type="number"
-            value={state.baseAmount}
-            onChange={e =>
-              dispatch({ type: SET_BASE_AMOUNT, payload: e.target.value })
-            }
-          />
-          <FormSelect
-            label="From"
-            value={state.baseCurrency}
-            onChange={e => {
-              dispatch({
-                type: SET_BASE_CURRENCY,
-                payload: e.target.value,
-              });
-              dispatch({ type: HIDE_EXCHANGE_RATE });
-            }}
-            options={baseCurrencyOptions}
-            baseExchangeRate={state.baseExchangeRate}
-          />
-          <SwapButton
-            onClick={() => {
-              handleSwapCurrencies();
-              dispatch({ type: HIDE_EXCHANGE_RATE });
-            }}
-          />
-          <FormSelect
-            label="To"
-            value={state.targetCurrency}
-            onChange={e => {
-              dispatch({
-                type: SET_TARGET_CURRENCY,
-                payload: e.target.value,
-              });
-              dispatch({ type: HIDE_EXCHANGE_RATE });
-            }}
-            options={targetCurrencyOptions}
-            baseExchangeRate={state.baseExchangeRate}
-          />
-        </Row>
-        <div className="d-flex justify-content-between mt-3">
-          <DateInput
-            value={state.date}
-            onChange={e =>
-              dispatch({ type: SET_DATE, payload: e.target.value })
-            }
-          />
-          {state.isLoading ? (
-            <div className="d-flex justify-content-center align-items-center">
-              <Spinner animation="border" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            </div>
-          ) : (
-            <ConversionResult
-              baseAmount={state.baseAmount}
-              baseCurrency={state.baseCurrency}
-              convertedAmount={state.convertedAmount}
-              targetCurrency={state.targetCurrency}
-              exchangeRate={state.exchangeRate}
-              showExchangeRate={state.showExchangeRate}
+    <div style={{ height: "100vh" }}>
+      <Card className="mb-3">
+        <Form className="m-3" onSubmit={handleFormSubmit}>
+          <Row>
+            <FormInput
+              label="Amount"
+              placeholder={`${state.baseCurrency} 1.00`}
+              type="number"
+              value={state.baseAmount}
+              onChange={e =>
+                dispatch({ type: SET_BASE_AMOUNT, payload: e.target.value })
+              }
             />
-          )}
-
-          <Col className="d-flex justify-content-end" md={1}>
-            <ClearButton onClick={handleClear} />
-            <ConvertButton
-              onClick={() => dispatch({ type: SHOW_EXCHANGE_RATE })}
+            <FormSelect
+              label="From"
+              value={state.baseCurrency}
+              onChange={e => {
+                dispatch({
+                  type: SET_BASE_CURRENCY,
+                  payload: e.target.value,
+                });
+                dispatch({ type: HIDE_EXCHANGE_RATE });
+              }}
+              options={baseCurrencyOptions}
+              baseExchangeRate={state.baseExchangeRate}
             />
-          </Col>
-        </div>
-      </Form>
-      <ErrorMessage message={state.errorMessage} />
-    </Card>
+            <SwapButton
+              onClick={() => {
+                handleSwapCurrencies();
+                dispatch({ type: HIDE_EXCHANGE_RATE });
+              }}
+            />
+            <FormSelect
+              label="To"
+              value={state.targetCurrency}
+              onChange={e => {
+                dispatch({
+                  type: SET_TARGET_CURRENCY,
+                  payload: e.target.value,
+                });
+                dispatch({ type: HIDE_EXCHANGE_RATE });
+              }}
+              options={targetCurrencyOptions}
+              baseExchangeRate={state.baseExchangeRate}
+            />
+          </Row>
+          <div className="d-flex justify-content-between mt-3">
+            <DateInput
+              value={state.date}
+              onChange={e =>
+                dispatch({ type: SET_DATE, payload: e.target.value })
+              }
+            />
+            {state.isLoading && state.convertedAmount ? (
+              <div className="d-flex justify-content-center align-items-center">
+                <Spinner animation="border" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </Spinner>
+              </div>
+            ) : (
+              <ConversionResult
+                baseAmount={state.baseAmount}
+                baseCurrency={state.baseCurrency}
+                convertedAmount={state.convertedAmount}
+                targetCurrency={state.targetCurrency}
+                exchangeRate={state.exchangeRate}
+                showExchangeRate={state.showExchangeRate}
+              />
+            )}
+            <Col className="d-flex justify-content-end" md={1}>
+              <ClearButton onClick={handleClear} />
+              <ConvertButton
+                onClick={() => dispatch({ type: SHOW_EXCHANGE_RATE })}
+              />
+            </Col>
+          </div>
+        </Form>
+        <ErrorMessage message={state.errorMessage} />
+      </Card>
+    </div>
   );
 };
 
