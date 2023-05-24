@@ -28,7 +28,13 @@ const InformationPage = () => {
     },
     {
       text: "Holiday season at destination",
-      component: locationData && <Holiday locationData={locationData} />,
+      component: locationData && (
+        <Holiday
+          locationData={locationData}
+          isLoadingGeolocation={isLoadingGeolocation}
+          errorGeolocation={errorGeolocation}
+        />
+      ),
     },
   ];
 

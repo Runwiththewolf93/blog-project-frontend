@@ -1,24 +1,34 @@
-import { useState, useEffect } from "react";
-import { Table } from "react-bootstrap";
-import Spinner from "../shared/Spinner";
-import axios from "axios";
+import { Table, Spinner, Alert } from "react-bootstrap";
+import useFetchPublicHolidays from "./useFetchPublicHolidays";
 
-const Holiday = ({ locationData }) => {
-  const [holidayData, setHolidayData] = useState([]);
-  const year = 2023;
+const Holiday = ({ locationData, isLoadingGeolocation, errorGeolocation }) => {
+  const {
+    loading,
+    error,
+    data: holidayData,
+  } = useFetchPublicHolidays(locationData.country_code, 2023);
 
-  useEffect(() => {
-    axios
-      .get(
-        `https://date.nager.at/api/v3/publicholidays/${year}/${locationData.country_code}`
-      )
-      .then(({ data }) => setHolidayData(data));
-  }, [locationData.country_code]);
+  if (isLoadingGeolocation || loading) {
+    return (
+      <Spinner animation="border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </Spinner>
+    );
+  }
 
-  return !holidayData ? (
-    <Spinner />
+  if (errorGeolocation || error) {
+    return (
+      <Alert>
+        <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
+        <p>{(errorGeolocation || error).message}</p>
+      </Alert>
+    );
+  }
+
+  return !holidayData || holidayData.length === 0 ? (
+    <p>No holidays found</p>
   ) : (
-    <>
+    <div className="vh-100 mt-5">
       <h3>A list of all the holidays at destination:</h3>
       <Table striped bordered hover responsive variant="dark">
         <thead>
@@ -54,11 +64,8 @@ const Holiday = ({ locationData }) => {
           ))}
         </tbody>
       </Table>
-    </>
+    </div>
   );
 };
 
 export default Holiday;
-
-// const apiKey = process.env.REACT_APP_ABSTRACT_HOLIDAY_API_KEY;
-// `https://holidays.abstractapi.com/v1/?api_key=${apiKey}&country=${locationData.country_code}`

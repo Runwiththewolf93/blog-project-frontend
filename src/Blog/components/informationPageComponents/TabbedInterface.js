@@ -136,5 +136,3 @@ function TabbedInterface({
 }
 
 export default TabbedInterface;
-
-// Implement remaining state tomorrow and test existing one.

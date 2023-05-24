@@ -58,8 +58,11 @@ const useGeolocation = apiKey => {
         });
       })
       .catch(err => {
-        console.error(err);
-        setError(err);
+        if (err.response && err.response.status === 429) {
+          setError(null);
+        } else {
+          setError(err);
+        }
       })
       .finally(() => setIsLoading(false));
   }, [apiKey]);
