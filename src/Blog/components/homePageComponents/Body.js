@@ -32,12 +32,19 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
   } = useVoteContext();
 
   useEffect(() => {
-    if (userInfo?._id) {
-      getAllComments();
-      getAllVotes();
-    }
+    const fetchAllData = async () => {
+      if (userInfo?._id) {
+        await getAllComments();
+        await getAllVotes();
+      }
+    };
+    fetchAllData();
     // eslint-disable-next-line
   }, [userInfo?._id]);
+
+  console.log(isLoadingBlog);
+  console.log(isLoadingComment);
+  console.log(isLoadingVote);
 
   if (!userInfo) {
     return (
