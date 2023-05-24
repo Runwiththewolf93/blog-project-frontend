@@ -1,4 +1,11 @@
-import { Form, Col, Button, Alert } from "react-bootstrap";
+import {
+  Form,
+  Col,
+  Button,
+  Alert,
+  OverlayTrigger,
+  Tooltip,
+} from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
@@ -74,12 +81,22 @@ const DateInput = ({ value, onChange }) => (
   <Col md={2}>
     <Form.Group>
       <Form.Label>Date</Form.Label>
-      <Form.Control
-        placeholder="$1.00"
-        type="date"
-        value={value}
-        onChange={onChange}
-      />
+      <OverlayTrigger
+        placement="right"
+        overlay={
+          <Tooltip id="date-tooltip">
+            Please select a date that is at least 48 hours ago. The API does not
+            support later dates.
+          </Tooltip>
+        }
+      >
+        <Form.Control
+          placeholder="$1.00"
+          type="date"
+          value={value}
+          onChange={onChange}
+        />
+      </OverlayTrigger>
     </Form.Group>
   </Col>
 );

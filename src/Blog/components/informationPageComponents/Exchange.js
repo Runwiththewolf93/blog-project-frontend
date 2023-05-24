@@ -53,7 +53,7 @@ const Exchange = () => {
   };
 
   return (
-    <div style={{ height: "100vh" }}>
+    <div className="vh-100 mt-5">
       <Card className="mb-3">
         <Form className="m-3" onSubmit={handleFormSubmit}>
           <Row>

@@ -1,4 +1,4 @@
-import { Row, Col, Nav, Tab, Image } from "react-bootstrap";
+import { Row, Col, Nav, Tab, Image, Spinner, Alert } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faLocationCrosshairs,
@@ -6,7 +6,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import FigureComponent from "./Figure";
 
-function TabbedInterface({ locationData, images }) {
+function TabbedInterface({
+  locationData,
+  images,
+  isLoadingGeolocation,
+  isLoadingImages,
+  errorGeolocation,
+  errorImages,
+}) {
   return (
     <Tab.Container id="list-group-tabs-example" defaultActiveKey="first">
       <Row>
@@ -56,51 +63,70 @@ function TabbedInterface({ locationData, images }) {
                   <h4 className="mb-4">
                     <strong>Location Information:</strong>
                   </h4>
-                  <p>
-                    <strong>Continent:</strong> {locationData.continent}
-                  </p>
-                  <p>
-                    <strong>Country:</strong> {locationData.country} (
-                    {locationData.country_code})
-                  </p>
-                  <p>
-                    <strong>City:</strong> {locationData.city}
-                  </p>
-                  <p>
-                    <strong>Region:</strong> {locationData.region}
-                  </p>
-                  <p>
-                    <strong>Postal Code:</strong> {locationData.postal_code}
-                  </p>
-                  <p>
-                    <strong>Latitude:</strong> {locationData.latitude}
-                  </p>
-                  <p>
-                    <strong>Longitude:</strong> {locationData.longitude}
-                  </p>
-                  <p>
-                    <strong>Currency:</strong> {locationData.currency_name} (
-                    {locationData.currency_code || "No info"})
-                  </p>
-                  <p>
-                    <strong>Current Time:</strong> {locationData.current_time}
-                  </p>
-                  <p>
-                    <strong>Flag:</strong>
-                    <Image
-                      src={locationData.png}
-                      style={{
-                        width: "120px",
-                        height: "60px",
-                        marginLeft: "1rem",
-                      }}
-                    />
-                  </p>
+                  {isLoadingGeolocation ? (
+                    <Spinner animation="border" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </Spinner>
+                  ) : errorGeolocation ? (
+                    <Alert variant="danger">{errorGeolocation}</Alert>
+                  ) : (
+                    <>
+                      <p>
+                        <strong>Continent:</strong> {locationData.continent}
+                      </p>
+                      <p>
+                        <strong>Country:</strong> {locationData.country} (
+                        {locationData.country_code})
+                      </p>
+                      <p>
+                        <strong>City:</strong> {locationData.city}
+                      </p>
+                      <p>
+                        <strong>Region:</strong> {locationData.region}
+                      </p>
+                      <p>
+                        <strong>Postal Code:</strong> {locationData.postal_code}
+                      </p>
+                      <p>
+                        <strong>Latitude:</strong> {locationData.latitude}
+                      </p>
+                      <p>
+                        <strong>Longitude:</strong> {locationData.longitude}
+                      </p>
+                      <p>
+                        <strong>Currency:</strong> {locationData.currency_name}{" "}
+                        ({locationData.currency_code || "No info"})
+                      </p>
+                      <p>
+                        <strong>Current Time:</strong>{" "}
+                        {locationData.current_time}
+                      </p>
+                      <p>
+                        <strong>Flag:</strong>
+                        <Image
+                          src={locationData.png}
+                          style={{
+                            width: "120px",
+                            height: "60px",
+                            marginLeft: "1rem",
+                          }}
+                        />
+                      </p>
+                    </>
+                  )}
                 </Col>
               </Row>
             </Tab.Pane>
             <Tab.Pane eventKey="second">
-              <FigureComponent images={images} />
+              {isLoadingImages ? (
+                <Spinner animation="border" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </Spinner>
+              ) : errorImages ? (
+                <Alert variant="danger">{errorImages}</Alert>
+              ) : (
+                <FigureComponent images={images} />
+              )}
             </Tab.Pane>
           </Tab.Content>
         </Col>
@@ -110,3 +136,5 @@ function TabbedInterface({ locationData, images }) {
 }
 
 export default TabbedInterface;
+
+// Implement remaining state tomorrow and test existing one.

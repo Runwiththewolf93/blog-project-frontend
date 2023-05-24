@@ -1,6 +1,8 @@
 import { Figure, Image } from "react-bootstrap";
 
 function FigureComponent({ images }) {
+  if (!images) return null;
+
   return (
     images &&
     images.map(image => (

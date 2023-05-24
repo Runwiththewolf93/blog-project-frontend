@@ -7,6 +7,7 @@ import {
   SET_ERROR_MESSAGE,
 } from "./ExchangeReducer";
 
+// useHandleFormSubmit hook
 const useHandleFormSubmit = (abstractAPIKey, state, dispatch) => {
   const handleFormSubmit = e => {
     e.preventDefault();

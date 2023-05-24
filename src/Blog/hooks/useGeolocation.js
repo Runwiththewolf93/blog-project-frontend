@@ -8,6 +8,7 @@ const useGeolocation = apiKey => {
 
   useEffect(() => {
     setIsLoading(true);
+    setError(null);
     const randomIPAddress = Array(4)
       .fill(0)
       .map((_, i) => Math.floor(Math.random() * 255) + (i === 0 ? 1 : 0))
@@ -56,10 +57,14 @@ const useGeolocation = apiKey => {
           connection,
         });
       })
-      .catch(err => console.error(err));
+      .catch(err => {
+        console.error(err);
+        setError(err);
+      })
+      .finally(() => setIsLoading(false));
   }, [apiKey]);
 
-  return locationData;
+  return { locationData, isLoading, error };
 };
 
 export default useGeolocation;

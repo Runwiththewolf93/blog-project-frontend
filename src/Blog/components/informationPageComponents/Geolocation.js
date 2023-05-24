@@ -1,10 +1,23 @@
+import { useState } from "react";
 import { Card, Badge } from "react-bootstrap";
 import ToastComponent from "./Toast";
 import TabbedInterface from "./TabbedInterface";
 import useUnsplashImages from "../../hooks/useUnsplash";
 
-const Geolocation = ({ locationData }) => {
-  const images = useUnsplashImages(locationData.city, 12);
+const Geolocation = ({
+  locationData,
+  isLoadingGeolocation,
+  errorGeolocation,
+}) => {
+  const [isLoadingImages, setIsLoadingImages] = useState(false);
+  const [errorImages, setErrorImages] = useState(null);
+
+  const images = useUnsplashImages(
+    locationData.city,
+    12,
+    setIsLoadingImages,
+    setErrorImages
+  );
 
   return (
     <>
@@ -24,7 +37,16 @@ const Geolocation = ({ locationData }) => {
           <Card.Subtitle className="mb-3">
             We suggest the following location:
           </Card.Subtitle>
-          <TabbedInterface locationData={locationData} images={images} />
+          <TabbedInterface
+            {...{
+              locationData,
+              images,
+              isLoadingGeolocation,
+              isLoadingImages,
+              errorGeolocation,
+              errorImages,
+            }}
+          />
         </Card.Body>
       </Card>
     </>

@@ -8,13 +8,23 @@ import useGeolocation from "../hooks/useGeolocation";
 
 const InformationPage = () => {
   const apiKey = process.env.REACT_APP_ABSTRACT_LOCATION_API_KEY;
-  const locationData = useGeolocation(apiKey);
+  const {
+    locationData,
+    isLoading: isLoadingGeolocation,
+    error: errorGeolocation,
+  } = useGeolocation(apiKey);
 
   const links = [
     { text: "Exchange rates for your trip", component: <Exchange /> },
     {
       text: "Location of your trip",
-      component: locationData && <Geolocation locationData={locationData} />,
+      component: locationData && (
+        <Geolocation
+          locationData={locationData}
+          isLoading={isLoadingGeolocation}
+          error={errorGeolocation}
+        />
+      ),
     },
     {
       text: "Holiday season at destination",

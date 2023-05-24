@@ -7,6 +7,7 @@ import {
   SET_ERROR_MESSAGE,
 } from "./ExchangeReducer";
 
+// useFetchExchangeRates hook
 const useFetchExchangeRates = (abstractAPIKey, dispatch) => {
   useEffect(() => {
     const fetchExchangeRates = async () => {
