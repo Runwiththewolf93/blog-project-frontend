@@ -381,5 +381,3 @@ const useVoteContext = () => {
 };
 
 export { VoteProvider, initialState, useVoteContext };
-
-// test out deleteAllCommentVotesForBlogPost, implement delete func.

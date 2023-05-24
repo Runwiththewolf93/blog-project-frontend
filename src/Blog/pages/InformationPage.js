@@ -5,6 +5,7 @@ import Exchange from "../components/informationPageComponents/Exchange";
 import Geolocation from "../components/informationPageComponents/Geolocation";
 import Holiday from "../components/informationPageComponents/Holiday";
 import useGeolocation from "../hooks/useGeolocation";
+import Charts from "../components/informationPageComponents/Charts";
 
 const InformationPage = () => {
   const apiKey = process.env.REACT_APP_ABSTRACT_LOCATION_API_KEY;
@@ -35,6 +36,10 @@ const InformationPage = () => {
           errorGeolocation={errorGeolocation}
         />
       ),
+    },
+    {
+      text: "Visual representation of blog information",
+      component: <Charts />,
     },
   ];
 

@@ -21,9 +21,15 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
     editCommentBlogPost,
     deleteCommentBlogPost,
     deleteAllCommentsBlogPost,
+    isLoadingComment,
   } = useCommentContext();
-  const { voteInfo, getAllVotes, updateBlogVoteCount, updateCommentVoteCount } =
-    useVoteContext();
+  const {
+    voteInfo,
+    getAllVotes,
+    updateBlogVoteCount,
+    updateCommentVoteCount,
+    isLoadingVote,
+  } = useVoteContext();
 
   useEffect(() => {
     if (userInfo?._id) {
@@ -53,7 +59,7 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
     );
   }
 
-  if (isLoadingBlog || !blogDataToShow) {
+  if (isLoadingBlog || isLoadingComment || isLoadingVote || !blogDataToShow) {
     return (
       <div className="d-flex justify-content-center mb-3">
         <Spinner />

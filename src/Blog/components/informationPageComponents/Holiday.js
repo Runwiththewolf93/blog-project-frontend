@@ -30,7 +30,14 @@ const Holiday = ({ locationData, isLoadingGeolocation, errorGeolocation }) => {
   ) : (
     <div className="vh-100 mt-5">
       <h3>A list of all the holidays at destination:</h3>
-      <Table striped bordered hover responsive variant="dark">
+      <Table
+        striped
+        bordered
+        hover
+        responsive
+        variant="dark"
+        aria-label="List of holidays"
+      >
         <thead>
           <tr>
             <th>Name</th>
