@@ -21,6 +21,7 @@ import {
   DELETE_ALL_COMMENT_VOTES_FOR_BLOG_POST_BEGIN,
   DELETE_ALL_COMMENT_VOTES_FOR_BLOG_POST_SUCCESS,
   DELETE_ALL_COMMENT_VOTES_FOR_BLOG_POST_ERROR,
+  RESET_VOTE_LOADING,
   LOGOUT_USER,
 } from "./actions";
 import {
@@ -91,6 +92,8 @@ const VoteProvider = ({ children }) => {
           payload: error.response.data.msg,
         });
       }
+    } finally {
+      dispatch({ type: RESET_VOTE_LOADING });
     }
   };
 

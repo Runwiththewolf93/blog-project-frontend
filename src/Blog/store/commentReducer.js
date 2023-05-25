@@ -22,6 +22,7 @@ import {
   DELETE_ALL_COMMENTS_BLOG_POST_ERROR,
   RESET_COMMENT_ERROR,
   RESET_GET_ALL_COMMENTS_USER_LOADING,
+  RESET_COMMENT_LOADING,
   LOGOUT_USER,
 } from "./actions";
 
@@ -156,6 +157,10 @@ const commentReducer = (state, action) => {
   // reset isLoadingUserComment
   if (action.type === RESET_GET_ALL_COMMENTS_USER_LOADING) {
     return { ...state, isLoadingUserComment: false };
+  }
+  // reset isLoadingComment
+  if (action.type === RESET_COMMENT_LOADING) {
+    return { ...state, isLoadingComment: false };
   }
   // logout user comment
   if (action.type === LOGOUT_USER) {

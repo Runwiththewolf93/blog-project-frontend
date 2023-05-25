@@ -17,6 +17,7 @@ import {
   DELETE_ALL_COMMENT_VOTES_FOR_BLOG_POST_BEGIN,
   DELETE_ALL_COMMENT_VOTES_FOR_BLOG_POST_SUCCESS,
   DELETE_ALL_COMMENT_VOTES_FOR_BLOG_POST_ERROR,
+  RESET_VOTE_LOADING,
   LOGOUT_USER,
 } from "./actions";
 
@@ -128,6 +129,10 @@ const voteReducer = (state, action) => {
       isLoadingVote: false,
       errorVote: action.payload,
     };
+  }
+  // reset isLoadingVote
+  if (action.type === RESET_VOTE_LOADING) {
+    return { ...state, isLoadingVote: false };
   }
   // logout user vote
   if (action.type === LOGOUT_USER) {

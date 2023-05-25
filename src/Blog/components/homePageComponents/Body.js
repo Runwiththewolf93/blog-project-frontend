@@ -114,3 +114,5 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
 };
 
 export default Body;
+
+// Check if loading is being set correctly. If not again, return data.
