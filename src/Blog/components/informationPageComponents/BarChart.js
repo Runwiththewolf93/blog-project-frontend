@@ -7,6 +7,7 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
+import { generateChartData } from "../../utils/helper";
 
 const BarChartComponent = ({ commentInfo }) => {
   const data = commentInfo.reduce((acc, comment) => {
@@ -15,20 +16,17 @@ const BarChartComponent = ({ commentInfo }) => {
     return acc;
   }, {});
 
-  const commentData = Object.entries(data).map(([user, count]) => ({
-    user,
-    count,
-  }));
+  const commentData = generateChartData(data, "user", "count");
 
   return (
     <BarChart
       width={600}
       height={300}
       data={commentData}
-      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+      margin={{ top: 5, right: 30, left: -20, bottom: 5 }}
     >
       <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="user" />
+      <XAxis dataKey="user" tick={{ dy: 5 }} />
       <YAxis />
       <Tooltip />
       <Legend />

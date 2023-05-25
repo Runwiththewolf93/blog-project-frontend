@@ -22,6 +22,7 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
     deleteCommentBlogPost,
     deleteAllCommentsBlogPost,
     isLoadingComment,
+    commentInfo,
   } = useCommentContext();
   const {
     voteInfo,
@@ -32,10 +33,11 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
   } = useVoteContext();
 
   useEffect(() => {
+    console.log("userInfo?_id:", userInfo?._id);
+
     const fetchAllData = async () => {
       if (userInfo?._id) {
-        await getAllComments();
-        await getAllVotes();
+        await Promise.all([getAllComments(), getAllVotes()]);
       }
     };
     fetchAllData();
@@ -62,7 +64,14 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
     );
   }
 
-  if (isLoadingBlog || isLoadingComment || isLoadingVote || !blogDataToShow) {
+  if (
+    isLoadingBlog ||
+    isLoadingComment ||
+    isLoadingVote ||
+    !blogDataToShow ||
+    !voteInfo ||
+    !commentInfo
+  ) {
     return (
       <div className="d-flex justify-content-center mb-3">
         <Spinner />

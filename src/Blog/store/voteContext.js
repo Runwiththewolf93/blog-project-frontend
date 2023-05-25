@@ -81,7 +81,9 @@ const VoteProvider = ({ children }) => {
     dispatch({ type: GET_ALL_VOTES_BEGIN });
 
     try {
+      console.log("fetching...");
       const { data } = await authFetch.get("/vote");
+      console.log("fetching done!");
 
       dispatch({ type: GET_ALL_VOTES_SUCCESS, payload: data });
       localStorage.setItem("voteInfo", JSON.stringify(data));
@@ -92,6 +94,10 @@ const VoteProvider = ({ children }) => {
           payload: error.response.data.msg,
         });
       }
+      dispatch({
+        type: GET_ALL_VOTES_ERROR,
+        payload: error.response.data.msg,
+      });
     } finally {
       dispatch({ type: RESET_VOTE_LOADING });
     }

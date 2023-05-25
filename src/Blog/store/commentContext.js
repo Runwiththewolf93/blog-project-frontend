@@ -120,7 +120,9 @@ const CommentProvider = ({ children }) => {
     dispatch({ type: GET_ALL_COMMENTS_BEGIN });
 
     try {
+      console.log("fetching...");
       const { data } = await authFetch.get("/comment");
+      console.log("fetching done!");
 
       dispatch({ type: GET_ALL_COMMENTS_SUCCESS, payload: data });
       localStorage.setItem("commentInfo", JSON.stringify(data));
@@ -131,6 +133,10 @@ const CommentProvider = ({ children }) => {
           payload: error.response.data.msg,
         });
       }
+      dispatch({
+        type: GET_ALL_COMMENTS_ERROR,
+        payload: error.response.data.msg,
+      });
     } finally {
       dispatch({ type: RESET_COMMENT_LOADING });
     }

@@ -110,6 +110,13 @@ const calculateMostPost = (data, countProp, calcCount, blogInfo) => {
   return blogInfo.find(post => post._id === mostPostId);
 };
 
+const generateChartData = (data, labelKey, valueKey) => {
+  return Object.entries(data).map(([key, value]) => ({
+    [labelKey]: key,
+    [valueKey]: value,
+  }));
+};
+
 export {
   capitalizeFirstLetter,
   capitalizeName,
@@ -121,4 +128,5 @@ export {
   countUserVoteObjects,
   sortData,
   calculateMostPost,
+  generateChartData,
 };
