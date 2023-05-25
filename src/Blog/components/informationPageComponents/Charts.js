@@ -1,5 +1,5 @@
-import { Row, Col } from "react-bootstrap";
-import { useEffect } from "react";
+import { Row, Col, Spinner } from "react-bootstrap";
+import { useState, useEffect } from "react";
 import { useAppContext } from "../../store/appContext";
 import { useCommentContext } from "../../store/commentContext";
 import { useVoteContext } from "../../store/voteContext";
@@ -13,8 +13,14 @@ const Charts = () => {
   const { commentInfo } = useCommentContext();
   const { voteInfo } = useVoteContext();
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    getAllUsers();
+    const fetchUsers = async () => {
+      await getAllUsers();
+      setLoading(false);
+    };
+    fetchUsers();
     // eslint-disable-next-line
   }, []);
 
@@ -38,7 +44,13 @@ const Charts = () => {
           <AreaChartComponent blogInfo={blogInfo} />
         </Col>
         <Col md={6}>
-          <PieChartComponent voteInfo={voteInfo} users={users} />
+          {loading ? (
+            <Spinner animation="border" />
+          ) : (
+            users.length > 0 && (
+              <PieChartComponent voteInfo={voteInfo} users={users} />
+            )
+          )}
         </Col>
       </Row>
     </>

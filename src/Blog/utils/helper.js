@@ -21,7 +21,10 @@ const getLatestAvatar = (blogInfo, userInfo) => {
 };
 
 const processUsers = (allUsers, userInfo, blogInfo) => {
-  const filteredUsers = allUsers?.filter(user => user._id !== userInfo?._id);
+  const allUsersCopy = [...allUsers];
+  const filteredUsers = allUsersCopy?.filter(
+    user => user._id !== userInfo?._id
+  );
 
   const latestBlogPost = filteredUsers?.reduce((acc, user) => {
     const latestPost = blogInfo

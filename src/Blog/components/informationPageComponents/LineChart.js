@@ -22,7 +22,7 @@ const LineChartComponent = ({ blogInfo }) => {
 
   return (
     <LineChart
-      width={500}
+      width={600}
       height={300}
       data={blogData}
       margin={{ top: 5, right: 30, left: 20, bottom: 5 }}

@@ -7,32 +7,35 @@ const PieChartComponent = ({ voteInfo, users }) => {
     return acc;
   }, {});
 
-  // Map the user IDs to user names
   const userData = users.reduce((acc, user) => {
     acc[user._id] = user.name;
     return acc;
-  });
+  }, {});
 
   const voteData = Object.entries(data).map(([user, count]) => ({
     name: userData[user] || "Unknown",
     value: count,
   }));
 
+  console.log(voteData);
+
   return (
-    <PieChart width={400} height={400}>
-      <Pie
-        dataKey="value"
-        isAnimationActive={false}
-        data={voteData}
-        cx="50%"
-        cy="50%"
-        outerRadius={100}
-        fill="#8884d8"
-        label
-      />
-      <Tooltip />
-      <Legend />
-    </PieChart>
+    <div className="d-flex justify-content-center mt-3">
+      <PieChart width={400} height={400}>
+        <Pie
+          dataKey="value"
+          isAnimationActive={false}
+          data={voteData}
+          cx="50%"
+          cy="50%"
+          outerRadius={100}
+          fill="#8884d8"
+          label
+        />
+        <Tooltip />
+        <Legend wrapperStyle={{ paddingBottom: "80px" }} />
+      </PieChart>
+    </div>
   );
 };
 

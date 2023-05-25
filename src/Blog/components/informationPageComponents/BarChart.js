@@ -11,7 +11,6 @@ import {
 const BarChartComponent = ({ commentInfo }) => {
   const data = commentInfo.reduce((acc, comment) => {
     const user = comment.user.name;
-    console.log(user);
     acc[user] = (acc[user] || 0) + 1;
     return acc;
   }, {});
@@ -23,7 +22,7 @@ const BarChartComponent = ({ commentInfo }) => {
 
   return (
     <BarChart
-      width={500}
+      width={600}
       height={300}
       data={commentData}
       margin={{ top: 5, right: 30, left: 20, bottom: 5 }}

@@ -42,10 +42,6 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
     // eslint-disable-next-line
   }, [userInfo?._id]);
 
-  console.log(isLoadingBlog);
-  console.log(isLoadingComment);
-  console.log(isLoadingVote);
-
   if (!userInfo) {
     return (
       <div className="d-flex justify-content-center mb-3">
