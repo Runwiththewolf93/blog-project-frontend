@@ -13,9 +13,6 @@ const CommentItem = ({
   handleEditComment,
   handleDeleteComment,
   userInfo,
-  commentInfo,
-  voteInfo,
-  updateCommentVoteCount,
   editedComment,
   setEditedComment,
   errorMessage,
@@ -23,13 +20,7 @@ const CommentItem = ({
   <ListGroup.Item key={comment._id}>
     <div>
       <div className="d-flex align-items-center">
-        <Vote
-          itemId={comment._id}
-          userInfo={userInfo}
-          info={commentInfo}
-          voteInfo={voteInfo}
-          updateVoteCount={updateCommentVoteCount}
-        />
+        <Vote type="comment" itemId={comment._id} userInfo={userInfo} />
         <div className="ms-3">
           <h5>{comment.user.name || userInfo.name}</h5>
           <p className="mb-1">{comment.comment}</p>

@@ -1,18 +1,16 @@
 import { useState, useEffect } from "react";
 import { ListGroup } from "react-bootstrap";
-import { useCommentContextState } from "../../store/commentContext";
+import {
+  useCommentContextState,
+  useCommentContextDispatch,
+} from "../../store/commentContext";
 import CommentSort from "./CommentSort";
 import CommentItem from "./CommentItem";
 
-const CommentList = ({
-  blogId,
-  editCommentBlogPost,
-  deleteCommentBlogPost,
-  userInfo,
-  voteInfo,
-  updateCommentVoteCount,
-}) => {
+const CommentList = ({ blogId, userInfo }) => {
   const { commentInfo } = useCommentContextState();
+  const { editCommentBlogPost, deleteCommentBlogPost } =
+    useCommentContextDispatch();
   const [editCommentId, setEditCommentId] = useState(null);
   const [editedComment, setEditedComment] = useState("");
   const [sortedComments, setSortedComments] = useState([]);
@@ -91,9 +89,6 @@ const CommentList = ({
                 handleEditComment,
                 handleDeleteComment,
                 userInfo,
-                commentInfo,
-                voteInfo,
-                updateCommentVoteCount,
                 editedComment,
                 setEditedComment,
                 errorMessage,

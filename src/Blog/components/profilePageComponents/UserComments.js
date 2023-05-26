@@ -8,7 +8,6 @@ import CustomListGroup from "../shared/CustomListGroup";
 const UserComments = ({
   userInfo,
   blogPost,
-  getSingleBlogPost,
   resetBlogPost,
   isLoadingUserComment,
   errorUserComment,
@@ -40,7 +39,7 @@ const UserComments = ({
     <>
       {Object.keys(blogPost).length !== 0 ? (
         <div className="mb-5">
-          <PinnedBlogPost {...{ blogPost, getSingleBlogPost, resetBlogPost }} />
+          <PinnedBlogPost {...{ blogPost, resetBlogPost }} />
         </div>
       ) : (
         <CustomListGroup

@@ -1,6 +1,9 @@
 import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { useAppContextDispatch } from "../../store/appContext";
 
-const PostOverlay = ({ getSingleBlogPost, postId }) => {
+const PostOverlay = ({ postId }) => {
+  const { getSingleBlogPost } = useAppContextDispatch();
+
   const renderTooltip = props => (
     <Tooltip id="button-tooltip" {...props}>
       Pin a post to your profile!

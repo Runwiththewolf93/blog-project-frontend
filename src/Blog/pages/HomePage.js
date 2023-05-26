@@ -6,8 +6,7 @@ import { useAppContextState, useAppContextDispatch } from "../store/appContext";
 
 const HomePage = () => {
   const { userInfo, postUpdated } = useAppContextState();
-  const { getAllBlogPosts, deleteBlogPost, setPostUpdated } =
-    useAppContextDispatch();
+  const { getAllBlogPosts, setPostUpdated } = useAppContextDispatch();
   const [searchQuery, setSearchQuery] = useState("");
   const [showMyPosts, setShowMyPosts] = useState(false);
   const [blogDataToShow, setBlogDataToShow] = useState([]);
@@ -53,11 +52,7 @@ const HomePage = () => {
         getAllBlogPosts={getAllBlogPosts}
         toggleShowMyPosts={toggleShowMyPosts}
       />
-      <Body
-        userInfo={userInfo}
-        deleteBlogPost={deleteBlogPost}
-        blogDataToShow={blogDataToShow}
-      />
+      <Body userInfo={userInfo} blogDataToShow={blogDataToShow} />
     </Layout>
   );
 };

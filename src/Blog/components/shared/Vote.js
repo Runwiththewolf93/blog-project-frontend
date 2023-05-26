@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowUp,
@@ -6,64 +5,19 @@ import {
   faExclamationCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { Spinner } from "react-bootstrap";
+import useVoteHandler from "./useVoteHandler";
+import { VoteButton, VoteCount } from "./VoteComponents";
 
-const Vote = ({ itemId, userInfo, info, voteInfo, updateVoteCount }) => {
-  const item = info?.find(post => post._id === itemId);
-
-  // Find the Vote object for the logged-in user
-  const currentUserVote =
-    item &&
-    voteInfo?.filter(
-      vote => vote.post === item._id && vote.user === userInfo._id
-    );
-  const currVote = currentUserVote?.reduce((acc, curr) => acc + curr.vote, 0);
-
-  // Calculate the totalVotes per blog / comment
-  const itemVotes = item && voteInfo?.filter(vote => vote.post === item._id);
-  const totalVotes = itemVotes?.reduce((acc, curr) => acc + curr.vote, 0);
-  const [currentVote, setCurrentVote] = useState(currVote);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const handleUpVoteClick = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      if (currentVote === 1) {
-        await updateVoteCount(itemId, 0);
-        setCurrentVote(0);
-      } else {
-        await updateVoteCount(itemId, 1);
-        setCurrentVote(1);
-      }
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleDownVoteClick = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      if (currentVote === -1) {
-        await updateVoteCount(itemId, 0);
-        setCurrentVote(0);
-      } else {
-        await updateVoteCount(itemId, -1);
-        setCurrentVote(-1);
-      }
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleDismissError = () => {
-    setError(null);
-  };
+const Vote = ({ type, itemId, userInfo }) => {
+  const {
+    currentVote,
+    totalVotes,
+    handleUpVoteClick,
+    handleDownVoteClick,
+    handleDismissError,
+    isLoading,
+    error,
+  } = useVoteHandler(type, itemId, userInfo);
 
   return isLoading ? (
     <Spinner />
@@ -78,20 +32,16 @@ const Vote = ({ itemId, userInfo, info, voteInfo, updateVoteCount }) => {
     />
   ) : (
     <div className="d-flex align-items-center">
-      <FontAwesomeIcon
+      <VoteButton
         icon={faArrowUp}
         className={`me-2 ${currentVote === 1 ? "text-primary" : ""}`}
-        size="2x"
         onClick={handleUpVoteClick}
-        cursor="pointer"
       />
-      <h5 className="fw-bold mt-1">{totalVotes}</h5>
-      <FontAwesomeIcon
+      <VoteCount totalVotes={totalVotes} />
+      <VoteButton
         icon={faArrowDown}
         className={`ms-2 ${currentVote === -1 ? "text-danger" : ""}`}
-        size="2x"
         onClick={handleDownVoteClick}
-        cursor="pointer"
       />
     </div>
   );

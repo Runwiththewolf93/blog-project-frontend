@@ -5,7 +5,7 @@ import UserInfo from "../shared/UserInfo";
 import PostButton from "../shared/PostButton";
 import PostImages from "../shared/PostImages";
 
-const PinnedBlogPost = ({ blogPost, getSingleBlogPost, resetBlogPost }) => (
+const PinnedBlogPost = ({ blogPost, resetBlogPost }) => (
   <>
     <h3>Pinned blog post:</h3>
     <BlogPostWrapper>
@@ -22,7 +22,6 @@ const PinnedBlogPost = ({ blogPost, getSingleBlogPost, resetBlogPost }) => (
             />
             <PostButton
               showPostOverlay={false}
-              getSingleBlogPost={getSingleBlogPost}
               postId={blogPost._id}
               resetBlogPost={resetBlogPost}
             />

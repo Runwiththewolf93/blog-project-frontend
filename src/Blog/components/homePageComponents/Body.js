@@ -1,9 +1,6 @@
 import React, { useEffect } from "react";
 import { Container, Row, Col, Alert } from "react-bootstrap";
-import {
-  useAppContextState,
-  useAppContextDispatch,
-} from "../../store/appContext";
+import { useAppContextState } from "../../store/appContext";
 import {
   useCommentContextState,
   useCommentContextDispatch,
@@ -17,20 +14,12 @@ import BlogPosts from "./BlogPosts";
 import Spinner from "../shared/Spinner";
 import ScrollToTopPopup from "./ButtonOverlay";
 
-const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
-  const { blogInfo, isLoadingBlog, errorBlog, wasLoggedOut } =
-    useAppContextState();
-  const { getSingleBlogPost } = useAppContextDispatch();
+const Body = ({ userInfo, blogDataToShow }) => {
+  const { isLoadingBlog, errorBlog, wasLoggedOut } = useAppContextState();
   const { isLoadingComment, commentInfo } = useCommentContextState();
-  const {
-    getAllComments,
-    editCommentBlogPost,
-    deleteCommentBlogPost,
-    deleteAllCommentsBlogPost,
-  } = useCommentContextDispatch();
+  const { getAllComments } = useCommentContextDispatch();
   const { isLoadingVote, voteInfo } = useVoteContextState();
-  const { getAllVotes, updateBlogVoteCount, updateCommentVoteCount } =
-    useVoteContextDispatch();
+  const { getAllVotes } = useVoteContextDispatch();
 
   useEffect(() => {
     const fetchAllData = async () => {
@@ -91,21 +80,7 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
           <BlogSections blogDataToShow={blogDataToShow} />
         </Col>
         <Col md={10}>
-          <BlogPosts
-            {...{
-              blogDataToShow,
-              userInfo,
-              blogInfo,
-              voteInfo,
-              deleteBlogPost,
-              getSingleBlogPost,
-              deleteAllCommentsBlogPost,
-              updateBlogVoteCount,
-              updateCommentVoteCount,
-              editCommentBlogPost,
-              deleteCommentBlogPost,
-            }}
-          />
+          <BlogPosts blogDataToShow={blogDataToShow} userInfo={userInfo} />
           <div className="d-flex justify-content-end">
             <ScrollToTopPopup />
           </div>

@@ -1,4 +1,4 @@
-import React, { useReducer, useContext, useCallback } from "react";
+import React, { useReducer, useContext } from "react";
 
 import voteReducer from "./voteReducer";
 import axios from "axios";
