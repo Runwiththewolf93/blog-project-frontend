@@ -20,8 +20,6 @@ const CommentList = ({
   const [errorCommentId, setErrorCommentId] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
 
-  console.log(commentInfo);
-
   useEffect(() => {
     const commentsPerBlogPost = commentInfo.filter(
       comment => comment.blog === blogId

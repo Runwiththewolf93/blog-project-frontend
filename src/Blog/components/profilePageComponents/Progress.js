@@ -1,9 +1,13 @@
+import React, { useMemo, useCallback } from "react";
 import { ProgressBar, Card } from "react-bootstrap";
 import { capitalizeName } from "../../utils/helper";
 import { shuffle } from "lodash";
 
-const Progress = ({ userProfile, userInfo }) => {
-  const getRandomNumber = () => Math.floor(Math.random() * 81) + 20;
+const Progress = React.memo(({ userProfile, userInfo }) => {
+  const getRandomNumber = useCallback(
+    () => Math.floor(Math.random() * 81) + 20,
+    []
+  );
 
   const labels = [
     "Security Audit",
@@ -20,8 +24,10 @@ const Progress = ({ userProfile, userInfo }) => {
 
   const variants = ["danger", "light", "warning", "success", "info"];
 
-  const shuffledLabels = shuffle(labels).slice(0, 5);
-  const shuffledVariants = shuffle(variants);
+  // eslint-disable-next-line
+  const shuffledLabels = useMemo(() => shuffle(labels).slice(0, 5), []);
+  // eslint-disable-next-line
+  const shuffledVariants = useMemo(() => shuffle(variants), []);
 
   return (
     <Card>
@@ -48,6 +54,6 @@ const Progress = ({ userProfile, userInfo }) => {
       </div>
     </Card>
   );
-};
+});
 
 export default Progress;
