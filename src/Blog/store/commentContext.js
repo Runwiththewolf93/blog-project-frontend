@@ -2,6 +2,7 @@ import React, { useReducer, useContext } from "react";
 
 import commentReducer from "./commentReducer";
 import axios from "axios";
+import axiosRetry from "axios-retry";
 import {
   GET_ALL_COMMENTS_BLOG_POST_BEGIN,
   GET_ALL_COMMENTS_BLOG_POST_SUCCESS,
@@ -54,6 +55,9 @@ const CommentProvider = ({ children }) => {
   const authFetch = axios.create({
     baseURL: "/api/v1",
   });
+
+  // Set up axios-retry
+  axiosRetry(authFetch, { retries: 3 });
 
   // request
   authFetch.interceptors.request.use(
@@ -122,20 +126,17 @@ const CommentProvider = ({ children }) => {
     try {
       console.log("fetching...");
       const { data } = await authFetch.get("/comment");
-      console.log("fetching done!");
+      console.log(data, "fetching done!");
 
       dispatch({ type: GET_ALL_COMMENTS_SUCCESS, payload: data });
       localStorage.setItem("commentInfo", JSON.stringify(data));
     } catch (error) {
-      if (error.response) {
-        dispatch({
-          type: GET_ALL_COMMENTS_ERROR,
-          payload: error.response.data.msg,
-        });
-      }
+      const errorMessage = error.response
+        ? error.response.data.msg
+        : "An error occurred";
       dispatch({
         type: GET_ALL_COMMENTS_ERROR,
-        payload: error.response.data.msg,
+        payload: errorMessage,
       });
     } finally {
       dispatch({ type: RESET_COMMENT_LOADING });

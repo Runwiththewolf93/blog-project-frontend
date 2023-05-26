@@ -52,3 +52,5 @@ const Charts = () => {
 };
 
 export default Charts;
+
+// figure out body component and why comments and votes aren't loading

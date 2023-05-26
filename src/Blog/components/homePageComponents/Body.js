@@ -36,13 +36,11 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
     console.log("userInfo?_id:", userInfo?._id);
 
     const fetchAllData = async () => {
-      if (userInfo?._id) {
-        await Promise.all([getAllComments(), getAllVotes()]);
-      }
+      await Promise.all([getAllComments(), getAllVotes()]);
     };
     fetchAllData();
     // eslint-disable-next-line
-  }, [userInfo?._id]);
+  }, [userInfo]);
 
   if (!userInfo) {
     return (
@@ -69,8 +67,8 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
     isLoadingComment ||
     isLoadingVote ||
     !blogDataToShow ||
-    !voteInfo ||
-    !commentInfo
+    !commentInfo ||
+    !voteInfo
   ) {
     return (
       <div className="d-flex justify-content-center mb-3">
@@ -119,5 +117,3 @@ const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
 };
 
 export default Body;
-
-// Check if loading is being set correctly. If not again, return data.

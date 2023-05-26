@@ -2,6 +2,7 @@ import React, { useReducer, useContext } from "react";
 
 import voteReducer from "./voteReducer";
 import axios from "axios";
+import axiosRetry from "axios-retry";
 import {
   GET_ALL_VOTES_BEGIN,
   GET_ALL_VOTES_SUCCESS,
@@ -52,6 +53,9 @@ const VoteProvider = ({ children }) => {
     baseURL: "/api/v1",
   });
 
+  // Set up axios-retry
+  axiosRetry(authFetch, { retries: 3 });
+
   // request
   authFetch.interceptors.request.use(
     config => {
@@ -83,20 +87,17 @@ const VoteProvider = ({ children }) => {
     try {
       console.log("fetching...");
       const { data } = await authFetch.get("/vote");
-      console.log("fetching done!");
+      console.log(data, "fetching done!");
 
       dispatch({ type: GET_ALL_VOTES_SUCCESS, payload: data });
       localStorage.setItem("voteInfo", JSON.stringify(data));
     } catch (error) {
-      if (error.response) {
-        dispatch({
-          type: GET_ALL_VOTES_ERROR,
-          payload: error.response.data.msg,
-        });
-      }
+      const errorMessage = error.response
+        ? error.response.data.msg
+        : "An error occurred";
       dispatch({
         type: GET_ALL_VOTES_ERROR,
-        payload: error.response.data.msg,
+        payload: errorMessage,
       });
     } finally {
       dispatch({ type: RESET_VOTE_LOADING });
