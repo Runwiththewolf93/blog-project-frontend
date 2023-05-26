@@ -1,5 +1,5 @@
 import { Spinner, Alert, Form, Button } from "react-bootstrap";
-import { useVoteContext } from "../../store/voteContext";
+import { useVoteContextDispatch } from "../../store/voteContext";
 
 const CommentItemControls = ({
   comment,
@@ -15,7 +15,7 @@ const CommentItemControls = ({
   setEditedComment,
   errorMessage,
 }) => {
-  const { deleteCommentVoteCount } = useVoteContext();
+  const { deleteCommentVoteCount } = useVoteContextDispatch();
 
   return loadingCommentId === comment._id ? (
     <Spinner />

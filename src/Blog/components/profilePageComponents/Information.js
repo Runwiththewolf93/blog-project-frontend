@@ -4,10 +4,10 @@ import {
   truncateContent,
   countUserVoteObjects,
 } from "../../utils/helper";
-import { useVoteContext } from "../../store/voteContext";
+import { useVoteContextState } from "../../store/voteContext";
 
 const Information = ({ userCommentInfo, userInfo, blogInfo }) => {
-  const { voteInfo } = useVoteContext();
+  const { voteInfo } = useVoteContextState();
 
   // Filter blogInfo to only include blogs of the current user
   const userBlogs = blogInfo?.filter(blog => blog.user._id === userInfo._id);

@@ -46,7 +46,8 @@ const initialState = {
   errorUserComment: null,
 };
 
-const CommentContext = React.createContext();
+const CommentContextState = React.createContext();
+const CommentContextDispatch = React.createContext();
 
 const CommentProvider = ({ children }) => {
   const [state, dispatch] = useReducer(commentReducer, initialState);
@@ -124,9 +125,7 @@ const CommentProvider = ({ children }) => {
     dispatch({ type: GET_ALL_COMMENTS_BEGIN });
 
     try {
-      console.log("fetching...");
       const { data } = await authFetch.get("/comment");
-      console.log(data, "fetching done!");
 
       dispatch({ type: GET_ALL_COMMENTS_SUCCESS, payload: data });
       localStorage.setItem("commentInfo", JSON.stringify(data));
@@ -250,27 +249,41 @@ const CommentProvider = ({ children }) => {
   };
 
   return (
-    <CommentContext.Provider
+    <CommentContextState.Provider
       value={{
         ...state,
-        // dispatch functions
-        getAllCommentsBlogPost,
-        getAllCommentsUser,
-        getAllComments,
-        addCommentBlogPost,
-        editCommentBlogPost,
-        deleteCommentBlogPost,
-        resetCommentError,
-        deleteAllCommentsBlogPost,
       }}
     >
-      {children}
-    </CommentContext.Provider>
+      <CommentContextDispatch.Provider
+        value={{
+          // dispatch functions
+          getAllCommentsBlogPost,
+          getAllCommentsUser,
+          getAllComments,
+          addCommentBlogPost,
+          editCommentBlogPost,
+          deleteCommentBlogPost,
+          resetCommentError,
+          deleteAllCommentsBlogPost,
+        }}
+      >
+        {children}
+      </CommentContextDispatch.Provider>
+    </CommentContextState.Provider>
   );
 };
 
-const useCommentContext = () => {
-  return useContext(CommentContext);
+const useCommentContextState = () => {
+  return useContext(CommentContextState);
 };
 
-export { CommentProvider, initialState, useCommentContext };
+const useCommentContextDispatch = () => {
+  return useContext(CommentContextDispatch);
+};
+
+export {
+  CommentProvider,
+  initialState,
+  useCommentContextState,
+  useCommentContextDispatch,
+};

@@ -1,42 +1,41 @@
 import React, { useEffect } from "react";
 import { Container, Row, Col, Alert } from "react-bootstrap";
-import { useAppContext } from "../../store/appContext";
-import { useCommentContext } from "../../store/commentContext";
-import { useVoteContext } from "../../store/voteContext";
+import {
+  useAppContextState,
+  useAppContextDispatch,
+} from "../../store/appContext";
+import {
+  useCommentContextState,
+  useCommentContextDispatch,
+} from "../../store/commentContext";
+import {
+  useVoteContextState,
+  useVoteContextDispatch,
+} from "../../store/voteContext";
 import BlogSections from "./BlogSections";
 import BlogPosts from "./BlogPosts";
 import Spinner from "../shared/Spinner";
 import ScrollToTopPopup from "./ButtonOverlay";
 
 const Body = ({ userInfo, deleteBlogPost, blogDataToShow }) => {
-  const {
-    blogInfo,
-    getSingleBlogPost,
-    isLoadingBlog,
-    errorBlog,
-    wasLoggedOut,
-  } = useAppContext();
+  const { blogInfo, isLoadingBlog, errorBlog, wasLoggedOut } =
+    useAppContextState();
+  const { getSingleBlogPost } = useAppContextDispatch();
+  const { isLoadingComment, commentInfo } = useCommentContextState();
   const {
     getAllComments,
     editCommentBlogPost,
     deleteCommentBlogPost,
     deleteAllCommentsBlogPost,
-    isLoadingComment,
-    commentInfo,
-  } = useCommentContext();
-  const {
-    voteInfo,
-    getAllVotes,
-    updateBlogVoteCount,
-    updateCommentVoteCount,
-    isLoadingVote,
-  } = useVoteContext();
+  } = useCommentContextDispatch();
+  const { isLoadingVote, voteInfo } = useVoteContextState();
+  const { getAllVotes, updateBlogVoteCount, updateCommentVoteCount } =
+    useVoteContextDispatch();
 
   useEffect(() => {
-    console.log("userInfo?_id:", userInfo?._id);
-
     const fetchAllData = async () => {
-      await Promise.all([getAllComments(), getAllVotes()]);
+      await getAllComments();
+      await getAllVotes();
     };
     fetchAllData();
     // eslint-disable-next-line

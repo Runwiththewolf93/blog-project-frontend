@@ -2,16 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import Message from "../components/homePageComponents/Message";
 import Body from "../components/homePageComponents/Body";
 import Layout from "../components/shared/Layout";
-import { useAppContext } from "../store/appContext";
+import { useAppContextState, useAppContextDispatch } from "../store/appContext";
 
 const HomePage = () => {
-  const {
-    getAllBlogPosts,
-    deleteBlogPost,
-    userInfo,
-    postUpdated,
-    setPostUpdated,
-  } = useAppContext();
+  const { userInfo, postUpdated } = useAppContextState();
+  const { getAllBlogPosts, deleteBlogPost, setPostUpdated } =
+    useAppContextDispatch();
   const [searchQuery, setSearchQuery] = useState("");
   const [showMyPosts, setShowMyPosts] = useState(false);
   const [blogDataToShow, setBlogDataToShow] = useState([]);

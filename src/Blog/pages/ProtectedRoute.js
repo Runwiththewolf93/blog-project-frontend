@@ -1,8 +1,8 @@
 import { Navigate } from "react-router-dom";
-import { useAppContext } from "../store/appContext";
+import { useAppContextState } from "../store/appContext";
 
 const ProtectedRoute = ({ children }) => {
-  const { userInfo } = useAppContext();
+  const { userInfo } = useAppContextState();
   if (!userInfo) {
     alert("You need to log in to access this page.");
     return <Navigate to="/" />;

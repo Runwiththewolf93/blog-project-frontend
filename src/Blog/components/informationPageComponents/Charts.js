@@ -1,8 +1,11 @@
 import { Row, Col } from "react-bootstrap";
 import { useEffect } from "react";
-import { useAppContext } from "../../store/appContext";
-import { useCommentContext } from "../../store/commentContext";
-import { useVoteContext } from "../../store/voteContext";
+import {
+  useAppContextState,
+  useAppContextDispatch,
+} from "../../store/appContext";
+import { useCommentContextState } from "../../store/commentContext";
+import { useVoteContextState } from "../../store/voteContext";
 import LineChartComponent from "./LineChart";
 import BarChartComponent from "./BarChart";
 import AreaChartComponent from "./AreaChart";
@@ -10,9 +13,10 @@ import PieChartComponent from "./PieChart";
 import CustomCard from "./CustomCard";
 
 const Charts = () => {
-  const { blogInfo, getAllUsers, users } = useAppContext();
-  const { commentInfo } = useCommentContext();
-  const { voteInfo } = useVoteContext();
+  const { blogInfo, users } = useAppContextState();
+  const { getAllUsers } = useAppContextDispatch();
+  const { commentInfo } = useCommentContextState();
+  const { voteInfo } = useVoteContextState();
 
   useEffect(() => {
     getAllUsers();

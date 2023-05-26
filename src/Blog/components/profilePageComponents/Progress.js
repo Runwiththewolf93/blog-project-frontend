@@ -1,13 +1,10 @@
-import React, { useMemo, useCallback } from "react";
+import React, { useMemo } from "react";
 import { ProgressBar, Card } from "react-bootstrap";
 import { capitalizeName } from "../../utils/helper";
 import { shuffle } from "lodash";
 
 const Progress = React.memo(({ userProfile, userInfo }) => {
-  const getRandomNumber = useCallback(
-    () => Math.floor(Math.random() * 81) + 20,
-    []
-  );
+  const getRandomNumber = () => Math.floor(Math.random() * 81) + 20;
 
   const labels = [
     "Security Audit",

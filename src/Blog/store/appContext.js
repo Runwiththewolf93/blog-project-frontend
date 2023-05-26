@@ -58,7 +58,8 @@ const initialState = {
   wasLoggedOut: false,
 };
 
-const AppContext = React.createContext();
+const AppContextState = React.createContext();
+const AppContextDispatch = React.createContext();
 
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
@@ -291,36 +292,45 @@ const AppProvider = ({ children }) => {
   };
 
   return (
-    <AppContext.Provider
+    <AppContextState.Provider
       value={{
         ...state,
-        // dispatch functions
-        registerUser,
-        loginUser,
-        getAllUsers,
-        logoutUser,
-        resetBlogPost,
-        resetUserError,
-        resetUserSuccess,
-        resetBlogError,
-        getAllBlogPosts,
-        getSingleBlogPost,
-        addBlogPost,
-        editBlogPost,
-        deleteBlogPost,
-        // state functions
         postUpdated,
-        setPostUpdated,
-        scrollToBlogPost,
       }}
     >
-      {children}
-    </AppContext.Provider>
+      <AppContextDispatch.Provider
+        value={{
+          // dispatch functions
+          registerUser,
+          loginUser,
+          getAllUsers,
+          logoutUser,
+          resetBlogPost,
+          resetUserError,
+          resetUserSuccess,
+          resetBlogError,
+          getAllBlogPosts,
+          getSingleBlogPost,
+          addBlogPost,
+          editBlogPost,
+          deleteBlogPost,
+          // state functions
+          setPostUpdated,
+          scrollToBlogPost,
+        }}
+      >
+        {children}
+      </AppContextDispatch.Provider>
+    </AppContextState.Provider>
   );
 };
 
-const useAppContext = () => {
-  return useContext(AppContext);
+const useAppContextState = () => {
+  return useContext(AppContextState);
 };
 
-export { AppProvider, initialState, useAppContext };
+const useAppContextDispatch = () => {
+  return useContext(AppContextDispatch);
+};
+
+export { AppProvider, initialState, useAppContextState, useAppContextDispatch };

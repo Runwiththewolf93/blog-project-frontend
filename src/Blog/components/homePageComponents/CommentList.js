@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ListGroup } from "react-bootstrap";
-import { useCommentContext } from "../../store/commentContext";
+import { useCommentContextState } from "../../store/commentContext";
 import CommentSort from "./CommentSort";
 import CommentItem from "./CommentItem";
 
@@ -12,7 +12,7 @@ const CommentList = ({
   voteInfo,
   updateCommentVoteCount,
 }) => {
-  const { commentInfo } = useCommentContext();
+  const { commentInfo } = useCommentContextState();
   const [editCommentId, setEditCommentId] = useState(null);
   const [editedComment, setEditedComment] = useState("");
   const [sortedComments, setSortedComments] = useState([]);

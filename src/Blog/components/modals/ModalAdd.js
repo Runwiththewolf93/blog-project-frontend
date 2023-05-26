@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { Alert, Button, Form, Modal, Spinner } from "react-bootstrap";
-import { useAppContext } from "../../store/appContext";
+import {
+  useAppContextState,
+  useAppContextDispatch,
+} from "../../store/appContext";
 import { getLatestAvatar } from "../../utils/helper";
 
 export const initialState = {
@@ -13,14 +16,8 @@ export const initialState = {
 const ModalAdd = () => {
   const [show, setShow] = useState(false);
   const [values, setValues] = useState(initialState);
-  const {
-    isLoadingBlog,
-    addBlogPost,
-    errorBlog,
-    blogInfo,
-    userInfo,
-    setPostUpdated,
-  } = useAppContext();
+  const { isLoadingBlog, errorBlog, blogInfo, userInfo } = useAppContextState();
+  const { addBlogPost, setPostUpdated } = useAppContextDispatch();
 
   useEffect(() => {
     if (!isLoadingBlog && !errorBlog) {

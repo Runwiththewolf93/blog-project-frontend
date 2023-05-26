@@ -8,28 +8,22 @@ import Pictures from "../components/profilePageComponents/Pictures";
 import Map from "../components/profilePageComponents/Map";
 import Information from "../components/profilePageComponents/Information";
 import useRandomUsers from "../hooks/useRandomUsers";
-import { useAppContext } from "../store/appContext";
-import { useCommentContext } from "../store/commentContext";
+import { useAppContextState, useAppContextDispatch } from "../store/appContext";
+import {
+  useCommentContextState,
+  useCommentContextDispatch,
+} from "../store/commentContext";
 import UserComments from "../components/profilePageComponents/UserComments";
 
 const ProfilePage = () => {
   // added gender for single user
   const { userProfile } = useRandomUsers("male");
-  const {
-    blogPost,
-    userInfo,
-    blogInfo,
-    users,
-    getSingleBlogPost,
-    resetBlogPost,
-    getAllUsers,
-  } = useAppContext();
-  const {
-    isLoadingUserComment,
-    userCommentInfo,
-    errorUserComment,
-    getAllCommentsUser,
-  } = useCommentContext();
+  const { blogPost, userInfo, blogInfo, users } = useAppContextState();
+  const { getSingleBlogPost, resetBlogPost, getAllUsers } =
+    useAppContextDispatch();
+  const { isLoadingUserComment, userCommentInfo, errorUserComment } =
+    useCommentContextState();
+  const { getAllCommentsUser } = useCommentContextDispatch();
 
   useEffect(() => {
     getAllUsers().then(() => {

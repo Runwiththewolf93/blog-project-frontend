@@ -1,4 +1,4 @@
-import React, { useReducer, useContext } from "react";
+import React, { useReducer, useContext, useCallback } from "react";
 
 import voteReducer from "./voteReducer";
 import axios from "axios";
@@ -43,7 +43,8 @@ const initialState = {
   errorVote: null,
 };
 
-const VoteContext = React.createContext();
+const VoteContextState = React.createContext();
+const VoteContextDispatch = React.createContext();
 
 const VoteProvider = ({ children }) => {
   const [state, dispatch] = useReducer(voteReducer, initialState);
@@ -85,9 +86,7 @@ const VoteProvider = ({ children }) => {
     dispatch({ type: GET_ALL_VOTES_BEGIN });
 
     try {
-      console.log("fetching...");
       const { data } = await authFetch.get("/vote");
-      console.log(data, "fetching done!");
 
       dispatch({ type: GET_ALL_VOTES_SUCCESS, payload: data });
       localStorage.setItem("voteInfo", JSON.stringify(data));
@@ -183,9 +182,6 @@ const VoteProvider = ({ children }) => {
 
       // Parse the data received from the backend
       const { vote, totalVotes } = data;
-
-      console.log(vote);
-      console.log(state.voteInfo);
 
       // Get the existing vote object from the voteInfo array
       const existingVote = state.voteInfo.find(
@@ -369,25 +365,39 @@ const VoteProvider = ({ children }) => {
   };
 
   return (
-    <VoteContext.Provider
+    <VoteContextState.Provider
       value={{
         ...state,
-        // dispatch functions
-        getAllVotes,
-        updateBlogVoteCount,
-        updateCommentVoteCount,
-        deleteBlogVoteCount,
-        deleteCommentVoteCount,
-        deleteAllCommentVotesForBlogPost,
       }}
     >
-      {children}
-    </VoteContext.Provider>
+      <VoteContextDispatch.Provider
+        value={{
+          // dispatch functions
+          getAllVotes,
+          updateBlogVoteCount,
+          updateCommentVoteCount,
+          deleteBlogVoteCount,
+          deleteCommentVoteCount,
+          deleteAllCommentVotesForBlogPost,
+        }}
+      >
+        {children}
+      </VoteContextDispatch.Provider>
+    </VoteContextState.Provider>
   );
 };
 
-const useVoteContext = () => {
-  return useContext(VoteContext);
+const useVoteContextState = () => {
+  return useContext(VoteContextState);
 };
 
-export { VoteProvider, initialState, useVoteContext };
+const useVoteContextDispatch = () => {
+  return useContext(VoteContextDispatch);
+};
+
+export {
+  VoteProvider,
+  initialState,
+  useVoteContextState,
+  useVoteContextDispatch,
+};

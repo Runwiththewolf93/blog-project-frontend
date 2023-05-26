@@ -4,7 +4,7 @@ import { Icon } from "leaflet";
 import Spinner from "../shared/Spinner";
 import "leaflet/dist/leaflet.css";
 
-const Map = ({ userProfile, userInfo }) => {
+const MapComponent = ({ userProfile, userInfo }) => {
   const position =
     userProfile && userProfile.location && userProfile.location.coordinates
       ? [
@@ -46,4 +46,4 @@ const Map = ({ userProfile, userInfo }) => {
   );
 };
 
-export default Map;
+export default MapComponent;

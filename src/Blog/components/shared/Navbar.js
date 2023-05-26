@@ -9,11 +9,15 @@ import {
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import LoginPage from "../../pages/LoginPage";
-import { useAppContext } from "../../store/appContext";
+import {
+  useAppContextState,
+  useAppContextDispatch,
+} from "../../store/appContext";
 
 function Navigation({ handleSearch }) {
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const { userInfo, logoutUser } = useAppContext();
+  const { userInfo } = useAppContextState();
+  const { logoutUser } = useAppContextDispatch();
 
   const handleLoginClick = () => {
     setShowLoginModal(true);

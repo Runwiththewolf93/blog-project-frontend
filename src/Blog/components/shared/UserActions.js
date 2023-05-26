@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ModalEdit from "../modals/ModalEdit";
 import { Button, Tooltip, OverlayTrigger } from "react-bootstrap";
-import { useVoteContext } from "../../store/voteContext";
+import { useVoteContextDispatch } from "../../store/voteContext";
 
 const UserActions = ({
   userInfo,
@@ -10,7 +10,7 @@ const UserActions = ({
   deleteAllCommentsBlogPost,
 }) => {
   const { deleteBlogVoteCount, deleteAllCommentVotesForBlogPost } =
-    useVoteContext();
+    useVoteContextDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);

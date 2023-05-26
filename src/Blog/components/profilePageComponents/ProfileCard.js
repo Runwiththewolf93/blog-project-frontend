@@ -14,7 +14,10 @@ import {
   truncateContent,
 } from "../../utils/helper";
 import { Link } from "react-router-dom";
-import { useCommentContext } from "../../store/commentContext";
+import {
+  useCommentContextState,
+  useCommentContextDispatch,
+} from "../../store/commentContext";
 
 const ProfileCard = ({
   userProfile,
@@ -23,7 +26,8 @@ const ProfileCard = ({
   userCommentInfo,
   isLoadingUserComment,
 }) => {
-  const { getAllCommentsBlogPost, blogCommentInfo } = useCommentContext();
+  const { blogCommentInfo } = useCommentContextState();
+  const { getAllCommentsBlogPost } = useCommentContextDispatch();
 
   useEffect(() => {
     // Find the blog post with the highest absolute totalVotes

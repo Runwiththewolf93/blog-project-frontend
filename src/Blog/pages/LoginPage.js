@@ -9,8 +9,8 @@ import {
   Alert,
 } from "react-bootstrap";
 import CarouselLogin from "../components/loginPageComponents/CarouselLogin";
-import { useAppContext } from "../store/appContext";
-import { useCommentContext } from "../store/commentContext";
+import { useAppContextState, useAppContextDispatch } from "../store/appContext";
+import { useCommentContextDispatch } from "../store/commentContext";
 
 const initialState = {
   name: "",
@@ -23,16 +23,10 @@ const LoginPage = ({ show, handleClose }) => {
   const [values, setValues] = useState(initialState);
   const [formValid, setFormValid] = useState(false);
 
-  const {
-    isLoading,
-    error,
-    success,
-    registerUser,
-    loginUser,
-    resetUserError,
-    resetUserSuccess,
-  } = useAppContext();
-  const { resetCommentError } = useCommentContext();
+  const { isLoading, error, success } = useAppContextState();
+  const { registerUser, loginUser, resetUserError, resetUserSuccess } =
+    useAppContextDispatch();
+  const { resetCommentError } = useCommentContextDispatch();
 
   const toggleMember = () => {
     setValues({ ...values, isMember: !values.isMember });

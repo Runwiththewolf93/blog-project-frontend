@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form, Spinner, Alert } from "react-bootstrap";
-import { useAppContext } from "../../store/appContext";
+import {
+  useAppContextState,
+  useAppContextDispatch,
+} from "../../store/appContext";
 
 const ModalEdit = ({ post }) => {
   const [show, setShow] = useState(false);
   const [values, setValues] = useState(post);
   const [editSuccessful, setEditSuccessful] = useState(false);
-  const {
-    isLoadingBlog,
-    editBlogPost,
-    errorBlog,
-    setPostUpdated,
-    scrollToBlogPost,
-  } = useAppContext();
+  const { isLoadingBlog, errorBlog } = useAppContextState();
+  const { editBlogPost, setPostUpdated, scrollToBlogPost } =
+    useAppContextDispatch();
 
   useEffect(() => {
     setValues(post);

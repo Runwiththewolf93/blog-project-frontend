@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Form, Button, ListGroup } from "react-bootstrap";
-import { useCommentContext } from "../../store/commentContext";
+import { useCommentContextDispatch } from "../../store/commentContext";
 
 const CommentForm = ({ blogId }) => {
   const [comment, setComment] = useState("");
-  const { addCommentBlogPost } = useCommentContext();
+  const { addCommentBlogPost } = useCommentContextDispatch();
 
   const handleSubmit = event => {
     event.preventDefault();
