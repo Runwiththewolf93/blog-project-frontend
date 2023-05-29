@@ -12,12 +12,12 @@ import { useReducer } from "react";
 import {
   initialState,
   exchangeReducer,
-  SET_BASE_AMOUNT,
-  SET_BASE_CURRENCY,
-  SET_TARGET_CURRENCY,
-  SET_DATE,
+  setBaseExchangeRate,
+  setBaseAmount,
+  setBaseCurrency,
+  setTargetCurrency,
+  setDate,
   CLEAR_FORM,
-  SET_BASE_EXCHANGE_RATE,
   SWAP_CURRENCIES,
   HIDE_EXCHANGE_RATE,
   SHOW_EXCHANGE_RATE,
@@ -41,7 +41,7 @@ const Exchange = () => {
 
   const handleClear = () => {
     dispatch({ type: CLEAR_FORM });
-    dispatch({ type: SET_BASE_EXCHANGE_RATE, payload: "EUR" });
+    dispatch(setBaseExchangeRate("EUR"));
   };
 
   const handleSwapCurrencies = () => {
@@ -62,18 +62,13 @@ const Exchange = () => {
               placeholder={`${state.baseCurrency} 1.00`}
               type="number"
               value={state.baseAmount}
-              onChange={e =>
-                dispatch({ type: SET_BASE_AMOUNT, payload: e.target.value })
-              }
+              onChange={e => dispatch(setBaseAmount(e.target.value))}
             />
             <FormSelect
               label="From"
               value={state.baseCurrency}
               onChange={e => {
-                dispatch({
-                  type: SET_BASE_CURRENCY,
-                  payload: e.target.value,
-                });
+                dispatch(setBaseCurrency(e.target.value));
                 dispatch({ type: HIDE_EXCHANGE_RATE });
               }}
               options={baseCurrencyOptions}
@@ -89,10 +84,7 @@ const Exchange = () => {
               label="To"
               value={state.targetCurrency}
               onChange={e => {
-                dispatch({
-                  type: SET_TARGET_CURRENCY,
-                  payload: e.target.value,
-                });
+                dispatch(setTargetCurrency(e.target.value));
                 dispatch({ type: HIDE_EXCHANGE_RATE });
               }}
               options={targetCurrencyOptions}
@@ -102,9 +94,7 @@ const Exchange = () => {
           <div className="d-flex justify-content-between mt-3">
             <DateInput
               value={state.date}
-              onChange={e =>
-                dispatch({ type: SET_DATE, payload: e.target.value })
-              }
+              onChange={e => dispatch(setDate(e.target.value))}
             />
             {state.isLoading && state.convertedAmount ? (
               <div className="d-flex justify-content-center align-items-center">

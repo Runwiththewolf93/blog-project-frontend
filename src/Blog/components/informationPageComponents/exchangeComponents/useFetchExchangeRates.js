@@ -1,41 +1,32 @@
 import { useEffect } from "react";
 import axios from "axios";
 import {
-  SET_LOADING,
-  SET_EXCHANGE_RATES,
-  SET_BASE_EXCHANGE_RATE,
-  SET_ERROR_MESSAGE,
+  setLoading,
+  setExchangeRates,
+  setBaseExchangeRate,
+  setErrorMessage,
 } from "./ExchangeReducer";
 
 // useFetchExchangeRates hook
 const useFetchExchangeRates = (abstractAPIKey, dispatch) => {
   useEffect(() => {
     const fetchExchangeRates = async () => {
-      dispatch({ type: SET_LOADING, payload: true });
+      dispatch(setLoading(true));
       try {
         const { data } = await axios.get(
           `https://exchange-rates.abstractapi.com/v1/live?api_key=${abstractAPIKey}&base=EUR`
         );
-        dispatch({ type: SET_EXCHANGE_RATES, payload: data.exchange_rates });
-        dispatch({
-          type: SET_BASE_EXCHANGE_RATE,
-          payload: data.base,
-        });
+        dispatch(setExchangeRates(data.exchange_rates));
+        dispatch(setBaseExchangeRate(data.base));
       } catch (error) {
         if (error.response && error.response.status === 429) {
           // Handle rate limit error
-          dispatch({
-            type: SET_ERROR_MESSAGE,
-            payload: null,
-          });
+          dispatch(setErrorMessage(null));
         } else {
-          dispatch({
-            type: SET_ERROR_MESSAGE,
-            payload: error.message,
-          });
+          dispatch(setErrorMessage(error.message));
         }
       } finally {
-        dispatch({ type: SET_LOADING, payload: false });
+        dispatch(setLoading(false));
       }
     };
 

@@ -1,18 +1,68 @@
-export const SET_BASE_CURRENCY = "SET_BASE_CURRENCY";
-export const SET_TARGET_CURRENCY = "SET_TARGET_CURRENCY";
-export const SET_DATE = "SET_DATE";
-export const SET_BASE_AMOUNT = "SET_BASE_AMOUNT";
-export const SET_CONVERTED_AMOUNT = "SET_CONVERTED_AMOUNT";
-export const SET_EXCHANGE_RATE = "SET_EXCHANGE_RATE";
-export const SET_EXCHANGE_RATES = "SET_EXCHANGE_RATES";
+const SET_BASE_CURRENCY = "SET_BASE_CURRENCY";
+const SET_TARGET_CURRENCY = "SET_TARGET_CURRENCY";
+const SET_DATE = "SET_DATE";
+const SET_BASE_AMOUNT = "SET_BASE_AMOUNT";
+const SET_CONVERTED_AMOUNT = "SET_CONVERTED_AMOUNT";
+const SET_EXCHANGE_RATE = "SET_EXCHANGE_RATE";
+const SET_EXCHANGE_RATES = "SET_EXCHANGE_RATES";
+const SET_BASE_EXCHANGE_RATE = "SET_BASE_EXCHANGE_RATE";
+const SET_LOADING = "SET_LOADING";
+const SET_ERROR_MESSAGE = "SET_ERROR_MESSAGE";
 export const CLEAR_FORM = "CLEAR_FORM";
 export const SWAP_CURRENCIES = "SWAP_CURRENCIES";
 export const HIDE_EXCHANGE_RATE = "HIDE_EXCHANGE_RATE";
 export const SHOW_EXCHANGE_RATE = "SHOW_EXCHANGE_RATE";
-export const SET_BASE_EXCHANGE_RATE = "SET_BASE_EXCHANGE_RATE";
-export const SET_LOADING = "SET_LOADING";
-export const SET_ERROR_MESSAGE = "SET_ERROR_MESSAGE";
 export const CLEAR_ERROR_MESSAGE = "CLEAR_ERROR_MESSAGE";
+
+export const setBaseCurrency = currency => ({
+  type: SET_BASE_CURRENCY,
+  payload: currency,
+});
+
+export const setTargetCurrency = currency => ({
+  type: SET_TARGET_CURRENCY,
+  payload: currency,
+});
+
+export const setDate = date => ({
+  type: SET_DATE,
+  payload: date,
+});
+
+export const setBaseAmount = amount => ({
+  type: SET_BASE_AMOUNT,
+  payload: amount,
+});
+
+export const setConvertedAmount = amount => ({
+  type: SET_CONVERTED_AMOUNT,
+  payload: amount,
+});
+
+export const setExchangeRate = rate => ({
+  type: SET_EXCHANGE_RATE,
+  payload: rate,
+});
+
+export const setExchangeRates = rates => ({
+  type: SET_EXCHANGE_RATES,
+  payload: rates,
+});
+
+export const setBaseExchangeRate = rate => ({
+  type: SET_BASE_EXCHANGE_RATE,
+  payload: rate,
+});
+
+export const setLoading = isLoading => ({
+  type: SET_LOADING,
+  payload: isLoading,
+});
+
+export const setErrorMessage = message => ({
+  type: SET_ERROR_MESSAGE,
+  payload: message,
+});
 
 export const initialState = {
   baseCurrency: "USD",

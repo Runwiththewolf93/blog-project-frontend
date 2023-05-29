@@ -1,10 +1,10 @@
 import axios from "axios";
 import { debounce } from "lodash";
 import {
-  SET_LOADING,
-  SET_CONVERTED_AMOUNT,
-  SET_EXCHANGE_RATE,
-  SET_ERROR_MESSAGE,
+  setLoading,
+  setConvertedAmount,
+  setExchangeRate,
+  setErrorMessage,
 } from "./ExchangeReducer";
 
 // useHandleFormSubmit hook
@@ -13,31 +13,22 @@ const useHandleFormSubmit = (abstractAPIKey, state, dispatch) => {
     e.preventDefault();
 
     const fetchExchangeRate = debounce(async () => {
-      dispatch({ type: SET_LOADING, payload: true });
+      dispatch(setLoading(true));
       try {
         const { data } = await axios.get(
           `https://exchange-rates.abstractapi.com/v1/convert?api_key=${abstractAPIKey}&base=${state.baseCurrency}&target=${state.targetCurrency}&date=${state.date}&base_amount=${state.baseAmount}`
         );
-        dispatch({
-          type: SET_CONVERTED_AMOUNT,
-          payload: data.converted_amount,
-        });
-        dispatch({ type: SET_EXCHANGE_RATE, payload: data.exchange_rate });
+        dispatch(setConvertedAmount(data.converted_amount));
+        dispatch(setExchangeRate(data.exchange_rate));
       } catch (error) {
         if (error.response && error.response.status === 429) {
           // Handle rate limit error
-          dispatch({
-            type: SET_ERROR_MESSAGE,
-            payload: null,
-          });
+          dispatch(setErrorMessage(null));
         } else {
-          dispatch({
-            type: SET_ERROR_MESSAGE,
-            payload: error.message,
-          });
+          dispatch(setErrorMessage(error.message));
         }
       } finally {
-        dispatch({ type: SET_LOADING, payload: false });
+        dispatch(setLoading(false));
       }
     }, 1000);
 
