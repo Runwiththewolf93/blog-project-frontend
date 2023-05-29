@@ -2,6 +2,7 @@ import React, { useReducer, useContext, useState } from "react";
 
 import appReducer from "./appReducer";
 import axios from "axios";
+import axiosRetry from "axios-retry";
 import {
   REGISTER_USER_BEGIN,
   REGISTER_USER_SUCCESS,
@@ -69,6 +70,9 @@ const AppProvider = ({ children }) => {
   const authFetch = axios.create({
     baseURL: "/api/v1",
   });
+
+  // Set up axios-retry
+  axiosRetry(authFetch, { retries: 3 });
 
   // request
   authFetch.interceptors.request.use(

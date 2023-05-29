@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Container, Row, Col, Alert } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { useAppContextState } from "../../store/appContext";
 import {
   useCommentContextState,
@@ -11,8 +11,8 @@ import {
 } from "../../store/voteContext";
 import BlogSections from "./BlogSections";
 import BlogPosts from "./BlogPosts";
-import Spinner from "../shared/Spinner";
 import ScrollToTopPopup from "./ButtonOverlay";
+import { Loading, Error, NoPosts } from "./BodyComponents";
 
 const Body = ({ userInfo, blogDataToShow }) => {
   const { isLoadingBlog, errorBlog, wasLoggedOut } = useAppContextState();
@@ -32,22 +32,18 @@ const Body = ({ userInfo, blogDataToShow }) => {
 
   if (!userInfo) {
     return (
-      <div className="d-flex justify-content-center mb-3">
-        <Alert variant="info" className="fs-5">
-          {wasLoggedOut
+      <Error
+        message={
+          wasLoggedOut
             ? "Please log in to view available blog posts"
-            : "Session expired, please log in to view available blog posts"}
-        </Alert>
-      </div>
+            : "Session expired, please log in to view available blog posts"
+        }
+      />
     );
   }
 
   if (errorBlog) {
-    return (
-      <div className="d-flex justify-content-center mb-3">
-        <Alert variant="danger">{errorBlog}</Alert>;
-      </div>
-    );
+    return <Error message={errorBlog} />;
   }
 
   if (
@@ -58,19 +54,11 @@ const Body = ({ userInfo, blogDataToShow }) => {
     !commentInfo ||
     !voteInfo
   ) {
-    return (
-      <div className="d-flex justify-content-center mb-3">
-        <Spinner />
-      </div>
-    );
+    return <Loading />;
   }
 
   if (blogDataToShow.length === 0) {
-    return (
-      <div className="d-flex justify-content-center mb-3">
-        <Alert variant="danger">No blog posts match your query</Alert>
-      </div>
-    );
+    return <NoPosts />;
   }
 
   return (

@@ -1,49 +1,37 @@
-import { useState, useEffect, useRef } from "react";
+import { useRef, useCallback } from "react";
 import Message from "../components/homePageComponents/Message";
 import Body from "../components/homePageComponents/Body";
 import Layout from "../components/shared/Layout";
-import { useAppContextState, useAppContextDispatch } from "../store/appContext";
+import useBlogPosts from "../hooks/useBlogPosts";
 
 const HomePage = () => {
-  const { userInfo, postUpdated } = useAppContextState();
-  const { getAllBlogPosts, setPostUpdated } = useAppContextDispatch();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [showMyPosts, setShowMyPosts] = useState(false);
-  const [blogDataToShow, setBlogDataToShow] = useState([]);
   const searchTimeout = useRef();
 
-  const debouncedHandleSearch = event => {
-    event.preventDefault();
-    const searchQuery = event.target.value.trim().toLowerCase();
-    if (searchTimeout.current) clearTimeout(searchTimeout.current);
-    searchTimeout.current = setTimeout(() => setSearchQuery(searchQuery), 500);
-  };
+  const {
+    userInfo,
+    setSearchQuery,
+    showMyPosts,
+    setShowMyPosts,
+    blogDataToShow,
+    getAllBlogPosts,
+  } = useBlogPosts();
 
-  const toggleShowMyPosts = () => {
+  const debouncedHandleSearch = useCallback(
+    event => {
+      event.preventDefault();
+      const searchQuery = event.target.value.trim().toLowerCase();
+      if (searchTimeout.current) clearTimeout(searchTimeout.current);
+      searchTimeout.current = setTimeout(
+        () => setSearchQuery(searchQuery),
+        500
+      );
+    },
+    [setSearchQuery]
+  );
+
+  const toggleShowMyPosts = useCallback(() => {
     setShowMyPosts(!showMyPosts);
-  };
-
-  useEffect(() => {
-    const fetchBlogPosts = async () => {
-      const fetchedBlogInfo = await getAllBlogPosts();
-
-      if (showMyPosts) {
-        setBlogDataToShow(
-          fetchedBlogInfo?.filter(post => post.user?._id === userInfo?._id)
-        );
-      } else {
-        setBlogDataToShow(
-          fetchedBlogInfo?.filter(post =>
-            post.title?.toLowerCase().includes(searchQuery)
-          )
-        );
-      }
-      setPostUpdated(false);
-    };
-
-    fetchBlogPosts();
-    // eslint-disable-next-line
-  }, [postUpdated, searchQuery, showMyPosts, userInfo?._id]);
+  }, [showMyPosts, setShowMyPosts]);
 
   return (
     <Layout handleSearch={debouncedHandleSearch}>

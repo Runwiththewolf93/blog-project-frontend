@@ -56,7 +56,7 @@ const CommentItemControls = ({ comment, blogId, state, dispatch }) => {
         as="textarea"
         rows={3}
         value={state.editedComment}
-        onChange={event => setEditedComment(event.target.value)}
+        onChange={event => dispatch(setEditedComment(event.target.value))}
         style={{ backgroundColor: "#D0D0D0" }}
       />
       <Button
