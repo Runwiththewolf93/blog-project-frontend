@@ -1,40 +1,61 @@
 import { Spinner, Alert, Form, Button } from "react-bootstrap";
+import { useCommentContextDispatch } from "../../store/commentContext";
 import { useVoteContextDispatch } from "../../store/voteContext";
-
-const CommentItemControls = ({
-  comment,
-  loadingCommentId,
-  errorCommentId,
-  editCommentId,
-  handleSaveComment,
-  handleCancelEditComment,
-  handleDismissError,
-  handleEditComment,
-  handleDeleteComment,
-  editedComment,
+import {
+  setEditCommentId,
   setEditedComment,
-  errorMessage,
-}) => {
+  setLoadingCommentId,
+  setErrorCommentId,
+  setErrorMessage,
+} from "./CommentsReducer";
+
+const CommentItemControls = ({ comment, blogId, state, dispatch }) => {
+  const { editCommentBlogPost, deleteCommentBlogPost } =
+    useCommentContextDispatch();
   const { deleteCommentVoteCount } = useVoteContextDispatch();
 
-  return loadingCommentId === comment._id ? (
+  const handleCancelEditComment = () => {
+    dispatch(setEditCommentId(null));
+    dispatch(setEditedComment(""));
+  };
+
+  const handleDismissError = () => {
+    dispatch(setErrorCommentId(null));
+    dispatch(setErrorMessage(""));
+  };
+
+  const handleSaveComment = async (commentId, editedComment) => {
+    dispatch(setLoadingCommentId(commentId));
+    try {
+      await editCommentBlogPost(blogId, commentId, { editedComment });
+    } catch (error) {
+      dispatch(setErrorCommentId(commentId));
+      dispatch(setErrorMessage(error.message));
+    } finally {
+      dispatch(setLoadingCommentId(null));
+    }
+    dispatch(setEditCommentId(null));
+    dispatch(setEditedComment(""));
+  };
+
+  return state.loadingCommentId === comment._id ? (
     <Spinner />
-  ) : errorCommentId === comment._id ? (
+  ) : state.errorCommentId === comment._id ? (
     <Alert
       variant="danger"
       dismissible
       onClose={handleDismissError}
       style={{ maxWidth: "400px" }}
     >
-      {errorMessage}
+      {state.errorMessage}
     </Alert>
-  ) : editCommentId === comment._id ? (
+  ) : state.editCommentId === comment._id ? (
     <Form className="mx-3">
       <Form.Label className="mb-0">Edit a comment</Form.Label>
       <Form.Control
         as="textarea"
         rows={3}
-        value={editedComment}
+        value={state.editedComment}
         onChange={event => setEditedComment(event.target.value)}
         style={{ backgroundColor: "#D0D0D0" }}
       />
@@ -42,7 +63,7 @@ const CommentItemControls = ({
         type="button"
         variant="secondary"
         className="my-2"
-        onClick={() => handleSaveComment(comment._id, editedComment)}
+        onClick={() => handleSaveComment(comment._id, state.editedComment)}
       >
         Save
       </Button>
@@ -61,7 +82,7 @@ const CommentItemControls = ({
         type="button"
         variant="secondary"
         className="my-2"
-        onClick={() => handleEditComment(comment._id)}
+        onClick={() => dispatch(setEditCommentId(comment._id))}
       >
         Edit Comment
       </Button>
@@ -71,7 +92,7 @@ const CommentItemControls = ({
         className="my-2 ms-2"
         onClick={() => {
           deleteCommentVoteCount(comment._id);
-          handleDeleteComment(comment._id);
+          deleteCommentBlogPost(blogId, comment._id);
         }}
       >
         Delete Comment
