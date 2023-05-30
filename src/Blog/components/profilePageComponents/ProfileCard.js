@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { Card, ListGroup } from "react-bootstrap";
+import { Card, ListGroup, Alert } from "react-bootstrap";
 import Spinner from "../shared/Spinner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -14,10 +13,7 @@ import {
   truncateContent,
 } from "../../utils/helper";
 import { Link } from "react-router-dom";
-import {
-  useCommentContextState,
-  useCommentContextDispatch,
-} from "../../store/commentContext";
+import useFetchHighestVotedBlogComments from "./useFetchHighestVotedBlogComments";
 
 const ProfileCard = ({
   userProfile,
@@ -25,27 +21,10 @@ const ProfileCard = ({
   blogInfo,
   userCommentInfo,
   isLoadingUserComment,
+  errorUserComment,
 }) => {
-  const { blogCommentInfo } = useCommentContextState();
-  const { getAllCommentsBlogPost } = useCommentContextDispatch();
-
-  useEffect(() => {
-    // Find the blog post with the highest absolute totalVotes
-    if (blogInfo && blogInfo.length > 0) {
-      const highestVotedBlog = blogInfo.reduce((prev, current) => {
-        return Math.abs(prev.totalVotes) > Math.abs(current.totalVotes)
-          ? prev
-          : current;
-      });
-
-      // Fetch comments related to the highest voted blog post
-      if (highestVotedBlog && highestVotedBlog._id) {
-        getAllCommentsBlogPost(highestVotedBlog._id);
-      }
-    }
-
-    // eslint-disable-next-line
-  }, [blogInfo]);
+  const { isLoadingComment, blogCommentInfo, errorComment } =
+    useFetchHighestVotedBlogComments(blogInfo);
 
   const sortedComments = userCommentInfo?.sort(
     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -53,8 +32,10 @@ const ProfileCard = ({
 
   const avatar = getLatestAvatar(blogInfo, userInfo);
 
-  if (isLoadingUserComment) {
+  if (isLoadingUserComment || isLoadingComment) {
     return <Spinner />;
+  } else if (errorUserComment || errorComment) {
+    return <Alert>Error fetching comments</Alert>;
   }
 
   return (
@@ -73,10 +54,7 @@ const ProfileCard = ({
                   Your most recent comment:
                 </Card.Subtitle>
                 <Card.Text>
-                  {sortedComments.length > 0 &&
-                  sortedComments[0]?.comment.length > 200
-                    ? sortedComments[0]?.comment.slice(0, 200) + "..."
-                    : sortedComments[0]?.comment}
+                  {truncateContent(sortedComments[0]?.comment, 200)}
                 </Card.Text>
               </>
             ) : (

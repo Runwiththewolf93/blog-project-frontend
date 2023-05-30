@@ -1,6 +1,8 @@
-import { useEffect } from "react";
 import Layout from "../components/shared/Layout";
 import { Container, Row, Col } from "react-bootstrap";
+import { useAppContextState } from "../store/appContext";
+import { useCommentContextState } from "../store/commentContext";
+import useProfilePage from "../hooks/useProfilePage";
 import ProfileCard from "../components/profilePageComponents/ProfileCard";
 import Progress from "../components/profilePageComponents/Progress";
 import Relationships from "../components/profilePageComponents/Relationships";
@@ -8,28 +10,14 @@ import Pictures from "../components/profilePageComponents/Pictures";
 import Map from "../components/profilePageComponents/Map";
 import Information from "../components/profilePageComponents/Information";
 import useRandomUsers from "../hooks/useRandomUsers";
-import { useAppContextState, useAppContextDispatch } from "../store/appContext";
-import {
-  useCommentContextState,
-  useCommentContextDispatch,
-} from "../store/commentContext";
 import UserComments from "../components/profilePageComponents/UserComments";
 
 const ProfilePage = () => {
-  // added gender for single user
   const { userProfile } = useRandomUsers("male");
-  const { blogPost, userInfo, blogInfo, users } = useAppContextState();
-  const { resetBlogPost, getAllUsers } = useAppContextDispatch();
+  const { userInfo, blogInfo } = useAppContextState();
   const { isLoadingUserComment, userCommentInfo, errorUserComment } =
     useCommentContextState();
-  const { getAllCommentsUser } = useCommentContextDispatch();
-
-  useEffect(() => {
-    getAllUsers().then(() => {
-      getAllCommentsUser();
-    });
-    // eslint-disable-next-line
-  }, []);
+  useProfilePage();
 
   return (
     <Layout>
@@ -43,6 +31,7 @@ const ProfilePage = () => {
                 blogInfo,
                 userCommentInfo,
                 isLoadingUserComment,
+                errorUserComment,
               }}
             />
           </Col>
@@ -50,7 +39,6 @@ const ProfilePage = () => {
             <Progress userProfile={userProfile} userInfo={userInfo} />
             <Relationships
               userProfile={userProfile}
-              allUsers={users}
               userInfo={userInfo}
               blogInfo={blogInfo}
             />
@@ -72,8 +60,6 @@ const ProfilePage = () => {
         <UserComments
           {...{
             userInfo,
-            blogPost,
-            resetBlogPost,
             isLoadingUserComment,
             errorUserComment,
             userCommentInfo,

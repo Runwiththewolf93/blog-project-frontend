@@ -1,9 +1,12 @@
-import { CardGroup, Card, Image } from "react-bootstrap";
+import { CardGroup, Card, Image, Spinner, Alert } from "react-bootstrap";
 import useRandomUsers from "../../hooks/useRandomUsers";
 import { processUsers, concatAndSliceData } from "../../utils/helper";
+import { useAppContextState } from "../../store/appContext";
 
-const Relationships = ({ userProfile, allUsers, userInfo, blogInfo }) => {
-  const { filteredUsers, latestBlogPost, userAvatars } = processUsers(
+const Relationships = ({ userProfile, userInfo, blogInfo }) => {
+  const { isLoading, users: allUsers, error } = useAppContextState();
+
+  const { filteredUsers, userAvatars } = processUsers(
     allUsers,
     userInfo,
     blogInfo
@@ -12,6 +15,14 @@ const Relationships = ({ userProfile, allUsers, userInfo, blogInfo }) => {
   const numAdditionalUsers = Math.max(0, 7 - filteredUsers?.length);
   const additionalUsers = useRandomUsers("female", numAdditionalUsers);
   const users = concatAndSliceData(filteredUsers, additionalUsers?.users, 7);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  if (error) {
+    return <Alert>{error}</Alert>;
+  }
 
   return (
     <Card className="mt-4">
