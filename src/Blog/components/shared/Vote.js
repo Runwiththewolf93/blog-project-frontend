@@ -5,19 +5,20 @@ import {
   faExclamationCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { Spinner } from "react-bootstrap";
-import useVoteHandler from "./useVoteHandler";
+import useVoteData from "./useVoteData";
+import useVoteActions from "./useVoteActions";
 import { VoteButton, VoteCount } from "./VoteComponents";
 
 const Vote = ({ type, itemId, userInfo }) => {
+  const { currVote, totalVotes } = useVoteData(type, itemId, userInfo);
   const {
     currentVote,
-    totalVotes,
     handleUpVoteClick,
     handleDownVoteClick,
     handleDismissError,
     isLoading,
     error,
-  } = useVoteHandler(type, itemId, userInfo);
+  } = useVoteActions(type, itemId, currVote);
 
   return isLoading ? (
     <Spinner />
