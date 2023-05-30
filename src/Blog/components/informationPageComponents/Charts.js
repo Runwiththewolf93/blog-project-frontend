@@ -21,7 +21,7 @@ const Charts = () => {
   useEffect(() => {
     getAllUsers();
     // eslint-disable-next-line
-  }, [users]);
+  }, []);
 
   return (
     <div className="mt-5">
