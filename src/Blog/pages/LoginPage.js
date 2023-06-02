@@ -22,6 +22,7 @@ const initialState = {
 const LoginPage = ({ show, handleClose }) => {
   const [values, setValues] = useState(initialState);
   const [formValid, setFormValid] = useState(false);
+  const [showError, setShowError] = useState(true);
 
   const { isLoading, error, success } = useAppContextState();
   const { registerUser, loginUser, resetUserError, resetUserSuccess } =
@@ -101,11 +102,6 @@ const LoginPage = ({ show, handleClose }) => {
           <Container>
             <Row>
               <Col md={6}>
-                {error && (
-                  <Alert variant="danger" className="text-center fs-5">
-                    {error}
-                  </Alert>
-                )}
                 <h1 className="text-center mb-4">
                   {values.isMember ? "Login to blog" : "Create an account"}
                 </h1>
@@ -160,6 +156,17 @@ const LoginPage = ({ show, handleClose }) => {
                       characters.
                     </Form.Text>
                   </Form.Group>
+                  {error && (
+                    <Alert
+                      variant="danger"
+                      className="text-center fs-5 mb-0"
+                      dismissible
+                      show={showError}
+                      onClose={() => setShowError(false)}
+                    >
+                      {error}
+                    </Alert>
+                  )}
                   <Button
                     type="submit"
                     variant="secondary"

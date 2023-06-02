@@ -117,6 +117,20 @@ const generateChartData = (data, labelKey, valueKey) => {
   }));
 };
 
+const errorHandler = (error, dispatch, errorAction) => {
+  if (error.response) {
+    dispatch({
+      type: errorAction,
+      payload: error.response.data.msg,
+    });
+  } else {
+    dispatch({
+      type: errorAction,
+      payload: "Something went wrong",
+    });
+  }
+};
+
 export {
   capitalizeFirstLetter,
   capitalizeName,
@@ -129,4 +143,5 @@ export {
   sortData,
   calculateMostPost,
   generateChartData,
+  errorHandler,
 };

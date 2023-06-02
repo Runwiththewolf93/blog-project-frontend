@@ -23,8 +23,11 @@ const Body = ({ userInfo, blogDataToShow }) => {
 
   useEffect(() => {
     const fetchAllData = async () => {
-      await getAllComments();
-      await getAllVotes();
+      await Promise.all([getAllComments(), getAllVotes()]);
+
+      if (userInfo && (commentInfo.length === 0 || voteInfo.length === 0)) {
+        window.location.reload();
+      }
     };
     fetchAllData();
     // eslint-disable-next-line

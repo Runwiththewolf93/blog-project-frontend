@@ -3,6 +3,7 @@ import React, { useReducer, useContext } from "react";
 import voteReducer from "./voteReducer";
 import axios from "axios";
 import axiosRetry from "axios-retry";
+import { errorHandler } from "../utils/helper";
 import {
   GET_ALL_VOTES_BEGIN,
   GET_ALL_VOTES_SUCCESS,
@@ -91,13 +92,7 @@ const VoteProvider = ({ children }) => {
       dispatch({ type: GET_ALL_VOTES_SUCCESS, payload: data });
       localStorage.setItem("voteInfo", JSON.stringify(data));
     } catch (error) {
-      const errorMessage = error.response
-        ? error.response.data.msg
-        : "An error occurred";
-      dispatch({
-        type: GET_ALL_VOTES_ERROR,
-        payload: errorMessage,
-      });
+      errorHandler(error, dispatch, GET_ALL_VOTES_ERROR);
     } finally {
       dispatch({ type: RESET_VOTE_LOADING });
     }
@@ -163,12 +158,7 @@ const VoteProvider = ({ children }) => {
       // Save the updated blogInfo to localStorage
       localStorage.setItem("blogInfo", JSON.stringify(updatedBlogInfo));
     } catch (error) {
-      if (error.response) {
-        dispatch({
-          type: UPDATE_BLOG_VOTE_COUNT_ERROR,
-          payload: error.response.data.msg,
-        });
-      }
+      errorHandler(error, dispatch, UPDATE_BLOG_VOTE_COUNT_ERROR);
     }
   };
 
@@ -232,12 +222,7 @@ const VoteProvider = ({ children }) => {
       // Save the updated commentInfo to localStorage
       localStorage.setItem("commentInfo", JSON.stringify(updatedCommentInfo));
     } catch (error) {
-      if (error.response) {
-        dispatch({
-          type: UPDATE_COMMENT_VOTE_COUNT_ERROR,
-          payload: error.response.data.msg,
-        });
-      }
+      errorHandler(error, dispatch, UPDATE_COMMENT_VOTE_COUNT_ERROR);
     }
   };
 
@@ -275,12 +260,7 @@ const VoteProvider = ({ children }) => {
       // Save the updated blogInfo to localStorage
       localStorage.setItem("blogInfo", JSON.stringify(updatedBlogInfo));
     } catch (error) {
-      if (error.response) {
-        dispatch({
-          type: DELETE_BLOG_VOTE_COUNT_ERROR,
-          payload: error.response.data.msg,
-        });
-      }
+      errorHandler(error, dispatch, DELETE_BLOG_VOTE_COUNT_ERROR);
     }
   };
 
@@ -318,12 +298,7 @@ const VoteProvider = ({ children }) => {
       // Save the updated commentInfo to localStorage
       localStorage.setItem("commentInfo", JSON.stringify(updatedCommentInfo));
     } catch (error) {
-      if (error.response) {
-        dispatch({
-          type: DELETE_COMMENT_VOTE_COUNT_ERROR,
-          payload: error.response.data.msg,
-        });
-      }
+      errorHandler(error, dispatch, DELETE_COMMENT_VOTE_COUNT_ERROR);
     }
   };
 
@@ -350,12 +325,11 @@ const VoteProvider = ({ children }) => {
       // Save the updated voteInfo to localStorage
       localStorage.setItem("voteInfo", JSON.stringify(updatedVoteInfo));
     } catch (error) {
-      if (error.response) {
-        dispatch({
-          type: DELETE_ALL_COMMENT_VOTES_FOR_BLOG_POST_ERROR,
-          payload: error.response.data.msg,
-        });
-      }
+      errorHandler(
+        error,
+        dispatch,
+        DELETE_ALL_COMMENT_VOTES_FOR_BLOG_POST_ERROR
+      );
     }
   };
 

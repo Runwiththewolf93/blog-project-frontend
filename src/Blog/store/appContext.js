@@ -3,6 +3,7 @@ import React, { useReducer, useContext, useState } from "react";
 import appReducer from "./appReducer";
 import axios from "axios";
 import axiosRetry from "axios-retry";
+import { errorHandler } from "../utils/helper";
 import {
   REGISTER_USER_BEGIN,
   REGISTER_USER_SUCCESS,
@@ -20,6 +21,8 @@ import {
   RESET_BLOG_ERROR,
   RESET_BLOG_LOADING,
   RESET_WAS_LOGGED_OUT,
+  RESET_SUCCESS_MESSAGE,
+  RESET_ERROR_MESSAGE,
   GET_ALL_BLOG_POSTS_BEGIN,
   GET_ALL_BLOG_POSTS_SUCCESS,
   GET_ALL_BLOG_POSTS_ERROR,
@@ -35,6 +38,15 @@ import {
   DELETE_BLOG_POST_BEGIN,
   DELETE_BLOG_POST_SUCCESS,
   DELETE_BLOG_POST_ERROR,
+  UPDATE_USER_PASSWORD_BEGIN,
+  UPDATE_USER_PASSWORD_SUCCESS,
+  UPDATE_USER_PASSWORD_ERROR,
+  FORGOT_USER_PASSWORD_BEGIN,
+  FORGOT_USER_PASSWORD_SUCCESS,
+  FORGOT_USER_PASSWORD_ERROR,
+  RESET_USER_PASSWORD_BEGIN,
+  RESET_USER_PASSWORD_SUCCESS,
+  RESET_USER_PASSWORD_ERROR,
 } from "./actions";
 
 export const userInfoFromLocalStorage =
@@ -57,6 +69,9 @@ const initialState = {
   blogPost: blogPostFromLocalStorage,
   errorBlog: null,
   wasLoggedOut: false,
+  isLoadingReset: false,
+  successMessage: "",
+  errorReset: null,
 };
 
 const AppContextState = React.createContext();
@@ -113,12 +128,7 @@ const AppProvider = ({ children }) => {
       dispatch({ type: REGISTER_USER_SUCCESS, payload: data });
       localStorage.setItem("userInfo", JSON.stringify(data));
     } catch (error) {
-      if (error.response) {
-        dispatch({
-          type: REGISTER_USER_ERROR,
-          payload: error.response.data.msg,
-        });
-      }
+      errorHandler(error, dispatch, REGISTER_USER_ERROR);
     }
   };
 
@@ -137,12 +147,7 @@ const AppProvider = ({ children }) => {
       // Reset the wasLoggedOut flag
       dispatch({ type: RESET_WAS_LOGGED_OUT });
     } catch (error) {
-      if (error.response) {
-        dispatch({
-          type: LOGIN_USER_ERROR,
-          payload: error.response.data.msg,
-        });
-      }
+      errorHandler(error, dispatch, LOGIN_USER_ERROR);
     }
   };
 
@@ -153,12 +158,7 @@ const AppProvider = ({ children }) => {
       const { data } = await authFetch.get("auth/users");
       dispatch({ type: GET_ALL_USERS_SUCCESS, payload: data });
     } catch (error) {
-      if (error.response) {
-        dispatch({
-          type: GET_ALL_USERS_ERROR,
-          payload: error.response.data.msg,
-        });
-      }
+      errorHandler(error, dispatch, GET_ALL_USERS_ERROR);
     }
   };
 
@@ -184,6 +184,14 @@ const AppProvider = ({ children }) => {
     dispatch({ type: RESET_BLOG_ERROR });
   };
 
+  const resetSuccessMessage = () => {
+    dispatch({ type: RESET_SUCCESS_MESSAGE });
+  };
+
+  const resetErrorMessage = () => {
+    dispatch({ type: RESET_ERROR_MESSAGE });
+  };
+
   const getAllBlogPosts = async () => {
     dispatch({ type: GET_ALL_BLOG_POSTS_BEGIN });
 
@@ -195,12 +203,7 @@ const AppProvider = ({ children }) => {
 
       return data;
     } catch (error) {
-      if (error.response) {
-        dispatch({
-          type: GET_ALL_BLOG_POSTS_ERROR,
-          payload: error.response.data.msg,
-        });
-      }
+      errorHandler(error, dispatch, GET_ALL_BLOG_POSTS_ERROR);
     } finally {
       dispatch({ type: RESET_BLOG_LOADING });
     }
@@ -215,12 +218,7 @@ const AppProvider = ({ children }) => {
       dispatch({ type: GET_SINGLE_BLOG_POST_SUCCESS, payload: data });
       localStorage.setItem("blogPost", JSON.stringify(data));
     } catch (error) {
-      if (error.response) {
-        dispatch({
-          type: GET_SINGLE_BLOG_POST_ERROR,
-          payload: error.response.data.msg,
-        });
-      }
+      errorHandler(error, dispatch, GET_SINGLE_BLOG_POST_ERROR);
     }
   };
 
@@ -235,12 +233,7 @@ const AppProvider = ({ children }) => {
       const updatedBlogInfo = [...blogInfoFromLocalStorage, data];
       localStorage.setItem("blogInfo", JSON.stringify(updatedBlogInfo));
     } catch (error) {
-      if (error.response) {
-        dispatch({
-          type: ADD_BLOG_POST_ERROR,
-          payload: error.response.data.msg,
-        });
-      }
+      errorHandler(error, dispatch, ADD_BLOG_POST_ERROR);
     }
   };
 
@@ -257,12 +250,7 @@ const AppProvider = ({ children }) => {
       );
       localStorage.setItem("blogInfo", JSON.stringify(updatedBlogInfo));
     } catch (error) {
-      if (error.response) {
-        dispatch({
-          type: EDIT_BLOG_POST_ERROR,
-          payload: error.response.data.msg,
-        });
-      }
+      errorHandler(error, dispatch, EDIT_BLOG_POST_ERROR);
     }
   };
 
@@ -279,12 +267,62 @@ const AppProvider = ({ children }) => {
       );
       localStorage.setItem("blogInfo", JSON.stringify(updatedBlogInfo));
     } catch (error) {
-      if (error.response) {
-        dispatch({
-          type: DELETE_BLOG_POST_ERROR,
-          payload: error.response.data.msg,
-        });
-      }
+      errorHandler(error, dispatch, DELETE_BLOG_POST_ERROR);
+    }
+  };
+
+  const updateUserPassword = async ({ currentPassword, newPassword }) => {
+    dispatch({ type: UPDATE_USER_PASSWORD_BEGIN });
+
+    try {
+      await authFetch.patch("/auth/updateUserPassword", {
+        currentPassword,
+        newPassword,
+      });
+
+      dispatch({
+        type: UPDATE_USER_PASSWORD_SUCCESS,
+        payload: "Password updated successfully",
+      });
+    } catch (error) {
+      errorHandler(error, dispatch, UPDATE_USER_PASSWORD_ERROR);
+    }
+  };
+
+  const forgotUserPassword = async email => {
+    dispatch({ type: FORGOT_USER_PASSWORD_BEGIN });
+
+    try {
+      await axios.patch("/api/v1/auth/forgotPassword", { email });
+      dispatch({
+        type: FORGOT_USER_PASSWORD_SUCCESS,
+        payload: "Email sent successfully",
+      });
+    } catch (error) {
+      errorHandler(error, dispatch, FORGOT_USER_PASSWORD_ERROR);
+    }
+  };
+
+  const resetUserPassword = async ({ password, token }) => {
+    dispatch({ type: RESET_USER_PASSWORD_BEGIN });
+
+    try {
+      const { data } = await axios.patch(
+        `/api/v1/auth/resetPassword/${token}`,
+        {
+          password,
+        }
+      );
+
+      dispatch({
+        type: RESET_USER_PASSWORD_SUCCESS,
+        payload: data.msg,
+      });
+
+      dispatch({ type: LOGIN_USER_SUCCESS, payload: data.user });
+      localStorage.setItem("userInfo", JSON.stringify(data.user));
+    } catch (error) {
+      errorHandler(error, dispatch, RESET_USER_PASSWORD_ERROR);
     }
   };
 
@@ -313,11 +351,16 @@ const AppProvider = ({ children }) => {
           resetUserError,
           resetUserSuccess,
           resetBlogError,
+          resetSuccessMessage,
+          resetErrorMessage,
           getAllBlogPosts,
           getSingleBlogPost,
           addBlogPost,
           editBlogPost,
           deleteBlogPost,
+          updateUserPassword,
+          forgotUserPassword,
+          resetUserPassword,
           // state functions
           setPostUpdated,
           scrollToBlogPost,

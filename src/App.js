@@ -3,7 +3,8 @@ import HomePage from "./Blog/pages/HomePage";
 import ProfilePage from "./Blog/pages/ProfilePage";
 import InterestsPage from "./Blog/pages/InterestsPage";
 import InformationPage from "./Blog/pages/InformationPage";
-import LoginPage from "./Blog/pages/LoginPage";
+import ResetPasswordPage from "./Blog/pages/ResetPasswordPage";
+import ConfirmationPage from "./Blog/components/resetPageComponents/ConfrimationPage";
 import ProtectedRoute from "./Blog/pages/ProtectedRoute";
 import "./App.css";
 
@@ -36,7 +37,8 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/login-page" element={<LoginPage />} />
+        <Route path="/reset-password/:token?" element={<ResetPasswordPage />} />
+        <Route path="/confirmation" element={<ConfirmationPage />}></Route>
       </Routes>
     </BrowserRouter>
   );

@@ -54,6 +54,9 @@ function Navigation({ handleSearch }) {
               <Link to="/information-page" className="nav-link">
                 Information
               </Link>
+              <Link to="/reset-password" className="nav-link">
+                Reset-pass
+              </Link>
               {userInfo ? (
                 <Link
                   to="/"
@@ -63,7 +66,7 @@ function Navigation({ handleSearch }) {
                   Logout
                 </Link>
               ) : (
-                <Link to="/" className="nav-link" onClick={handleLoginClick}>
+                <Link className="nav-link" onClick={handleLoginClick}>
                   Login
                 </Link>
               )}

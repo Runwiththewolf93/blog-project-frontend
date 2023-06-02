@@ -3,6 +3,7 @@ import React, { useReducer, useContext } from "react";
 import commentReducer from "./commentReducer";
 import axios from "axios";
 import axiosRetry from "axios-retry";
+import { errorHandler } from "../utils/helper";
 import {
   GET_ALL_COMMENTS_BLOG_POST_BEGIN,
   GET_ALL_COMMENTS_BLOG_POST_SUCCESS,
@@ -93,12 +94,7 @@ const CommentProvider = ({ children }) => {
 
       dispatch({ type: GET_ALL_COMMENTS_BLOG_POST_SUCCESS, payload: data });
     } catch (error) {
-      if (error.response) {
-        dispatch({
-          type: GET_ALL_COMMENTS_BLOG_POST_ERROR,
-          payload: error.response.data.msg,
-        });
-      }
+      errorHandler(error, dispatch, GET_ALL_COMMENTS_BLOG_POST_ERROR);
     }
   };
 
@@ -110,12 +106,7 @@ const CommentProvider = ({ children }) => {
 
       dispatch({ type: GET_ALL_COMMENTS_USER_SUCCESS, payload: data });
     } catch (error) {
-      if (error.response) {
-        dispatch({
-          type: GET_ALL_COMMENTS_USER_ERROR,
-          payload: error.response.data.msg,
-        });
-      }
+      errorHandler(error, dispatch, GET_ALL_COMMENTS_USER_ERROR);
     } finally {
       dispatch({ type: RESET_GET_ALL_COMMENTS_USER_LOADING });
     }
@@ -130,13 +121,7 @@ const CommentProvider = ({ children }) => {
       dispatch({ type: GET_ALL_COMMENTS_SUCCESS, payload: data });
       localStorage.setItem("commentInfo", JSON.stringify(data));
     } catch (error) {
-      const errorMessage = error.response
-        ? error.response.data.msg
-        : "An error occurred";
-      dispatch({
-        type: GET_ALL_COMMENTS_ERROR,
-        payload: errorMessage,
-      });
+      errorHandler(error, dispatch, GET_ALL_COMMENTS_ERROR);
     } finally {
       dispatch({ type: RESET_COMMENT_LOADING });
     }
@@ -156,12 +141,7 @@ const CommentProvider = ({ children }) => {
       const updatedCommentInfo = [...commentInfoFromLocalStorage, data];
       localStorage.setItem("commentInfo", JSON.stringify(updatedCommentInfo));
     } catch (error) {
-      if (error.response) {
-        dispatch({
-          type: ADD_COMMENT_BLOG_POST_ERROR,
-          payload: error.response.data.msg,
-        });
-      }
+      errorHandler(error, dispatch, ADD_COMMENT_BLOG_POST_ERROR);
     }
   };
 
@@ -181,12 +161,7 @@ const CommentProvider = ({ children }) => {
       );
       localStorage.setItem("commentInfo", JSON.stringify(updatedCommentInfo));
     } catch (error) {
-      if (error.response) {
-        dispatch({
-          type: EDIT_COMMENT_BLOG_POST_ERROR,
-          payload: error.response.data.msg,
-        });
-      }
+      errorHandler(error, dispatch, EDIT_COMMENT_BLOG_POST_ERROR);
     }
   };
 
@@ -205,12 +180,7 @@ const CommentProvider = ({ children }) => {
       );
       localStorage.setItem("commentInfo", JSON.stringify(updatedCommentInfo));
     } catch (error) {
-      if (error.response) {
-        dispatch({
-          type: DELETE_COMMENT_BLOG_POST_ERROR,
-          payload: error.response.data.msg,
-        });
-      }
+      errorHandler(error, dispatch, DELETE_COMMENT_BLOG_POST_ERROR);
     }
   };
 
@@ -230,12 +200,7 @@ const CommentProvider = ({ children }) => {
       );
       localStorage.setItem("commentInfo", JSON.stringify(updatedCommentInfo));
     } catch (error) {
-      if (error.response) {
-        dispatch({
-          type: DELETE_ALL_COMMENTS_BLOG_POST_ERROR,
-          payload: error.response.data.msg,
-        });
-      }
+      errorHandler(error, dispatch, DELETE_ALL_COMMENTS_BLOG_POST_ERROR);
     }
   };
 

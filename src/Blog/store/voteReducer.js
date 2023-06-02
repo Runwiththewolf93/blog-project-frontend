@@ -53,7 +53,7 @@ const voteReducer = (state, action) => {
       isLoadingVote: false,
       voteInfo: action.payload.updatedVoteInfo,
       blogInfo: action.payload.updatedBlogInfo,
-      errorVote: false,
+      errorVote: null,
     };
   }
   if (action.type === UPDATE_BLOG_VOTE_COUNT_ERROR) {
@@ -69,7 +69,7 @@ const voteReducer = (state, action) => {
       isLoadingVote: false,
       voteInfo: action.payload.updatedVoteInfo,
       commentInfo: action.payload.updatedCommentInfo,
-      errorVote: false,
+      errorVote: null,
     };
   }
   if (action.type === UPDATE_COMMENT_VOTE_COUNT_ERROR) {
@@ -85,7 +85,7 @@ const voteReducer = (state, action) => {
       isLoadingVote: false,
       voteInfo: action.payload.updatedVoteInfo,
       blogInfo: action.payload.updatedBlogInfo,
-      errorVote: false,
+      errorVote: null,
     };
   }
   if (action.type === DELETE_BLOG_VOTE_COUNT_ERROR) {
@@ -101,7 +101,7 @@ const voteReducer = (state, action) => {
       isLoadingVote: false,
       voteInfo: action.payload.updatedVoteInfo,
       commentInfo: action.payload.updatedCommentInfo,
-      errorVote: false,
+      errorVote: null,
     };
   }
   if (action.type === DELETE_COMMENT_VOTE_COUNT_ERROR) {
@@ -120,7 +120,7 @@ const voteReducer = (state, action) => {
       ...state,
       isLoadingVote: false,
       voteInfo: action.payload.updatedVoteInfo,
-      errorVote: false,
+      errorVote: null,
     };
   }
   if (action.type === DELETE_ALL_COMMENT_VOTES_FOR_BLOG_POST_ERROR) {
@@ -143,7 +143,7 @@ const voteReducer = (state, action) => {
       errorVote: null,
     };
   }
-  return state;
+  return { ...state, isLoadingVote: false };
 };
 
 export default voteReducer;
