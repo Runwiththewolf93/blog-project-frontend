@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppContextDispatch } from "../../store/appContext";
-import { Card, Form, Button, Alert } from "react-bootstrap";
+import { Form, Alert } from "react-bootstrap";
+import {
+  FormCard,
+  AlertMessage,
+  ClearSubmitButtonGroup,
+} from "./FormComponents";
 
 const ForgotPasswordForm = ({ isLoadingReset, successMessage, errorReset }) => {
   const { forgotUserPassword, resetSuccessMessage } = useAppContextDispatch();
@@ -51,12 +56,12 @@ const ForgotPasswordForm = ({ isLoadingReset, successMessage, errorReset }) => {
   };
 
   return (
-    <Card className="p-5 border border-dark rounded-5">
+    <FormCard>
       <Form onSubmit={handleSubmit}>
         <h3 className="mb-0">Enter Your Email</h3>
         <p>We will send you a link to reset your password.</p>
 
-        <Form.Group controlId="formCurrentPassword" className="mb-3">
+        <Form.Group controlId="formEmailAddress">
           <Form.Label className="mb-0">Email Address</Form.Label>
           <Form.Control
             type="email"
@@ -72,43 +77,30 @@ const ForgotPasswordForm = ({ isLoadingReset, successMessage, errorReset }) => {
           </Alert>
         )}
         {successMessage && (
-          <Alert
+          <AlertMessage
             variant="success"
-            dismissible
-            show={showSuccessAlert}
+            message={successMessage}
+            showAlert={showSuccessAlert}
             onClose={() => setShowSuccessAlert(false)}
-            className="my-3"
-          >
-            {successMessage}
-          </Alert>
+          />
         )}
         {errorReset && (
-          <Alert
+          <AlertMessage
             variant="danger"
-            dismissible
-            show={showErrorAlert}
+            message={errorReset}
+            showAlert={showErrorAlert}
             onClose={() => setShowErrorAlert(false)}
-            className="my-3"
-          >
-            {errorReset}
-          </Alert>
+          />
         )}
 
-        <div className="d-flex justify-content-between">
-          <Button
-            variant="secondary"
-            type="button"
-            onClick={handleClear}
-            disabled={isLoadingReset}
-          >
-            Clear
-          </Button>
-          <Button variant="secondary" type="submit" disabled={isLoadingReset}>
-            Send
-          </Button>
-        </div>
+        <ClearSubmitButtonGroup
+          clearLabel="Clear"
+          submitLabel="Send"
+          handleClear={handleClear}
+          isLoading={isLoadingReset}
+        />
       </Form>
-    </Card>
+    </FormCard>
   );
 };
 

@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Alert, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-const ConfirmationPage = () => {
+const ConfirmationPage = ({ heading, paragraph }) => {
   const navigate = useNavigate();
 
   const handleGoHome = () => {
@@ -11,16 +11,13 @@ const ConfirmationPage = () => {
 
   return (
     <Container className="d-flex flex-column justify-content-center align-items-center vh-100">
-      <Alert variant="success">
+      <Alert variant="secondary rounded-3">
         <Alert.Heading className="text-center fs-3 fw-bold">
-          Check your email!
+          {heading}
         </Alert.Heading>
-        <p className="fs-5">
-          We've sent you an email with a link to reset your password. If you
-          don't see it, check your spam folder.
-        </p>
+        <p className="fs-5">{paragraph}</p>
       </Alert>
-      <Button variant="primary" onClick={handleGoHome}>
+      <Button variant="secondary" onClick={handleGoHome}>
         Go to Home Page
       </Button>
     </Container>

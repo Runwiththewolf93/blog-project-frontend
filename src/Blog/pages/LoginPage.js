@@ -1,16 +1,11 @@
 import { useState, useEffect } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Modal,
-  Form,
-  Button,
-  Alert,
-} from "react-bootstrap";
+import { Container, Row, Col, Modal } from "react-bootstrap";
 import CarouselLogin from "../components/loginPageComponents/CarouselLogin";
 import { useAppContextState, useAppContextDispatch } from "../store/appContext";
 import { useCommentContextDispatch } from "../store/commentContext";
+import LoginForm from "../components/loginPageComponents/LoginForm";
+import ErrorAlert from "../components/loginPageComponents/ErrorAlert";
+import useForm from "../components/loginPageComponents/useForm";
 
 const initialState = {
   name: "",
@@ -20,59 +15,33 @@ const initialState = {
 };
 
 const LoginPage = ({ show, handleClose }) => {
-  const [values, setValues] = useState(initialState);
-  const [formValid, setFormValid] = useState(false);
-  const [showError, setShowError] = useState(true);
-
   const { isLoading, error, success } = useAppContextState();
   const { registerUser, loginUser, resetUserError, resetUserSuccess } =
     useAppContextDispatch();
   const { resetCommentError } = useCommentContextDispatch();
 
-  const toggleMember = () => {
-    setValues({ ...values, isMember: !values.isMember });
-  };
-
-  const checkFormValidity = () => {
-    const { email, password } = values;
-    if (values.isMember) {
-      if (email && password) {
-        setFormValid(true);
-      } else {
-        setFormValid(false);
-      }
-    } else {
-      const { name } = values;
-      if (name && email && password) {
-        setFormValid(true);
-      } else {
-        setFormValid(false);
-      }
-    }
-  };
-
-  const handleChange = e => {
-    setValues({ ...values, [e.target.name]: e.target.value });
-    checkFormValidity();
-    if (error && e.target.value) {
-      resetUserError();
-      resetUserSuccess();
-    }
-  };
-
-  const onSubmit = e => {
-    e.preventDefault();
+  const onSubmit = values => {
     const { name, email, password, isMember } = values;
-    if (!formValid) {
-      window.alert("Please provide all values");
-      return;
-    }
     if (isMember) {
       loginUser({ email, password });
     } else {
       registerUser({ name, email, password });
     }
   };
+
+  const { values, handleChange, handleSubmit, formValid, setValues } = useForm(
+    initialState,
+    onSubmit,
+    error,
+    resetUserError,
+    resetUserSuccess
+  );
+
+  const toggleMember = () => {
+    setValues({ ...values, isMember: !values.isMember });
+  };
+
+  const [showError, setShowError] = useState(true);
 
   useEffect(() => {
     if (success) {
@@ -89,117 +58,48 @@ const LoginPage = ({ show, handleClose }) => {
     resetCommentError,
   ]);
 
+  useEffect(() => {
+    if (error) {
+      setShowError(true);
+    }
+  }, [error]);
+
   return (
-    <>
-      <Modal
-        show={show}
-        onHide={handleClose}
-        size="xl"
-        centered
-        aria-labelledby="modal-styling-title"
-      >
-        <Modal.Body>
-          <Container>
-            <Row>
-              <Col md={6}>
-                <h1 className="text-center mb-4">
-                  {values.isMember ? "Login to blog" : "Create an account"}
-                </h1>
-                <Form onSubmit={onSubmit}>
-                  <Form.Group className="mb-3" controlId="ControlInput1">
-                    {!values.isMember && (
-                      <div className="mb-3">
-                        <Form.Label>Username</Form.Label>
-                        <Form.Control
-                          type="text"
-                          placeholder="Username93"
-                          autoFocus
-                          required
-                          value={values.name}
-                          onChange={handleChange}
-                          name="name"
-                        />
-                        <Form.Text className="text-muted">
-                          Be as unique as possible when creating your username.
-                          Leave your mark!
-                        </Form.Text>
-                      </div>
-                    )}
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control
-                      type="email"
-                      placeholder="name@example.com"
-                      autoFocus
-                      required
-                      value={values.email}
-                      onChange={handleChange}
-                      name="email"
-                    />
-                    <Form.Text className="text-muted">
-                      We'll never share your email with anyone else.
-                    </Form.Text>
-                  </Form.Group>
-                  <Form.Group className="mb-3" controlId="ControlTextarea1">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control
-                      type="password"
-                      aria-label="Password"
-                      aria-required="true"
-                      required
-                      value={values.password}
-                      onChange={handleChange}
-                      name="password"
-                    />
-                    <Form.Text className="text-muted">
-                      Your password mut be at least 6 characters long and
-                      contain a combination of letters, numbers, and special
-                      characters.
-                    </Form.Text>
-                  </Form.Group>
-                  {error && (
-                    <Alert
-                      variant="danger"
-                      className="text-center fs-5 mb-0"
-                      dismissible
-                      show={showError}
-                      onClose={() => setShowError(false)}
-                    >
-                      {error}
-                    </Alert>
-                  )}
-                  <Button
-                    type="submit"
-                    variant="secondary"
-                    disabled={isLoading || !formValid}
-                    className="mt-3 w-100 fs-5"
-                    onClick={onSubmit}
-                  >
-                    Submit
-                  </Button>
-                  <p className="text-center mt-3 fs-5">
-                    {values.isMember
-                      ? "Not a member yet?"
-                      : "Already a member?"}
-                    <Button
-                      style={{ paddingTop: "3px" }}
-                      variant="link"
-                      type="button"
-                      onClick={toggleMember}
-                      className="fs-5"
-                    >
-                      {values.isMember ? "Register" : "Login"}
-                    </Button>
-                  </p>
-                </Form>
-              </Col>
-              <Col md={6}>
-                <CarouselLogin />
-              </Col>
-            </Row>
-          </Container>
-        </Modal.Body>
-      </Modal>
-    </>
+    <Modal
+      show={show}
+      onHide={handleClose}
+      size="xl"
+      centered
+      aria-labelledby="modal-styling-title"
+    >
+      <Modal.Body>
+        <Container>
+          <Row>
+            <Col md={6}>
+              <h1 className="text-center mb-4">
+                {values.isMember ? "Login to blog" : "Create an account"}
+              </h1>
+              <LoginForm
+                onSubmit={handleSubmit}
+                values={values}
+                handleChange={handleChange}
+                formValid={formValid}
+                isLoading={isLoading}
+                toggleMember={toggleMember}
+              />
+              <ErrorAlert
+                error={error}
+                showError={showError}
+                setShowError={setShowError}
+              />
+            </Col>
+            <Col md={6}>
+              <CarouselLogin />
+            </Col>
+          </Row>
+        </Container>
+      </Modal.Body>
+    </Modal>
   );
 };
 

@@ -4,7 +4,7 @@ import ProfilePage from "./Blog/pages/ProfilePage";
 import InterestsPage from "./Blog/pages/InterestsPage";
 import InformationPage from "./Blog/pages/InformationPage";
 import ResetPasswordPage from "./Blog/pages/ResetPasswordPage";
-import ConfirmationPage from "./Blog/components/resetPageComponents/ConfrimationPage";
+import ConfirmationPage from "./Blog/components/resetPageComponents/ConfirmationPage";
 import ProtectedRoute from "./Blog/pages/ProtectedRoute";
 import "./App.css";
 
@@ -38,7 +38,16 @@ function App() {
           }
         />
         <Route path="/reset-password/:token?" element={<ResetPasswordPage />} />
-        <Route path="/confirmation" element={<ConfirmationPage />}></Route>
+        <Route
+          path="/confirmation"
+          element={
+            <ConfirmationPage
+              heading="Check your email!"
+              paragraph="We've sent you an email with a link to reset your password. If you
+            don't see it, check your spam folder."
+            />
+          }
+        ></Route>
       </Routes>
     </BrowserRouter>
   );

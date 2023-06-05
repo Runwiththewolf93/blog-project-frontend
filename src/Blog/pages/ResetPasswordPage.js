@@ -1,16 +1,15 @@
 import Layout from "../components/shared/Layout";
 import { useAppContextState } from "../store/appContext";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import UpdatePasswordForm from "../components/resetPageComponents/UpdatePasswordForm";
 import ForgotPasswordForm from "../components/resetPageComponents/ForgotPasswordForm";
 import ResetPasswordForm from "../components/resetPageComponents/ResetPasswordForm";
+import ConfirmationPage from "../components/resetPageComponents/ConfirmationPage";
 
 const ResetPasswordPage = () => {
-  const { isLoadingReset, userInfo, success, successMessage, errorReset } =
+  const { isLoadingReset, userInfo, successMessage, errorReset } =
     useAppContextState();
   const { token } = useParams();
-  const navigate = useNavigate();
-  console.log(token);
 
   if (userInfo && !token) {
     return (
@@ -36,20 +35,24 @@ const ResetPasswordPage = () => {
     );
   }
 
-  if (!userInfo && token) {
+  if ((!userInfo || userInfo) && token) {
     return (
       <Layout>
         <div className="vh-100 d-flex align-items-center justify-content-center pb-5">
           <ResetPasswordForm
-            {...{ isLoadingReset, successMessage, errorReset, token, success }}
+            {...{ isLoadingReset, successMessage, errorReset, token }}
           />
         </div>
       </Layout>
     );
   }
 
-  navigate("/");
-  return null;
+  return (
+    <ConfirmationPage
+      heading="Whoops"
+      paragraph="Something went wrong. Click on the link below to navigate back to the home page."
+    />
+  );
 };
 
 export default ResetPasswordPage;

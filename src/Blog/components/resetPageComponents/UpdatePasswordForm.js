@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import { useAppContextDispatch } from "../../store/appContext";
 import { useNavigate } from "react-router-dom";
-import { Card, Form, Button, Alert } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import styles from "./UpdatePasswordForm.module.css";
+import { Form } from "react-bootstrap";
+import {
+  FormCard,
+  PasswordField,
+  AlertMessage,
+  ClearSubmitButtonGroup,
+} from "./FormComponents";
 
 const UpdatePasswordForm = ({
   isLoadingReset,
@@ -68,90 +71,58 @@ const UpdatePasswordForm = ({
   };
 
   return (
-    <Card className="p-5 border border-dark rounded-5">
+    <FormCard>
       <Form onSubmit={handleSubmit}>
         <h3 className="mb-0">Update Your Password</h3>
         <p>Please enter your current password and your new password.</p>
 
-        <Form.Group controlId="formCurrentPassword" className="mb-3">
-          <Form.Label className="mb-0">Current Password</Form.Label>
-          <div className={styles["password-input-group"]}>
-            <Form.Control
-              type={showCurrentPassword ? "text" : "password"}
-              placeholder="Enter current password"
-              value={currentPassword}
-              onChange={handleCurrentPasswordChange}
-            />
-            <FontAwesomeIcon
-              icon={showCurrentPassword ? faEyeSlash : faEye}
-              className={styles["password-icon"]}
-              onClick={toggleCurrentPasswordVisibility}
-            />
-          </div>
-        </Form.Group>
-
-        <Form.Group controlId="formNewPassword">
-          <Form.Label className="mb-0">New Password</Form.Label>
-          <div className={styles["password-input-group"]}>
-            <Form.Control
-              type={showNewPassword ? "text" : "password"}
-              placeholder="Enter new password"
-              value={newPassword}
-              onChange={handleNewPasswordChange}
-            />
-            <FontAwesomeIcon
-              icon={showNewPassword ? faEyeSlash : faEye}
-              className={styles["password-icon"]}
-              onClick={toggleNewPasswordVisibility}
-            />
-          </div>
-        </Form.Group>
+        <PasswordField
+          label="Current Password"
+          placeholder="Enter current password"
+          value={currentPassword}
+          showPassword={showCurrentPassword}
+          togglePasswordVisibility={toggleCurrentPasswordVisibility}
+          onChange={handleCurrentPasswordChange}
+        />
+        <div className="mb-3" />
+        <PasswordField
+          label="New Password"
+          placeholder="Enter new password"
+          value={newPassword}
+          showPassword={showNewPassword}
+          togglePasswordVisibility={toggleNewPasswordVisibility}
+          onChange={handleNewPasswordChange}
+        />
 
         {successMessage && (
-          <Alert
+          <AlertMessage
             variant="success"
-            dismissible
-            show={showSuccessAlert}
+            message={successMessage}
+            showAlert={showSuccessAlert}
             onClose={() => setShowSuccessAlert(false)}
-            className="mt-3 mb-0"
-          >
-            {successMessage}
-          </Alert>
+          />
         )}
         {errorReset && (
-          <Alert
+          <AlertMessage
             variant="danger"
-            dismissible
-            show={showErrorAlert}
+            message={errorReset}
+            showAlert={showErrorAlert}
             onClose={() => setShowErrorAlert(false)}
-            className="mt-3 mb-0"
-          >
-            {errorReset}
-          </Alert>
+          />
         )}
 
-        <div className="d-flex justify-content-between">
-          <Button
-            variant="secondary"
-            type="button"
-            className="mt-3"
-            onClick={handleClear}
-            disabled={isLoadingReset}
-          >
-            Clear
-          </Button>
-          <Button
-            variant="secondary"
-            type="submit"
-            className="mt-3"
-            disabled={isLoadingReset}
-          >
-            Update Password
-          </Button>
-        </div>
+        <ClearSubmitButtonGroup
+          clearLabel="Clear"
+          submitLabel="Update"
+          handleClear={handleClear}
+          handleSubmit={handleSubmit}
+          isLoading={isLoadingReset}
+        />
       </Form>
-    </Card>
+    </FormCard>
   );
 };
 
 export default UpdatePasswordForm;
+
+// refactor the forms, test out a bit more, see if state can be fixed. Implement file upload for create and update blog post.
