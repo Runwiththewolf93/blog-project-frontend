@@ -41,6 +41,9 @@ import {
   RESET_USER_PASSWORD_BEGIN,
   RESET_USER_PASSWORD_SUCCESS,
   RESET_USER_PASSWORD_ERROR,
+  UPLOAD_BLOG_IMAGES_BEGIN,
+  UPLOAD_BLOG_IMAGES_SUCCESS,
+  UPLOAD_BLOG_IMAGES_ERROR,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -288,6 +291,21 @@ const appReducer = (state, action) => {
   }
   if (action.type === RESET_USER_PASSWORD_ERROR) {
     return { ...state, isLoadingReset: false, errorReset: action.payload };
+  }
+  // upload images to cloudinary
+  if (action.type === UPLOAD_BLOG_IMAGES_BEGIN) {
+    return { ...state, isLoadingBlog: true };
+  }
+  if (action.type === UPLOAD_BLOG_IMAGES_SUCCESS) {
+    return {
+      ...state,
+      isLoadingBlog: false,
+      images: action.payload,
+      errorBlog: null,
+    };
+  }
+  if (action.type === UPLOAD_BLOG_IMAGES_ERROR) {
+    return { ...state, isLoadingBlog: false, errorBlog: action.payload };
   }
   return { ...state, isLoadingBlog: false };
 };

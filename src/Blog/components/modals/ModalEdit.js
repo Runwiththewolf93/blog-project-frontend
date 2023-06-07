@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Button, Form, Spinner, Alert } from "react-bootstrap";
+import { Modal, Button, Form } from "react-bootstrap";
 import {
   useAppContextState,
   useAppContextDispatch,
 } from "../../store/appContext";
+import ModalFooterContent from "./ModalFooterContent";
+import FormInput from "./FormInput";
 
 const ModalEdit = ({ post }) => {
   const [show, setShow] = useState(false);
@@ -64,76 +66,57 @@ const ModalEdit = ({ post }) => {
         </Modal.Header>
         <Form onSubmit={handleSubmit}>
           <Modal.Body>
-            <Form.Group className="mb-3" controlId="TitleInput">
-              <Form.Label>Title</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Title of the post"
-                autoFocus
-                value={values.title}
-                onChange={handleChange}
-                name="title"
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="AvatarInput">
-              <Form.Label>Avatar - Profile Image</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="URL to profile image"
-                value={values.avatar}
-                onChange={handleChange}
-                name="avatar"
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="ContentInput">
-              <Form.Label>Content</Form.Label>
-              <Form.Control
-                type="text"
-                as="textarea"
-                placeholder="Content of the post"
-                value={values.content}
-                onChange={handleChange}
-                name="content"
-                rows={3}
-              />
-            </Form.Group>
+            <FormInput
+              controlId="TitleInput"
+              label="Title"
+              type="text"
+              placeholder="Title of the post"
+              autoFocus
+              value={values.title}
+              onChange={handleChange}
+              name="title"
+            />
+            <FormInput
+              controlId="AvatarInput"
+              label="Avatar"
+              type="text"
+              placeholder="URL to profile image"
+              value={values.avatar}
+              onChange={handleChange}
+              name="avatar"
+            />
+            <FormInput
+              controlId="ContentInput"
+              label="Content"
+              type="text"
+              as="textarea"
+              placeholder="Content of the post"
+              value={values.content}
+              onChange={handleChange}
+              name="content"
+              rows={3}
+            />
             {[0, 1, 2].map(index => (
-              <Form.Group
-                className="mb-3"
+              <FormInput
                 controlId={`ImageInput-${index}`}
+                label={`Image ${index + 1}`}
+                type="text"
+                placeholder={`URL to image ${index + 1}`}
+                value={values.images[index]}
+                onChange={handleChange}
+                name="images"
+                dataIndex={index}
                 key={index}
-              >
-                <Form.Label>{`Image ${index + 1}`}</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder={`URL to image ${index + 1}`}
-                  value={values.images[index]}
-                  onChange={handleChange}
-                  name="images"
-                  data-index={index}
-                />
-              </Form.Group>
+              />
             ))}
           </Modal.Body>
           <Modal.Footer className="d-block">
-            {isLoadingBlog ? (
-              <div className="d-flex justify-content-center">
-                <Spinner animation="border" size="sm" />
-              </div>
-            ) : errorBlog ? (
-              <div className="d-flex justify-content-center">
-                <Alert variant="danger">{errorBlog}</Alert>
-              </div>
-            ) : (
-              <div className="d-flex justify-content-between">
-                <Button type="button" variant="secondary" onClick={handleClose}>
-                  Cancel
-                </Button>
-                <Button type="submit" variant="secondary">
-                  Edit Post
-                </Button>
-              </div>
-            )}
+            <ModalFooterContent
+              isLoading={isLoadingBlog}
+              error={errorBlog}
+              onClose={handleClose}
+              buttonText="Edit Post"
+            />
           </Modal.Footer>
         </Form>
       </Modal>

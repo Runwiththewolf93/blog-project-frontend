@@ -1,20 +1,21 @@
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useState, useEffect } from "react";
 import Message from "../components/homePageComponents/Message";
 import Body from "../components/homePageComponents/Body";
 import Layout from "../components/shared/Layout";
-import useBlogPosts from "../hooks/useBlogPosts";
+import { useAppContextState, useAppContextDispatch } from "../store/appContext";
 
 const HomePage = () => {
   const searchTimeout = useRef();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showMyPosts, setShowMyPosts] = useState(false);
+  const { userInfo, blogInfo } = useAppContextState();
+  const { getAllBlogPosts, setPostUpdated } = useAppContextDispatch();
 
-  const {
-    userInfo,
-    setSearchQuery,
-    showMyPosts,
-    setShowMyPosts,
-    blogDataToShow,
-    getAllBlogPosts,
-  } = useBlogPosts();
+  useEffect(() => {
+    getAllBlogPosts();
+    setPostUpdated(false);
+    // eslint-disable-next-line
+  }, []);
 
   const debouncedHandleSearch = useCallback(
     event => {
@@ -32,6 +33,16 @@ const HomePage = () => {
   const toggleShowMyPosts = useCallback(() => {
     setShowMyPosts(!showMyPosts);
   }, [showMyPosts, setShowMyPosts]);
+
+  let blogDataToShow;
+
+  if (showMyPosts) {
+    blogDataToShow = blogInfo?.filter(post => post.user?._id === userInfo?._id);
+  } else {
+    blogDataToShow = blogInfo?.filter(post =>
+      post.title?.toLowerCase().includes(searchQuery)
+    );
+  }
 
   return (
     <Layout handleSearch={debouncedHandleSearch}>

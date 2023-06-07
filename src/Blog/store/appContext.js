@@ -47,6 +47,9 @@ import {
   RESET_USER_PASSWORD_BEGIN,
   RESET_USER_PASSWORD_SUCCESS,
   RESET_USER_PASSWORD_ERROR,
+  UPLOAD_BLOG_IMAGES_BEGIN,
+  UPLOAD_BLOG_IMAGES_SUCCESS,
+  UPLOAD_BLOG_IMAGES_ERROR,
 } from "./actions";
 
 export const userInfoFromLocalStorage =
@@ -67,6 +70,7 @@ const initialState = {
   isLoadingBlog: false,
   blogInfo: blogInfoFromLocalStorage,
   blogPost: blogPostFromLocalStorage,
+  images: {},
   errorBlog: null,
   wasLoggedOut: false,
   isLoadingReset: false,
@@ -79,7 +83,7 @@ const AppContextDispatch = React.createContext();
 
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
-  const [postUpdated, setPostUpdated] = useState(false);
+  const setPostUpdated = useState(false)[1];
 
   // axios
   const authFetch = axios.create({
@@ -237,6 +241,24 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const uploadBlogImages = async formData => {
+    dispatch({ type: UPLOAD_BLOG_IMAGES_BEGIN });
+
+    try {
+      const { data } = await authFetch.post("/blog/images", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      dispatch({ type: UPLOAD_BLOG_IMAGES_SUCCESS, payload: data });
+      console.log(data);
+      return { avatar: data.avatar, images: data.images };
+    } catch (error) {
+      errorHandler(error, dispatch, UPLOAD_BLOG_IMAGES_ERROR);
+    }
+  };
+
   const editBlogPost = async ({ id, updatedValues }) => {
     dispatch({ type: EDIT_BLOG_POST_BEGIN });
 
@@ -337,7 +359,6 @@ const AppProvider = ({ children }) => {
     <AppContextState.Provider
       value={{
         ...state,
-        postUpdated,
       }}
     >
       <AppContextDispatch.Provider
@@ -361,6 +382,7 @@ const AppProvider = ({ children }) => {
           updateUserPassword,
           forgotUserPassword,
           resetUserPassword,
+          uploadBlogImages,
           // state functions
           setPostUpdated,
           scrollToBlogPost,
