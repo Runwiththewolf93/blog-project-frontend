@@ -83,7 +83,7 @@ const AppContextDispatch = React.createContext();
 
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
-  const setPostUpdated = useState(false)[1];
+  const [postUpdated, setPostUpdated] = useState(false);
 
   // axios
   const authFetch = axios.create({
@@ -359,6 +359,7 @@ const AppProvider = ({ children }) => {
     <AppContextState.Provider
       value={{
         ...state,
+        postUpdated,
       }}
     >
       <AppContextDispatch.Provider

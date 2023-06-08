@@ -1,14 +1,15 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import {
   useAppContextState,
   useAppContextDispatch,
 } from "../../store/appContext";
-import { getLatestAvatar } from "../../utils/helper";
 import ModalFooterContent from "./ModalFooterContent";
 import FormInput from "./FormInput";
+import useModal from "./useModal";
+import { getLatestAvatar } from "../../utils/helper";
 
-export const initialState = {
+const initialState = {
   title: "",
   avatar: "",
   content: "",
@@ -16,79 +17,45 @@ export const initialState = {
 };
 
 const ModalAdd = () => {
-  const [show, setShow] = useState(false);
-  const [values, setValues] = useState(initialState);
-  const [isAvatarFileInput, setIsAvatarFileInput] = useState(false);
-  const [isImageFileInput, setIsImageFileInput] = useState(
-    Array(3).fill(false)
-  );
-  const [files, setFiles] = useState({
-    avatar: "",
-    images: Array(3).fill(""),
-  });
-  const { isLoadingBlog, errorBlog, blogInfo, userInfo } = useAppContextState();
-  const { addBlogPost, setPostUpdated, uploadBlogImages } =
-    useAppContextDispatch();
+  const {
+    show,
+    values,
+    setValues,
+    isAvatarFileInput,
+    setIsAvatarFileInput,
+    isImageFileInput,
+    setIsImageFileInput,
+    files,
+    setFiles,
+    isLoadingBlog,
+    errorBlog,
+    postUpdated,
+    setPostUpdated,
+    uploadBlogImages,
+    handleClose,
+    handleShow,
+    handleChange,
+    handleFileChange,
+    handleToggle,
+    avatarField,
+    setAvatarField,
+  } = useModal(initialState);
+
+  const { blogInfo, userInfo } = useAppContextState();
+  const { addBlogPost } = useAppContextDispatch();
+
+  const avatar = getLatestAvatar(blogInfo, userInfo) || "";
 
   useEffect(() => {
-    if (!isLoadingBlog && !errorBlog) {
-      handleClose();
+    setAvatarField(avatar);
+    // eslint-disable-next-line
+  }, [avatar]);
+
+  useEffect(() => {
+    if (postUpdated) {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
     }
-  }, [isLoadingBlog, errorBlog]);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  const handleChange = e => {
-    const { name, value } = e.target;
-    if (name === "images") {
-      const newImages = [...values.images];
-      newImages[Number(e.target.dataset.index)] = value || "";
-      setValues({ ...values, images: newImages });
-    } else {
-      setValues({ ...values, [name]: value || "" });
-    }
-  };
-
-  const handleFileChange = e => {
-    const { name, files: incomingFiles } = e.target;
-
-    if (!incomingFiles[0]) return;
-
-    const newFileUrl = URL.createObjectURL(incomingFiles[0]) || "";
-
-    if (name === "images") {
-      const newFiles = [...files.images];
-      const newValues = [...values.images];
-      newFiles[Number(e.target.dataset.index)] = incomingFiles[0] || "";
-      newValues[Number(e.target.dataset.index)] = newFileUrl || "";
-      setFiles({ ...files, images: newFiles });
-      setValues({ ...values, images: newValues });
-    } else {
-      setFiles({ ...files, [name]: incomingFiles[0] || "" });
-      setValues({ ...values, [name]: newFileUrl || "" });
-    }
-  };
-
-  const handleToggle = (name, index) => {
-    if (name === "images") {
-      const newIsImageFileInput = [...isImageFileInput];
-      newIsImageFileInput[index] = !newIsImageFileInput[index];
-      setIsImageFileInput(newIsImageFileInput);
-
-      if (newIsImageFileInput[index]) {
-        const newValues = [...values.images];
-        newValues[index] = "";
-        setValues({ ...values, images: newValues });
-      }
-    } else {
-      setIsAvatarFileInput(!isAvatarFileInput);
-
-      if (!isAvatarFileInput) {
-        setValues({ ...values, avatar: "" });
-      }
-    }
-  };
+  }, [postUpdated]);
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -97,10 +64,6 @@ const ModalAdd = () => {
       isAvatarFileInput || isImageFileInput.some(value => value);
 
     let newValues = { ...values };
-
-    if (!newValues.avatar && avatar) {
-      newValues.avatar = avatar;
-    }
 
     if (hasFilesToUpload) {
       const formData = new FormData();
@@ -125,6 +88,8 @@ const ModalAdd = () => {
       images.forEach((image, index) => {
         if (isImageFileInput[index]) {
           newImages[index] = image;
+        } else {
+          newImages[index] = values.images[index];
         }
       });
 
@@ -135,20 +100,14 @@ const ModalAdd = () => {
       };
     }
 
-    // Call addBlogPost with newValues regardless of whether there were files to upload or not
     await addBlogPost(newValues);
 
     setValues(initialState);
-    setFiles({
-      avatar: "",
-      images: Array(3).fill(""),
-    });
+    setFiles({ avatar: "", images: Array(3).fill("") });
     setIsAvatarFileInput(false);
     setIsImageFileInput(Array(3).fill(false));
     setPostUpdated(true);
   };
-
-  const avatar = getLatestAvatar(blogInfo, userInfo) || "";
 
   return (
     <>
@@ -176,7 +135,7 @@ const ModalAdd = () => {
               label="Profile Image - latest submitted image"
               type="text"
               placeholder="URL to profile image"
-              value={avatar || values.avatar}
+              value={avatarField || values.avatar}
               onChange={handleChange}
               name="avatar"
               handleFileChange={handleFileChange}
@@ -229,4 +188,4 @@ const ModalAdd = () => {
 
 export default ModalAdd;
 
-// continue tomorrow
+// We are done for today. Check some other cases as well, just to be sure.

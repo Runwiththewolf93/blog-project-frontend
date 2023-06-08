@@ -8,14 +8,21 @@ const HomePage = () => {
   const searchTimeout = useRef();
   const [searchQuery, setSearchQuery] = useState("");
   const [showMyPosts, setShowMyPosts] = useState(false);
-  const { userInfo, blogInfo } = useAppContextState();
+  const [page, setPage] = useState(1);
+  const { userInfo, blogInfo, postUpdated } = useAppContextState();
   const { getAllBlogPosts, setPostUpdated } = useAppContextDispatch();
 
   useEffect(() => {
     getAllBlogPosts();
     setPostUpdated(false);
     // eslint-disable-next-line
-  }, []);
+  }, [postUpdated]);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+    // eslint-disable-next-line
+  }, [page]);
 
   const debouncedHandleSearch = useCallback(
     event => {
@@ -29,6 +36,18 @@ const HomePage = () => {
     },
     [setSearchQuery]
   );
+
+  const handleScroll = () => {
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    const scrollTop = document.documentElement.scrollTop;
+    if (windowHeight + scrollTop === documentHeight) {
+      setTimeout(() => {
+        getAllBlogPosts(page + 1);
+        setPage(page + 1);
+      }, 500);
+    }
+  };
 
   const toggleShowMyPosts = useCallback(() => {
     setShowMyPosts(!showMyPosts);

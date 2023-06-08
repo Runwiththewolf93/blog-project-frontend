@@ -10,8 +10,8 @@ const BlogPosts = ({ blogDataToShow, userInfo }) => {
       <div id={post._id}></div>
       <BlogPost post={post} userInfo={userInfo} />
       <Card className="mb-3">
-        <CommentList blogId={post._id} userInfo={userInfo} />
         <CommentForm blogId={post._id} />
+        <CommentList blogId={post._id} userInfo={userInfo} />
       </Card>
     </React.Fragment>
   ));

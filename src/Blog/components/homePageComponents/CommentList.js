@@ -23,13 +23,13 @@ const CommentList = ({ blogId, userInfo }) => {
   return (
     <>
       {state.sortedComments.length === 0 ? (
-        <ListGroup className="mb-1">
+        <ListGroup>
           <ListGroup.Item>
             No comments? Be the first to comment on this post!
           </ListGroup.Item>
         </ListGroup>
       ) : (
-        <ListGroup className="mb-1">
+        <ListGroup>
           <CommentSort {...{ state, dispatch }} />
           {state.sortedComments.map(comment => (
             <CommentItem

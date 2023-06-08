@@ -16,7 +16,7 @@ const CommentForm = ({ blogId }) => {
 
   return (
     <ListGroup>
-      <ListGroup.Item>
+      <ListGroup.Item className="mb-1">
         <Form onSubmit={handleSubmit} className="mx-3" key={blogId}>
           <Form.Label className="mb-0">Leave a comment</Form.Label>
           <Form.Control

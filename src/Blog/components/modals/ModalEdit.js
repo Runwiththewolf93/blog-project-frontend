@@ -1,58 +1,103 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
-import {
-  useAppContextState,
-  useAppContextDispatch,
-} from "../../store/appContext";
+import { useAppContextDispatch } from "../../store/appContext";
 import ModalFooterContent from "./ModalFooterContent";
 import FormInput from "./FormInput";
+import useModal from "./useModal";
 
 const ModalEdit = ({ post }) => {
-  const [show, setShow] = useState(false);
-  const [values, setValues] = useState(post);
-  const [editSuccessful, setEditSuccessful] = useState(false);
-  const { isLoadingBlog, errorBlog } = useAppContextState();
-  const { editBlogPost, setPostUpdated, scrollToBlogPost } =
-    useAppContextDispatch();
+  const {
+    show,
+    values,
+    setValues,
+    isAvatarFileInput,
+    setIsAvatarFileInput,
+    isImageFileInput,
+    setIsImageFileInput,
+    files,
+    setFiles,
+    isLoadingBlog,
+    errorBlog,
+    postUpdated,
+    setPostUpdated,
+    uploadBlogImages,
+    handleClose,
+    handleShow,
+    handleChange,
+    handleFileChange,
+    handleToggle,
+    avatarField,
+    setAvatarField,
+  } = useModal(post);
+
+  const { editBlogPost, scrollToBlogPost } = useAppContextDispatch();
 
   useEffect(() => {
     setValues(post);
+    setAvatarField(post.avatar);
+    // eslint-disable-next-line
   }, [post]);
 
   useEffect(() => {
-    if (editSuccessful && !isLoadingBlog && !errorBlog) {
-      handleClose();
+    if (postUpdated) {
       scrollToBlogPost(values._id);
-      setEditSuccessful(false);
     }
-  }, [isLoadingBlog, errorBlog, scrollToBlogPost, values._id, editSuccessful]);
+  }, [postUpdated, scrollToBlogPost, values._id]);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const handleChange = e => {
-    const { name, value } = e.target;
-    if (name === "images") {
-      const newImages = [...values.images];
-      newImages[Number(e.target.dataset.index)] = value;
-      setValues({ ...values, images: newImages });
-    } else {
-      setValues({ ...values, [name]: value });
-    }
-  };
-
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
 
-    const updatedValues = {
+    const hasFilesToUpload =
+      isAvatarFileInput || isImageFileInput.some(value => value);
+
+    let newValues = {
       title: values.title,
       avatar: values.avatar,
       content: values.content,
       images: values.images,
     };
 
-    editBlogPost({ id: values._id, updatedValues });
+    if (hasFilesToUpload) {
+      const formData = new FormData();
+
+      if (files.avatar && isAvatarFileInput) {
+        formData.append("avatar", files.avatar);
+      }
+
+      if (files.images) {
+        files.images.forEach((file, index) => {
+          if (file && isImageFileInput[index]) {
+            formData.append("images", file, `image-${index}`);
+          }
+        });
+      }
+
+      const { avatar, images } = await uploadBlogImages(formData);
+
+      // Merge uploaded image URLs with the existing URLs
+      let newImages = [...values.images];
+      images.forEach((image, index) => {
+        if (isImageFileInput[index]) {
+          newImages[index] = image;
+        } else {
+          newImages[index] = values.images[index];
+        }
+      });
+
+      newValues = {
+        ...newValues,
+        avatar: isAvatarFileInput ? avatar : newValues.avatar,
+        images: newImages,
+      };
+    }
+
+    await editBlogPost({ id: values._id, updatedValues: newValues });
+
+    setValues(post);
+    setFiles({ avatar: "", images: Array(3).fill("") });
+    setIsAvatarFileInput(false);
+    setIsImageFileInput(Array(3).fill(false));
     setPostUpdated(true);
-    setEditSuccessful(true);
   };
 
   return (
@@ -81,9 +126,13 @@ const ModalEdit = ({ post }) => {
               label="Avatar"
               type="text"
               placeholder="URL to profile image"
-              value={values.avatar}
+              value={avatarField || values.avatar}
               onChange={handleChange}
               name="avatar"
+              handleFileChange={handleFileChange}
+              isFileInput={isAvatarFileInput}
+              handleToggle={handleToggle}
+              fileUpload={true}
             />
             <FormInput
               controlId="ContentInput"
@@ -107,6 +156,10 @@ const ModalEdit = ({ post }) => {
                 name="images"
                 dataIndex={index}
                 key={index}
+                handleFileChange={handleFileChange}
+                isFileInput={isImageFileInput[index]}
+                handleToggle={handleToggle}
+                fileUpload={true}
               />
             ))}
           </Modal.Body>
