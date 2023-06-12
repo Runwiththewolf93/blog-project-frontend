@@ -1,17 +1,79 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { Card, Container, Row, Col } from "react-bootstrap";
 import {
-  Card,
-  Container,
-  Row,
-  Col,
-  CloseButton,
-  Button,
-} from "react-bootstrap";
-import ModalAdd from "../modals/ModalAdd";
-import { capitalizeName } from "../../utils/helper";
+  useAppContextState,
+  useAppContextDispatch,
+} from "../../store/appContext";
+import { Dropdowns, WelcomeCard, ButtonsGroup } from "./MessageComponents";
+import useScrollToLoadMore from "./useScroll";
 
-function Message({ userInfo, getAllBlogPosts, toggleShowMyPosts }) {
+// Message component
+function Message({
+  userInfo,
+  getAllBlogPosts,
+  toggleShowMyPosts,
+  setSearchQuery,
+  setShowMyPosts,
+}) {
+  const mounted = useRef(false);
   const [showCard, setShowCard] = useState(false);
+  const [page, setPage] = useState(1);
+  const [sort, setSort] = useState("createdAt");
+  const [order, setOrder] = useState("asc");
+  const [reset, setReset] = useState(false);
+  const [show, setShow] = useState(true);
+  const { blogInfo, hasMore, isLoadingFilter, errorFilter } =
+    useAppContextState();
+  const { getFilteredBlogPosts, resetFilteredBlogPosts, resetErrorFilter } =
+    useAppContextDispatch();
+
+  const handleSortChange = newSort => {
+    setSort(newSort);
+    setReset(true);
+  };
+
+  const handleOrderChange = newOrder => {
+    setOrder(newOrder);
+    setReset(true);
+  };
+
+  useEffect(() => {
+    if (!mounted.current) {
+      // Ensure this runs on the first render
+      getFilteredBlogPosts();
+      mounted.current = true;
+    }
+    // eslint-disable-next-line
+  }, []);
+
+  // Condition that prevents the useEffect from running if reset is true
+  useEffect(() => {
+    if (mounted.current && page !== 1 && !isLoadingFilter && !reset) {
+      // Ensure this is not the first render and isLoadingFilter and reset are false
+      getFilteredBlogPosts(page, sort, 5, order);
+    }
+    // eslint-disable-next-line
+  }, [blogInfo, page, sort, order]);
+
+  // Reset the page and blogFilter state when sort or order changes
+  useEffect(() => {
+    if (reset) {
+      setPage(1);
+      resetFilteredBlogPosts();
+      setReset(false);
+    }
+    // eslint-disable-next-line
+  }, [reset]);
+
+  // Fetch the first page of posts after the page and blogFilter state have been reset
+  useEffect(() => {
+    if (!reset) {
+      getFilteredBlogPosts(1, sort, 5, order);
+    }
+    // eslint-disable-next-line
+  }, [sort, order, reset]);
+
+  useScrollToLoadMore({ isLoadingFilter, hasMore, setPage });
 
   const handleCloseCard = () => {
     setShowCard(true);
@@ -19,57 +81,40 @@ function Message({ userInfo, getAllBlogPosts, toggleShowMyPosts }) {
 
   const handleRefresh = () => {
     getAllBlogPosts();
+    setSearchQuery("");
+    setShowMyPosts(false);
   };
 
   return (
     <Container className="my-3">
       <Row>
-        <Col md={2} />
+        <Col
+          md={2}
+          className="d-flex justify-content-center align-items-center mb-1"
+        >
+          <Dropdowns
+            onSortChange={handleSortChange}
+            onOrderChange={handleOrderChange}
+          />
+        </Col>
         <Col md={10}>
           <Card.Header className="h1 mb-3">Welcome to my Blog</Card.Header>
-          <Card style={{ display: showCard ? "none" : "flex" }}>
-            <Card.Body>
-              <div className="d-flex justify-content-between">
-                <Card.Title>
-                  {userInfo && userInfo.name
-                    ? `Welcome back, ${capitalizeName(userInfo.name)}`
-                    : "See what's new"}
-                </Card.Title>
-                <div className="d-flex justify-content-end">
-                  <CloseButton onClick={handleCloseCard} />
-                </div>
-              </div>
-              <Card.Text>
-                {userInfo
-                  ? "Check below some of the blog posts we have curated for you:"
-                  : "Container for showing application messages"}
-              </Card.Text>
-            </Card.Body>
-          </Card>
+          <WelcomeCard
+            {...{
+              userInfo,
+              showCard,
+              handleCloseCard,
+              show,
+              setShow,
+              errorFilter,
+              resetErrorFilter,
+            }}
+          />
           {userInfo && (
-            <div className="d-flex justify-content-between">
-              <div>
-                <Button
-                  className="mt-3"
-                  variant="light"
-                  onClick={() => {
-                    handleRefresh();
-                    // temporary solution
-                    window.location.reload();
-                  }}
-                >
-                  Refresh Post
-                </Button>
-                <Button
-                  className="ms-3 mt-3"
-                  variant="secondary"
-                  onClick={toggleShowMyPosts}
-                >
-                  Your posts
-                </Button>
-              </div>
-              <ModalAdd />
-            </div>
+            <ButtonsGroup
+              handleRefresh={handleRefresh}
+              toggleShowMyPosts={toggleShowMyPosts}
+            />
           )}
         </Col>
       </Row>

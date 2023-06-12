@@ -23,9 +23,15 @@ import {
   RESET_WAS_LOGGED_OUT,
   RESET_SUCCESS_MESSAGE,
   RESET_ERROR_MESSAGE,
+  RESET_FILTERED_BLOG_POSTS,
+  RESET_ERROR_FILTER,
   GET_ALL_BLOG_POSTS_BEGIN,
   GET_ALL_BLOG_POSTS_SUCCESS,
   GET_ALL_BLOG_POSTS_ERROR,
+  GET_FILTERED_BLOG_POSTS_BEGIN,
+  GET_FILTERED_BLOG_POSTS_SUCCESS,
+  ADD_FILTERED_BLOG_POSTS_SUCCESS,
+  GET_FILTERED_BLOG_POSTS_ERROR,
   GET_SINGLE_BLOG_POST_BEGIN,
   GET_SINGLE_BLOG_POST_SUCCESS,
   GET_SINGLE_BLOG_POST_ERROR,
@@ -65,9 +71,9 @@ const initialState = {
   isLoading: false,
   userInfo: userInfoFromLocalStorage,
   users: [],
-  error: null,
   success: false,
-  isLoadingBlog: false,
+  error: null,
+  isLoadingBlog: true,
   blogInfo: blogInfoFromLocalStorage,
   blogPost: blogPostFromLocalStorage,
   images: {},
@@ -76,6 +82,9 @@ const initialState = {
   isLoadingReset: false,
   successMessage: "",
   errorReset: null,
+  isLoadingFilter: true,
+  blogFilter: [],
+  errorFilter: null,
 };
 
 const AppContextState = React.createContext();
@@ -84,6 +93,7 @@ const AppContextDispatch = React.createContext();
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
   const [postUpdated, setPostUpdated] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
   // axios
   const authFetch = axios.create({
@@ -196,6 +206,14 @@ const AppProvider = ({ children }) => {
     dispatch({ type: RESET_ERROR_MESSAGE });
   };
 
+  const resetFilteredBlogPosts = () => {
+    dispatch({ type: RESET_FILTERED_BLOG_POSTS });
+  };
+
+  const resetErrorFilter = () => {
+    dispatch({ type: RESET_ERROR_FILTER });
+  };
+
   const getAllBlogPosts = async () => {
     dispatch({ type: GET_ALL_BLOG_POSTS_BEGIN });
 
@@ -210,6 +228,51 @@ const AppProvider = ({ children }) => {
       errorHandler(error, dispatch, GET_ALL_BLOG_POSTS_ERROR);
     } finally {
       dispatch({ type: RESET_BLOG_LOADING });
+    }
+  };
+
+  // getFilteredBlogPosts dispatch function
+  const getFilteredBlogPosts = async (
+    page = 1,
+    sort = "createdAt",
+    limit = 5,
+    order = "asc"
+  ) => {
+    dispatch({ type: GET_FILTERED_BLOG_POSTS_BEGIN });
+
+    try {
+      const { data } = await authFetch.get(
+        `/blog/filtered/?page=${page}&sort=${sort}&limit=${limit}&order=${order}`
+      );
+
+      // Set hasMore before filtering the posts and dispatching actions
+      setHasMore(data.hasMore);
+
+      // Filter out any posts that are already in the blogFilter state
+      const newPosts = data.posts.filter(
+        newPost =>
+          !state.blogFilter.some(
+            existingPost => existingPost._id === newPost._id
+          )
+      );
+
+      if (newPosts.length > 0) {
+        if (page === 1) {
+          dispatch({
+            // If this is the first page, replace the blogFilter state with the fetched posts
+            type: GET_FILTERED_BLOG_POSTS_SUCCESS,
+            payload: newPosts,
+          });
+        } else {
+          dispatch({
+            // If this is not the first page, add the fetched posts to the blogFilter state
+            type: ADD_FILTERED_BLOG_POSTS_SUCCESS,
+            payload: newPosts,
+          });
+        }
+      }
+    } catch (error) {
+      errorHandler(error, dispatch, GET_FILTERED_BLOG_POSTS_ERROR);
     }
   };
 
@@ -360,6 +423,7 @@ const AppProvider = ({ children }) => {
       value={{
         ...state,
         postUpdated,
+        hasMore,
       }}
     >
       <AppContextDispatch.Provider
@@ -375,7 +439,10 @@ const AppProvider = ({ children }) => {
           resetBlogError,
           resetSuccessMessage,
           resetErrorMessage,
+          resetFilteredBlogPosts,
+          resetErrorFilter,
           getAllBlogPosts,
+          getFilteredBlogPosts,
           getSingleBlogPost,
           addBlogPost,
           editBlogPost,

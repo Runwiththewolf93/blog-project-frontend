@@ -39,7 +39,7 @@ const initialState = {
   userInfo: userInfoFromLocalStorage,
   blogInfo: blogInfoFromLocalStorage,
   commentInfo: commentInfoFromLocalStorage,
-  isLoadingVote: false,
+  isLoadingVote: true,
   voteInfo: voteInfoFromLocalStorage,
   errorVote: null,
 };

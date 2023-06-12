@@ -131,6 +131,21 @@ const errorHandler = (error, dispatch, errorAction) => {
   }
 };
 
+// throw the error below to actually see the message
+// throw { response: { data: { msg: "Oopsie Woopsie" } } };
+
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
 export {
   capitalizeFirstLetter,
   capitalizeName,
@@ -144,4 +159,5 @@ export {
   calculateMostPost,
   generateChartData,
   errorHandler,
+  debounce,
 };

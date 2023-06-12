@@ -4,12 +4,12 @@ import Body from "../components/homePageComponents/Body";
 import Layout from "../components/shared/Layout";
 import { useAppContextState, useAppContextDispatch } from "../store/appContext";
 
+// HomePage component
 const HomePage = () => {
   const searchTimeout = useRef();
   const [searchQuery, setSearchQuery] = useState("");
   const [showMyPosts, setShowMyPosts] = useState(false);
-  const [page, setPage] = useState(1);
-  const { userInfo, blogInfo, postUpdated } = useAppContextState();
+  const { userInfo, blogFilter, postUpdated } = useAppContextState();
   const { getAllBlogPosts, setPostUpdated } = useAppContextDispatch();
 
   useEffect(() => {
@@ -17,12 +17,6 @@ const HomePage = () => {
     setPostUpdated(false);
     // eslint-disable-next-line
   }, [postUpdated]);
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-    // eslint-disable-next-line
-  }, [page]);
 
   const debouncedHandleSearch = useCallback(
     event => {
@@ -37,18 +31,6 @@ const HomePage = () => {
     [setSearchQuery]
   );
 
-  const handleScroll = () => {
-    const windowHeight = window.innerHeight;
-    const documentHeight = document.documentElement.scrollHeight;
-    const scrollTop = document.documentElement.scrollTop;
-    if (windowHeight + scrollTop === documentHeight) {
-      setTimeout(() => {
-        getAllBlogPosts(page + 1);
-        setPage(page + 1);
-      }, 500);
-    }
-  };
-
   const toggleShowMyPosts = useCallback(() => {
     setShowMyPosts(!showMyPosts);
   }, [showMyPosts, setShowMyPosts]);
@@ -56,9 +38,11 @@ const HomePage = () => {
   let blogDataToShow;
 
   if (showMyPosts) {
-    blogDataToShow = blogInfo?.filter(post => post.user?._id === userInfo?._id);
+    blogDataToShow = blogFilter?.filter(
+      post => post.user?._id === userInfo?._id
+    );
   } else {
-    blogDataToShow = blogInfo?.filter(post =>
+    blogDataToShow = blogFilter?.filter(post =>
       post.title?.toLowerCase().includes(searchQuery)
     );
   }
@@ -69,6 +53,8 @@ const HomePage = () => {
         userInfo={userInfo}
         getAllBlogPosts={getAllBlogPosts}
         toggleShowMyPosts={toggleShowMyPosts}
+        setSearchQuery={setSearchQuery}
+        setShowMyPosts={setShowMyPosts}
       />
       <Body userInfo={userInfo} blogDataToShow={blogDataToShow} />
     </Layout>

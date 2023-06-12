@@ -38,11 +38,11 @@ export const commentInfoFromLocalStorage =
 
 const initialState = {
   userInfo: userInfoFromLocalStorage,
-  isLoadingComment: false,
+  isLoadingComment: true,
   commentInfo: commentInfoFromLocalStorage,
   blogCommentInfo: [],
   errorComment: null,
-  isLoadingUserComment: false,
+  isLoadingUserComment: true,
   userCommentInfo: [],
   errorUserComment: null,
 };

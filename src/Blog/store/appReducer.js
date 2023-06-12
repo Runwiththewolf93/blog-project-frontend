@@ -17,9 +17,15 @@ import {
   RESET_WAS_LOGGED_OUT,
   RESET_SUCCESS_MESSAGE,
   RESET_ERROR_MESSAGE,
+  RESET_FILTERED_BLOG_POSTS,
+  RESET_ERROR_FILTER,
   GET_ALL_BLOG_POSTS_BEGIN,
   GET_ALL_BLOG_POSTS_SUCCESS,
   GET_ALL_BLOG_POSTS_ERROR,
+  GET_FILTERED_BLOG_POSTS_BEGIN,
+  GET_FILTERED_BLOG_POSTS_SUCCESS,
+  ADD_FILTERED_BLOG_POSTS_SUCCESS,
+  GET_FILTERED_BLOG_POSTS_ERROR,
   GET_SINGLE_BLOG_POST_BEGIN,
   GET_SINGLE_BLOG_POST_SUCCESS,
   GET_SINGLE_BLOG_POST_ERROR,
@@ -154,6 +160,14 @@ const appReducer = (state, action) => {
   if (action.type === RESET_ERROR_MESSAGE) {
     return { ...state, errorReset: null };
   }
+  // reset filtered blog posts
+  if (action.type === RESET_FILTERED_BLOG_POSTS) {
+    return { ...state, blogFilter: [] };
+  }
+  // reset errorFilter state
+  if (action.type === RESET_ERROR_FILTER) {
+    return { ...state, errorFilter: null };
+  }
   // list available blog posts
   if (action.type === GET_ALL_BLOG_POSTS_BEGIN) {
     return { ...state, isLoadingBlog: true };
@@ -169,20 +183,28 @@ const appReducer = (state, action) => {
   if (action.type === GET_ALL_BLOG_POSTS_ERROR) {
     return { ...state, isLoadingBlog: false, errorBlog: action.payload };
   }
-  // add a new blog post
-  if (action.type === ADD_BLOG_POST_BEGIN) {
-    return { ...state, isLoadingBlog: true };
+  // list filtered blog posts
+  if (action.type === GET_FILTERED_BLOG_POSTS_BEGIN) {
+    return { ...state, isLoadingFilter: true };
   }
-  if (action.type === ADD_BLOG_POST_SUCCESS) {
+  if (action.type === GET_FILTERED_BLOG_POSTS_SUCCESS) {
     return {
       ...state,
-      isLoadingBlog: false,
-      blogInfo: [...state.blogInfo, action.payload],
-      errorBlog: null,
+      isLoadingFilter: false,
+      blogFilter: action.payload,
+      errorFilter: null,
     };
   }
-  if (action.type === ADD_BLOG_POST_ERROR) {
-    return { ...state, isLoadingBlog: false, errorBlog: action.payload };
+  if (action.type === ADD_FILTERED_BLOG_POSTS_SUCCESS) {
+    return {
+      ...state,
+      isLoadingFilter: false,
+      blogFilter: [...state.blogFilter, ...action.payload],
+      errorFilter: null,
+    };
+  }
+  if (action.type === GET_FILTERED_BLOG_POSTS_ERROR) {
+    return { ...state, isLoadingFilter: false, errorFilter: action.payload };
   }
   // get single blog post
   if (action.type === GET_SINGLE_BLOG_POST_BEGIN) {
@@ -197,6 +219,21 @@ const appReducer = (state, action) => {
     };
   }
   if (action.type === GET_SINGLE_BLOG_POST_ERROR) {
+    return { ...state, isLoadingBlog: false, errorBlog: action.payload };
+  }
+  // add a new blog post
+  if (action.type === ADD_BLOG_POST_BEGIN) {
+    return { ...state, isLoadingBlog: true };
+  }
+  if (action.type === ADD_BLOG_POST_SUCCESS) {
+    return {
+      ...state,
+      isLoadingBlog: false,
+      blogInfo: [...state.blogInfo, action.payload],
+      errorBlog: null,
+    };
+  }
+  if (action.type === ADD_BLOG_POST_ERROR) {
     return { ...state, isLoadingBlog: false, errorBlog: action.payload };
   }
   // edit an existing blog post

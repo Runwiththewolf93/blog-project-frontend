@@ -2,7 +2,7 @@ import { Alert } from "react-bootstrap";
 import Spinner from "../shared/Spinner";
 
 // Loading.js
-export const Loading = () => (
+export const LoadingComponent = () => (
   <>
     <div className="d-flex justify-content-center mb-3">
       <Spinner />
@@ -12,7 +12,7 @@ export const Loading = () => (
 );
 
 // Error.js
-export const Error = ({ message }) => (
+export const ErrorComponent = ({ message }) => (
   <>
     <div className="d-flex justify-content-center mb-3">
       <Alert variant="danger">{message}</Alert>

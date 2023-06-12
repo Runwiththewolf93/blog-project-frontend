@@ -12,10 +12,11 @@ import {
 import BlogSections from "./BlogSections";
 import BlogPosts from "./BlogPosts";
 import ScrollToTopPopup from "./ButtonOverlay";
-import { Loading, Error, NoPosts } from "./BodyComponents";
+import { LoadingComponent, ErrorComponent, NoPosts } from "./BodyComponents";
 
 const Body = ({ userInfo, blogDataToShow }) => {
-  const { isLoadingBlog, errorBlog, wasLoggedOut } = useAppContextState();
+  const { isLoadingBlog, errorBlog, wasLoggedOut, isLoadingFilter } =
+    useAppContextState();
   const { isLoadingComment, commentInfo } = useCommentContextState();
   const { getAllComments } = useCommentContextDispatch();
   const { isLoadingVote, voteInfo } = useVoteContextState();
@@ -35,7 +36,7 @@ const Body = ({ userInfo, blogDataToShow }) => {
 
   if (!userInfo) {
     return (
-      <Error
+      <ErrorComponent
         message={
           wasLoggedOut
             ? "Please log in to view available blog posts"
@@ -46,7 +47,7 @@ const Body = ({ userInfo, blogDataToShow }) => {
   }
 
   if (errorBlog) {
-    return <Error message={errorBlog} />;
+    return <ErrorComponent message={errorBlog} />;
   }
 
   if (
@@ -57,12 +58,14 @@ const Body = ({ userInfo, blogDataToShow }) => {
     !commentInfo ||
     !voteInfo
   ) {
-    return <Loading />;
+    return <LoadingComponent />;
   }
 
-  if (blogDataToShow.length === 0) {
+  if (blogDataToShow.length === 0 && !isLoadingFilter) {
     return <NoPosts />;
   }
+
+  console.log(isLoadingFilter);
 
   return (
     <Container>
