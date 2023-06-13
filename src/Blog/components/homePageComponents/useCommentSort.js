@@ -1,36 +1,59 @@
 import { useState, useCallback } from "react";
 import { setSortedComments } from "./CommentsReducer";
 
+// useCommentSort hook
 const useCommentSort = (sortedComments, dispatch) => {
-  const [sortOrder, setSortOrder] = useState("asc");
+  const [sortState, setSortState] = useState({
+    field: "createdAt",
+    order: "asc",
+  });
 
-  const handleSortByCreatedAt = useCallback(() => {
-    const sortedByCreatedAt = [...sortedComments].sort((a, b) => {
-      if (sortOrder === "asc") {
-        return new Date(a.createdAt) - new Date(b.createdAt);
+  const sortComments = useCallback(
+    (comments, field, state) => {
+      const sorted = [...comments].sort((a, b) => {
+        if (field === "createdAt" || field === "updatedAt") {
+          return state.order === "asc"
+            ? new Date(a[field]) - new Date(b[field])
+            : new Date(b[field]) - new Date(a[field]);
+        } else {
+          // for totalVotes
+          return state.order === "asc"
+            ? a[field] - b[field]
+            : b[field] - a[field];
+        }
+      });
+
+      dispatch(setSortedComments(sorted));
+    },
+    [dispatch]
+  );
+
+  const handleSort = useCallback(
+    field => {
+      let newState;
+      if (sortState.field === field) {
+        // If the field is the same, just toggle the order
+        newState = {
+          field,
+          order: sortState.order === "asc" ? "desc" : "asc",
+        };
       } else {
-        return new Date(b.createdAt) - new Date(a.createdAt);
+        // If the field changes, reset the order to "asc"
+        newState = { field, order: "asc" };
       }
-    });
 
-    dispatch(setSortedComments(sortedByCreatedAt));
-    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-  }, [sortedComments, sortOrder, dispatch]);
+      setSortState(newState);
+      sortComments(sortedComments, field, newState);
+    },
+    [sortState, sortedComments, sortComments]
+  );
 
-  const handleSortByUpdatedAt = useCallback(() => {
-    const sortedByUpdatedAt = [...sortedComments].sort((a, b) => {
-      if (sortOrder === "asc") {
-        return new Date(a.updatedAt) - new Date(b.updatedAt);
-      } else {
-        return new Date(b.updatedAt) - new Date(a.updatedAt);
-      }
-    });
-
-    dispatch(setSortedComments(sortedByUpdatedAt));
-    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-  }, [sortedComments, sortOrder, dispatch]);
-
-  return { sortOrder, handleSortByCreatedAt, handleSortByUpdatedAt };
+  return {
+    sortState,
+    handleSortByCreatedAt: () => handleSort("createdAt"),
+    handleSortByUpdatedAt: () => handleSort("updatedAt"),
+    handleSortByVotes: () => handleSort("totalVotes"),
+  };
 };
 
 export default useCommentSort;

@@ -146,6 +146,12 @@ function debounce(func, wait) {
   };
 }
 
+const filterNewItems = (newItems, existingItems) =>
+  newItems.filter(
+    newItem =>
+      !existingItems.some(existingItem => existingItem._id === newItem._id)
+  );
+
 export {
   capitalizeFirstLetter,
   capitalizeName,
@@ -160,4 +166,5 @@ export {
   generateChartData,
   errorHandler,
   debounce,
+  filterNewItems,
 };

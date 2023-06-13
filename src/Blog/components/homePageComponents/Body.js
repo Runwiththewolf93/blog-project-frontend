@@ -14,7 +14,8 @@ import BlogPosts from "./BlogPosts";
 import ScrollToTopPopup from "./ButtonOverlay";
 import { LoadingComponent, ErrorComponent, NoPosts } from "./BodyComponents";
 
-const Body = ({ userInfo, blogDataToShow }) => {
+// Body component
+const Body = ({ userInfo, blogDataToShow, isFiltering }) => {
   const { isLoadingBlog, errorBlog, wasLoggedOut, isLoadingFilter } =
     useAppContextState();
   const { isLoadingComment, commentInfo } = useCommentContextState();
@@ -50,6 +51,7 @@ const Body = ({ userInfo, blogDataToShow }) => {
     return <ErrorComponent message={errorBlog} />;
   }
 
+  // loading state resolves quickly on local machine, can't see comp.
   if (
     isLoadingBlog ||
     isLoadingComment ||
@@ -61,11 +63,9 @@ const Body = ({ userInfo, blogDataToShow }) => {
     return <LoadingComponent />;
   }
 
-  if (blogDataToShow.length === 0 && !isLoadingFilter) {
+  if (blogDataToShow.length === 0 && !isLoadingFilter && !isFiltering) {
     return <NoPosts />;
   }
-
-  console.log(isLoadingFilter);
 
   return (
     <Container>

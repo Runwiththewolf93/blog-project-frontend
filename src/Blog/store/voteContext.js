@@ -35,6 +35,7 @@ import { commentInfoFromLocalStorage } from "./commentContext";
 const voteInfoFromLocalStorage =
   JSON.parse(localStorage.getItem("voteInfo")) || [];
 
+// voteContext initialState object
 const initialState = {
   userInfo: userInfoFromLocalStorage,
   blogInfo: blogInfoFromLocalStorage,

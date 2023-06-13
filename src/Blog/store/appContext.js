@@ -3,7 +3,7 @@ import React, { useReducer, useContext, useState } from "react";
 import appReducer from "./appReducer";
 import axios from "axios";
 import axiosRetry from "axios-retry";
-import { errorHandler } from "../utils/helper";
+import { errorHandler, filterNewItems } from "../utils/helper";
 import {
   REGISTER_USER_BEGIN,
   REGISTER_USER_SUCCESS,
@@ -31,7 +31,13 @@ import {
   GET_FILTERED_BLOG_POSTS_BEGIN,
   GET_FILTERED_BLOG_POSTS_SUCCESS,
   ADD_FILTERED_BLOG_POSTS_SUCCESS,
+  GET_FILTERED_COMMENTS_SUCCESS,
+  ADD_FILTERED_COMMENTS_SUCCESS,
+  GET_FILTERED_VOTES_SUCCESS,
+  ADD_FILTERED_VOTES_SUCCESS,
   GET_FILTERED_BLOG_POSTS_ERROR,
+  GET_FILTERED_COMMENTS_ERROR,
+  GET_FILTERED_VOTES_ERROR,
   GET_SINGLE_BLOG_POST_BEGIN,
   GET_SINGLE_BLOG_POST_SUCCESS,
   GET_SINGLE_BLOG_POST_ERROR,
@@ -67,6 +73,7 @@ export const blogInfoFromLocalStorage =
 const blogPostFromLocalStorage =
   JSON.parse(localStorage.getItem("blogPost")) || {};
 
+// appContext initialState object
 const initialState = {
   isLoading: false,
   userInfo: userInfoFromLocalStorage,
@@ -84,6 +91,8 @@ const initialState = {
   errorReset: null,
   isLoadingFilter: true,
   blogFilter: [],
+  commentFilter: [],
+  voteFilter: [],
   errorFilter: null,
 };
 
@@ -221,6 +230,7 @@ const AppProvider = ({ children }) => {
       const { data } = await authFetch.get("/blog");
 
       dispatch({ type: GET_ALL_BLOG_POSTS_SUCCESS, payload: data });
+
       localStorage.setItem("blogInfo", JSON.stringify(data));
 
       return data;
@@ -238,23 +248,42 @@ const AppProvider = ({ children }) => {
     limit = 5,
     order = "asc"
   ) => {
+    // don't run dispatch function if user hasn't logged in
+    if (!state.userInfo) return;
+
     dispatch({ type: GET_FILTERED_BLOG_POSTS_BEGIN });
 
     try {
-      const { data } = await authFetch.get(
+      const { data: blogsData } = await authFetch.get(
         `/blog/filtered/?page=${page}&sort=${sort}&limit=${limit}&order=${order}`
       );
 
-      // Set hasMore before filtering the posts and dispatching actions
-      setHasMore(data.hasMore);
+      // Extract blogIds from the response
+      const blogIds = blogsData.posts.map(post => post._id);
 
-      // Filter out any posts that are already in the blogFilter state
-      const newPosts = data.posts.filter(
-        newPost =>
-          !state.blogFilter.some(
-            existingPost => existingPost._id === newPost._id
-          )
-      );
+      // Fetch comments
+      const { data: commentsData } = await authFetch.post("/comment/filter", {
+        blogIds,
+      });
+
+      // Extract commentIds from the response
+      const commentIds = commentsData.map(comment => comment._id);
+
+      // Combine blogIds and commentIds into a single array
+      const postIds = [...blogIds, ...commentIds];
+
+      // Fetch votes
+      const { data: votesData } = await authFetch.post("/vote/filter", {
+        postIds,
+      });
+
+      // Set hasMore before filtering the posts and dispatching actions
+      setHasMore(blogsData.hasMore);
+
+      // Filter out any posts that are already in the blogFilter, commentFilter or voteFilter state
+      const newPosts = filterNewItems(blogsData.posts, state.blogFilter);
+      const newComments = filterNewItems(commentsData, state.commentFilter);
+      const newVotes = filterNewItems(votesData, state.voteFilter);
 
       if (newPosts.length > 0) {
         if (page === 1) {
@@ -263,16 +292,35 @@ const AppProvider = ({ children }) => {
             type: GET_FILTERED_BLOG_POSTS_SUCCESS,
             payload: newPosts,
           });
+          dispatch({
+            type: GET_FILTERED_COMMENTS_SUCCESS,
+            payload: newComments,
+          });
+          dispatch({ type: GET_FILTERED_VOTES_SUCCESS, payload: newVotes });
         } else {
           dispatch({
             // If this is not the first page, add the fetched posts to the blogFilter state
             type: ADD_FILTERED_BLOG_POSTS_SUCCESS,
             payload: newPosts,
           });
+          dispatch({
+            type: ADD_FILTERED_COMMENTS_SUCCESS,
+            payload: newComments,
+          });
+          dispatch({ type: ADD_FILTERED_VOTES_SUCCESS, payload: newVotes });
         }
       }
+      // test all of this out tomorrow
     } catch (error) {
-      errorHandler(error, dispatch, GET_FILTERED_BLOG_POSTS_ERROR);
+      console.log(error);
+      // get the error to not trigger if the user isn't logged in.
+      if (error.request?.url?.includes("/comment/filter")) {
+        errorHandler(error, dispatch, GET_FILTERED_COMMENTS_ERROR);
+      } else if (error.request?.url?.includes("/vote/filter")) {
+        errorHandler(error, dispatch, GET_FILTERED_VOTES_ERROR);
+      } else {
+        errorHandler(error, dispatch, GET_FILTERED_BLOG_POSTS_ERROR);
+      }
     }
   };
 

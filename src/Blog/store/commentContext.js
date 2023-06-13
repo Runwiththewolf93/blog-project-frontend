@@ -36,6 +36,7 @@ import { userInfoFromLocalStorage } from "./appContext";
 export const commentInfoFromLocalStorage =
   JSON.parse(localStorage.getItem("commentInfo")) || [];
 
+// commentContext initialState object
 const initialState = {
   userInfo: userInfoFromLocalStorage,
   isLoadingComment: true,

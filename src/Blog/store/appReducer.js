@@ -25,7 +25,13 @@ import {
   GET_FILTERED_BLOG_POSTS_BEGIN,
   GET_FILTERED_BLOG_POSTS_SUCCESS,
   ADD_FILTERED_BLOG_POSTS_SUCCESS,
+  GET_FILTERED_COMMENTS_SUCCESS,
+  ADD_FILTERED_COMMENTS_SUCCESS,
+  GET_FILTERED_VOTES_SUCCESS,
+  ADD_FILTERED_VOTES_SUCCESS,
   GET_FILTERED_BLOG_POSTS_ERROR,
+  GET_FILTERED_COMMENTS_ERROR,
+  GET_FILTERED_VOTES_ERROR,
   GET_SINGLE_BLOG_POST_BEGIN,
   GET_SINGLE_BLOG_POST_SUCCESS,
   GET_SINGLE_BLOG_POST_ERROR,
@@ -183,7 +189,7 @@ const appReducer = (state, action) => {
   if (action.type === GET_ALL_BLOG_POSTS_ERROR) {
     return { ...state, isLoadingBlog: false, errorBlog: action.payload };
   }
-  // list filtered blog posts
+  // list filtered blog posts, comments, and votes
   if (action.type === GET_FILTERED_BLOG_POSTS_BEGIN) {
     return { ...state, isLoadingFilter: true };
   }
@@ -203,7 +209,45 @@ const appReducer = (state, action) => {
       errorFilter: null,
     };
   }
+  if (action.type === GET_FILTERED_COMMENTS_SUCCESS) {
+    return {
+      ...state,
+      isLoadingFilter: false,
+      commentFilter: action.payload,
+      errorFilter: null,
+    };
+  }
+  if (action.type === ADD_FILTERED_COMMENTS_SUCCESS) {
+    return {
+      ...state,
+      isLoadingFilter: false,
+      commentFilter: [...state.commentFilter, ...action.payload],
+      errorFilter: null,
+    };
+  }
+  if (action.type === GET_FILTERED_VOTES_SUCCESS) {
+    return {
+      ...state,
+      isLoadingFilter: false,
+      voteFilter: action.payload,
+      errorFilter: null,
+    };
+  }
+  if (action.type === ADD_FILTERED_VOTES_SUCCESS) {
+    return {
+      ...state,
+      isLoadingFilter: false,
+      voteFilter: [...state.voteFilter, ...action.payload],
+      errorFilter: null,
+    };
+  }
   if (action.type === GET_FILTERED_BLOG_POSTS_ERROR) {
+    return { ...state, isLoadingFilter: false, errorFilter: action.payload };
+  }
+  if (action.type === GET_FILTERED_COMMENTS_ERROR) {
+    return { ...state, isLoadingFilter: false, errorFilter: action.payload };
+  }
+  if (action.type === GET_FILTERED_VOTES_ERROR) {
     return { ...state, isLoadingFilter: false, errorFilter: action.payload };
   }
   // get single blog post

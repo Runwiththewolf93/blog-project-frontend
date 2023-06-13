@@ -9,6 +9,7 @@ const HomePage = () => {
   const searchTimeout = useRef();
   const [searchQuery, setSearchQuery] = useState("");
   const [showMyPosts, setShowMyPosts] = useState(false);
+  const [isFiltering, setIsFiltering] = useState(true);
   const { userInfo, blogFilter, postUpdated } = useAppContextState();
   const { getAllBlogPosts, setPostUpdated } = useAppContextDispatch();
 
@@ -23,10 +24,11 @@ const HomePage = () => {
       event.preventDefault();
       const searchQuery = event.target.value.trim().toLowerCase();
       if (searchTimeout.current) clearTimeout(searchTimeout.current);
-      searchTimeout.current = setTimeout(
-        () => setSearchQuery(searchQuery),
-        500
-      );
+      searchTimeout.current = setTimeout(() => {
+        setIsFiltering(true);
+        setSearchQuery(searchQuery);
+        setIsFiltering(false);
+      }, 500);
     },
     [setSearchQuery]
   );
@@ -47,6 +49,8 @@ const HomePage = () => {
     );
   }
 
+  console.log(blogDataToShow);
+
   return (
     <Layout handleSearch={debouncedHandleSearch}>
       <Message
@@ -56,7 +60,11 @@ const HomePage = () => {
         setSearchQuery={setSearchQuery}
         setShowMyPosts={setShowMyPosts}
       />
-      <Body userInfo={userInfo} blogDataToShow={blogDataToShow} />
+      <Body
+        userInfo={userInfo}
+        blogDataToShow={blogDataToShow}
+        isFiltering={isFiltering}
+      />
     </Layout>
   );
 };

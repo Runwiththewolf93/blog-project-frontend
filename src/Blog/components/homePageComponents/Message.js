@@ -90,7 +90,7 @@ function Message({
       <Row>
         <Col
           md={2}
-          className="d-flex justify-content-center align-items-center mb-1"
+          className="d-flex justify-content-center align-items-center"
         >
           <Dropdowns
             onSortChange={handleSortChange}
