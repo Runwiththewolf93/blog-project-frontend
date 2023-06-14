@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { useAppContextState } from "../../store/appContext";
+import { useBlogContextState } from "../../store/blogContext";
 import {
   useCommentContextState,
   useCommentContextDispatch,
@@ -16,8 +17,8 @@ import { LoadingComponent, ErrorComponent, NoPosts } from "./BodyComponents";
 
 // Body component
 const Body = ({ userInfo, blogDataToShow, isFiltering }) => {
-  const { isLoadingBlog, errorBlog, wasLoggedOut, isLoadingFilter } =
-    useAppContextState();
+  const { wasLoggedOut } = useAppContextState();
+  const { isLoadingBlog, errorBlog, isLoadingFilter } = useBlogContextState();
   const { isLoadingComment, commentInfo } = useCommentContextState();
   const { getAllComments } = useCommentContextDispatch();
   const { isLoadingVote, voteInfo } = useVoteContextState();
@@ -52,6 +53,12 @@ const Body = ({ userInfo, blogDataToShow, isFiltering }) => {
   }
 
   // loading state resolves quickly on local machine, can't see comp.
+  console.log(isLoadingBlog);
+  console.log(isLoadingComment);
+  console.log(isLoadingVote);
+  console.log(blogDataToShow);
+  console.log(commentInfo);
+  console.log(voteInfo);
   if (
     isLoadingBlog ||
     isLoadingComment ||

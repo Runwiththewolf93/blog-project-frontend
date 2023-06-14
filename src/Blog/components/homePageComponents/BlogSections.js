@@ -1,8 +1,8 @@
 import { Card, ListGroup } from "react-bootstrap";
-import { useAppContextDispatch } from "../../store/appContext";
+import { useBlogContextDispatch } from "../../store/blogContext";
 
 const BlogSections = ({ blogDataToShow }) => {
-  const { scrollToBlogPost } = useAppContextDispatch();
+  const { scrollToBlogPost } = useBlogContextDispatch();
 
   return (
     <Card>

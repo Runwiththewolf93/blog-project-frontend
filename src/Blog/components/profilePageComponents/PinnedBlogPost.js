@@ -5,14 +5,14 @@ import UserInfo from "../shared/UserInfo";
 import PostButton from "../shared/PostButton";
 import PostImages from "../shared/PostImages";
 import {
-  useAppContextState,
-  useAppContextDispatch,
-} from "../../store/appContext";
+  useBlogContextState,
+  useBlogContextDispatch,
+} from "../../store/blogContext";
 import CustomListGroup from "../shared/CustomListGroup";
 
 const PinnedBlogPost = () => {
-  const { blogPost } = useAppContextState();
-  const { resetBlogPost } = useAppContextDispatch();
+  const { blogPost } = useBlogContextState();
+  const { resetBlogPost } = useBlogContextDispatch();
 
   if (!blogPost || Object.keys(blogPost).length === 0) {
     return (
@@ -35,7 +35,7 @@ const PinnedBlogPost = () => {
             <div className="d-flex align-items-center">
               <UserInfo
                 title={blogPost.title}
-                date={blogPost.date}
+                date={blogPost.createdAt}
                 name={blogPost.user.name}
               />
               <PostButton

@@ -1,9 +1,9 @@
-import { useAppContextState } from "../../store/appContext";
+import { useBlogContextState } from "../../store/blogContext";
 import { useCommentContextState } from "../../store/commentContext";
 import { useVoteContextState } from "../../store/voteContext";
 
 const useVoteData = (type, itemId, userInfo) => {
-  const { blogInfo } = useAppContextState();
+  const { blogInfo } = useBlogContextState();
   const { commentInfo } = useCommentContextState();
   const { voteInfo } = useVoteContextState();
 

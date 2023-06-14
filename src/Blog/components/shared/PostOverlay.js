@@ -1,8 +1,8 @@
 import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
-import { useAppContextDispatch } from "../../store/appContext";
+import { useBlogContextDispatch } from "../../store/blogContext";
 
 const PostOverlay = ({ postId }) => {
-  const { getSingleBlogPost } = useAppContextDispatch();
+  const { getSingleBlogPost } = useBlogContextDispatch();
 
   const renderTooltip = props => (
     <Tooltip id="button-tooltip" {...props}>

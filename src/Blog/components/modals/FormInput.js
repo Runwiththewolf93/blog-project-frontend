@@ -1,5 +1,6 @@
 import { Form, Button } from "react-bootstrap";
 
+// FormInput component
 const FormInput = ({
   controlId,
   label,

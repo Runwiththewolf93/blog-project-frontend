@@ -1,12 +1,12 @@
 import { useState } from "react";
 import ModalEdit from "../modals/ModalEdit";
 import { Button, Tooltip, OverlayTrigger } from "react-bootstrap";
-import { useAppContextDispatch } from "../../store/appContext";
+import { useBlogContextDispatch } from "../../store/blogContext";
 import { useCommentContextDispatch } from "../../store/commentContext";
 import { useVoteContextDispatch } from "../../store/voteContext";
 
 const UserActions = ({ userInfo, post }) => {
-  const { deleteBlogPost } = useAppContextDispatch();
+  const { deleteBlogPost } = useBlogContextDispatch();
   const { deleteAllCommentsBlogPost } = useCommentContextDispatch();
   const { deleteBlogVoteCount, deleteAllCommentVotesForBlogPost } =
     useVoteContextDispatch();

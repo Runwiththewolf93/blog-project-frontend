@@ -3,12 +3,12 @@ import CarouselComponent from "../components/interestsPageComponents/Carousel";
 import EditorsChoice from "../components/interestsPageComponents/EditorsChoice";
 import OtherChoices from "../components/interestsPageComponents/OtherChoices";
 import { Row, Col } from "react-bootstrap";
-import { useAppContextState } from "../store/appContext";
+import { useBlogContextState } from "../store/blogContext";
 import { useCommentContextState } from "../store/commentContext";
 import { useVoteContextState } from "../store/voteContext";
 
 const InterestsPage = () => {
-  const { blogInfo } = useAppContextState();
+  const { blogInfo } = useBlogContextState();
   const { commentInfo } = useCommentContextState();
   const { voteInfo } = useVoteContextState();
 

@@ -25,7 +25,7 @@ const BlogPost = ({ post, userInfo }) => {
           <div className="d-flex align-items-center">
             <UserInfo
               title={post.title}
-              date={post.date}
+              date={post.createdAt}
               name={post.user.name}
             />
             <PostButton showPostOverlay={true} postId={post._id} />

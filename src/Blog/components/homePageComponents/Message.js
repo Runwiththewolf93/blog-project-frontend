@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { Card, Container, Row, Col } from "react-bootstrap";
 import {
-  useAppContextState,
-  useAppContextDispatch,
-} from "../../store/appContext";
+  useBlogContextState,
+  useBlogContextDispatch,
+} from "../../store/blogContext";
 import { Dropdowns, WelcomeCard, ButtonsGroup } from "./MessageComponents";
 import useScrollToLoadMore from "./useScroll";
 
@@ -22,10 +22,9 @@ function Message({
   const [order, setOrder] = useState("asc");
   const [reset, setReset] = useState(false);
   const [show, setShow] = useState(true);
-  const { blogInfo, hasMore, isLoadingFilter, errorFilter } =
-    useAppContextState();
+  const { hasMore, isLoadingFilter, errorFilter } = useBlogContextState();
   const { getFilteredBlogPosts, resetFilteredBlogPosts, resetErrorFilter } =
-    useAppContextDispatch();
+    useBlogContextDispatch();
 
   const handleSortChange = newSort => {
     setSort(newSort);
@@ -53,7 +52,7 @@ function Message({
       getFilteredBlogPosts(page, sort, 5, order);
     }
     // eslint-disable-next-line
-  }, [blogInfo, page, sort, order]);
+  }, [page, sort, order]);
 
   // Reset the page and blogFilter state when sort or order changes
   useEffect(() => {

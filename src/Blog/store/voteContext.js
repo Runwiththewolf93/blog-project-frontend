@@ -1,8 +1,7 @@
 import React, { useReducer, useContext } from "react";
 
 import voteReducer from "./voteReducer";
-import axios from "axios";
-import axiosRetry from "axios-retry";
+import createAuthFetch from "./createAuthFetch";
 import { errorHandler } from "../utils/helper";
 import {
   GET_ALL_VOTES_BEGIN,
@@ -26,10 +25,8 @@ import {
   RESET_VOTE_LOADING,
   LOGOUT_USER,
 } from "./actions";
-import {
-  userInfoFromLocalStorage,
-  blogInfoFromLocalStorage,
-} from "./appContext";
+import { userInfoFromLocalStorage } from "./appContext";
+import { blogFilterFromLocalStorage } from "./blogContext";
 import { commentInfoFromLocalStorage } from "./commentContext";
 
 const voteInfoFromLocalStorage =
@@ -38,7 +35,7 @@ const voteInfoFromLocalStorage =
 // voteContext initialState object
 const initialState = {
   userInfo: userInfoFromLocalStorage,
-  blogInfo: blogInfoFromLocalStorage,
+  blogInfo: blogFilterFromLocalStorage,
   commentInfo: commentInfoFromLocalStorage,
   isLoadingVote: true,
   voteInfo: voteInfoFromLocalStorage,
@@ -51,38 +48,13 @@ const VoteContextDispatch = React.createContext();
 const VoteProvider = ({ children }) => {
   const [state, dispatch] = useReducer(voteReducer, initialState);
 
+  const logoutUser = () => {
+    dispatch({ type: LOGOUT_USER });
+    localStorage.clear();
+  };
+
   // axios
-  const authFetch = axios.create({
-    baseURL: "/api/v1",
-  });
-
-  // Set up axios-retry
-  axiosRetry(authFetch, { retries: 3 });
-
-  // request
-  authFetch.interceptors.request.use(
-    config => {
-      config.headers.Authorization = `Bearer ${state.userInfo.token}`;
-      return config;
-    },
-    error => {
-      return Promise.reject(error);
-    }
-  );
-
-  // response
-  authFetch.interceptors.response.use(
-    response => {
-      return response;
-    },
-    error => {
-      if (error.response && error.response.status === 401) {
-        logoutUser();
-        window.location.href = "/";
-      }
-      return Promise.reject(error);
-    }
-  );
+  const authFetch = createAuthFetch(state?.userInfo, logoutUser);
 
   const getAllVotes = async () => {
     dispatch({ type: GET_ALL_VOTES_BEGIN });
@@ -332,11 +304,6 @@ const VoteProvider = ({ children }) => {
         DELETE_ALL_COMMENT_VOTES_FOR_BLOG_POST_ERROR
       );
     }
-  };
-
-  const logoutUser = () => {
-    dispatch({ type: LOGOUT_USER });
-    localStorage.clear();
   };
 
   return (

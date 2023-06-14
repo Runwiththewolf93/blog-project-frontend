@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
-import { useAppContextDispatch } from "../../store/appContext";
+import { useBlogContextDispatch } from "../../store/blogContext";
 import ModalFooterContent from "./ModalFooterContent";
 import FormInput from "./FormInput";
 import useModal from "./useModal";
@@ -30,7 +30,7 @@ const ModalEdit = ({ post }) => {
     setAvatarField,
   } = useModal(post);
 
-  const { editBlogPost, scrollToBlogPost } = useAppContextDispatch();
+  const { editBlogPost, scrollToBlogPost } = useBlogContextDispatch();
 
   useEffect(() => {
     setValues(post);

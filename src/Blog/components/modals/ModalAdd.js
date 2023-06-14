@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
+import { useAppContextState } from "../../store/appContext";
 import {
-  useAppContextState,
-  useAppContextDispatch,
-} from "../../store/appContext";
+  useBlogContextState,
+  useBlogContextDispatch,
+} from "../../store/blogContext";
 import ModalFooterContent from "./ModalFooterContent";
 import FormInput from "./FormInput";
 import useModal from "./useModal";
@@ -41,8 +42,9 @@ const ModalAdd = () => {
     setAvatarField,
   } = useModal(initialState);
 
-  const { blogInfo, userInfo } = useAppContextState();
-  const { addBlogPost } = useAppContextDispatch();
+  const { userInfo } = useAppContextState();
+  const { blogInfo } = useBlogContextState();
+  const { addBlogPost } = useBlogContextDispatch();
 
   const avatar = getLatestAvatar(blogInfo, userInfo) || "";
 
@@ -108,6 +110,9 @@ const ModalAdd = () => {
     setIsImageFileInput(Array(3).fill(false));
     setPostUpdated(true);
   };
+
+  console.log(avatarField);
+  console.log(values.avatar);
 
   return (
     <>
@@ -187,5 +192,3 @@ const ModalAdd = () => {
 };
 
 export default ModalAdd;
-
-// We are done for today. Check some other cases as well, just to be sure.

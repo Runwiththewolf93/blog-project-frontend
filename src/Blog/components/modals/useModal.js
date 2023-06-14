@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import {
-  useAppContextState,
-  useAppContextDispatch,
-} from "../../store/appContext";
+  useBlogContextState,
+  useBlogContextDispatch,
+} from "../../store/blogContext";
 
+// useModal hook
 const useModal = initialState => {
   const [show, setShow] = useState(false);
   const [values, setValues] = useState(initialState);
@@ -17,8 +18,8 @@ const useModal = initialState => {
   });
   const [avatarField, setAvatarField] = useState("");
 
-  const { isLoadingBlog, errorBlog, postUpdated } = useAppContextState();
-  const { setPostUpdated, uploadBlogImages } = useAppContextDispatch();
+  const { isLoadingBlog, errorBlog, postUpdated } = useBlogContextState();
+  const { setPostUpdated, uploadBlogImages } = useBlogContextDispatch();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -28,6 +29,10 @@ const useModal = initialState => {
       handleClose();
     }
   }, [postUpdated, isLoadingBlog, errorBlog]);
+
+  useEffect(() => {
+    setValues(values => ({ ...values, avatar: avatarField }));
+  }, [avatarField]);
 
   const handleChange = e => {
     const { name, value } = e.target;

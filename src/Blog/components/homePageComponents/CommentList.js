@@ -1,5 +1,6 @@
 import { useEffect, useReducer } from "react";
 import { ListGroup } from "react-bootstrap";
+import { useBlogContextState } from "../../store/blogContext";
 import { useCommentContextState } from "../../store/commentContext";
 import CommentSort from "./CommentSort";
 import CommentItem from "./CommentItem";
@@ -10,15 +11,16 @@ import {
 } from "./CommentsReducer";
 
 const CommentList = ({ blogId, userInfo }) => {
+  const { commentFilter } = useBlogContextState();
   const { commentInfo } = useCommentContextState();
   const [state, dispatch] = useReducer(commentsReducer, initialState);
 
   useEffect(() => {
-    const commentsPerBlogPost = commentInfo.filter(
+    const commentsPerBlogPost = commentFilter?.filter(
       comment => comment.blog === blogId
     );
     dispatch(setSortedComments(commentsPerBlogPost));
-  }, [commentInfo, blogId]);
+  }, [commentFilter, blogId]);
 
   return (
     <>

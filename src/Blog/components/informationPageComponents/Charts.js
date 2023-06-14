@@ -4,6 +4,7 @@ import {
   useAppContextState,
   useAppContextDispatch,
 } from "../../store/appContext";
+import { useBlogContextState } from "../../store/blogContext";
 import { useCommentContextState } from "../../store/commentContext";
 import { useVoteContextState } from "../../store/voteContext";
 import LineChartComponent from "./LineChart";
@@ -13,8 +14,9 @@ import PieChartComponent from "./PieChart";
 import CustomCard from "./CustomCard";
 
 const Charts = () => {
-  const { blogInfo, users } = useAppContextState();
+  const { users } = useAppContextState();
   const { getAllUsers } = useAppContextDispatch();
+  const { blogInfo } = useBlogContextState();
   const { commentInfo } = useCommentContextState();
   const { voteInfo } = useVoteContextState();
 
@@ -56,5 +58,3 @@ const Charts = () => {
 };
 
 export default Charts;
-
-// figure out body component and why comments and votes aren't loading

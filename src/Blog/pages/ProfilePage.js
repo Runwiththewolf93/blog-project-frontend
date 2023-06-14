@@ -1,6 +1,7 @@
 import Layout from "../components/shared/Layout";
 import { Container, Row, Col } from "react-bootstrap";
 import { useAppContextState } from "../store/appContext";
+import { useBlogContextState } from "../store/blogContext";
 import { useCommentContextState } from "../store/commentContext";
 import useProfilePage from "../hooks/useProfilePage";
 import ProfileCard from "../components/profilePageComponents/ProfileCard";
@@ -14,7 +15,8 @@ import UserComments from "../components/profilePageComponents/UserComments";
 
 const ProfilePage = () => {
   const { userProfile } = useRandomUsers("male");
-  const { userInfo, blogInfo } = useAppContextState();
+  const { userInfo } = useAppContextState();
+  const { blogInfo } = useBlogContextState();
   const { isLoadingUserComment, userCommentInfo, errorUserComment } =
     useCommentContextState();
   useProfilePage();

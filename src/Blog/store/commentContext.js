@@ -1,8 +1,7 @@
 import React, { useReducer, useContext } from "react";
 
 import commentReducer from "./commentReducer";
-import axios from "axios";
-import axiosRetry from "axios-retry";
+import createAuthFetch from "./createAuthFetch";
 import { errorHandler } from "../utils/helper";
 import {
   GET_ALL_COMMENTS_BLOG_POST_BEGIN,
@@ -54,38 +53,13 @@ const CommentContextDispatch = React.createContext();
 const CommentProvider = ({ children }) => {
   const [state, dispatch] = useReducer(commentReducer, initialState);
 
+  const logoutUser = () => {
+    dispatch({ type: LOGOUT_USER });
+    localStorage.clear();
+  };
+
   // axios
-  const authFetch = axios.create({
-    baseURL: "/api/v1",
-  });
-
-  // Set up axios-retry
-  axiosRetry(authFetch, { retries: 3 });
-
-  // request
-  authFetch.interceptors.request.use(
-    config => {
-      config.headers.Authorization = `Bearer ${state.userInfo.token}`;
-      return config;
-    },
-    error => {
-      return Promise.reject(error);
-    }
-  );
-
-  // response
-  authFetch.interceptors.response.use(
-    response => {
-      return response;
-    },
-    error => {
-      if (error.response && error.response.status === 401) {
-        logoutUser();
-        window.location.href = "/";
-      }
-      return Promise.reject(error);
-    }
-  );
+  const authFetch = createAuthFetch(state?.userInfo, logoutUser);
 
   // dispatching below
   const getAllCommentsBlogPost = async blogId => {
@@ -207,11 +181,6 @@ const CommentProvider = ({ children }) => {
 
   const resetCommentError = () => {
     dispatch({ type: RESET_COMMENT_ERROR });
-  };
-
-  const logoutUser = () => {
-    dispatch({ type: LOGOUT_USER });
-    localStorage.clear();
   };
 
   return (

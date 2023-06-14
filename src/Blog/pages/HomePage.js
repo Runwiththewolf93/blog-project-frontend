@@ -2,7 +2,11 @@ import { useRef, useCallback, useState, useEffect } from "react";
 import Message from "../components/homePageComponents/Message";
 import Body from "../components/homePageComponents/Body";
 import Layout from "../components/shared/Layout";
-import { useAppContextState, useAppContextDispatch } from "../store/appContext";
+import { useAppContextState } from "../store/appContext";
+import {
+  useBlogContextState,
+  useBlogContextDispatch,
+} from "../store/blogContext";
 
 // HomePage component
 const HomePage = () => {
@@ -10,8 +14,14 @@ const HomePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showMyPosts, setShowMyPosts] = useState(false);
   const [isFiltering, setIsFiltering] = useState(true);
-  const { userInfo, blogFilter, postUpdated } = useAppContextState();
-  const { getAllBlogPosts, setPostUpdated } = useAppContextDispatch();
+  const { userInfo } = useAppContextState();
+  const { blogFilter, postUpdated, blogInfo } = useBlogContextState();
+  const { getAllBlogPosts, setPostUpdated } = useBlogContextDispatch();
+
+  // figure it out tomorrow
+  console.log(blogFilter);
+  console.log(postUpdated);
+  console.log(blogInfo);
 
   useEffect(() => {
     getAllBlogPosts();
@@ -49,7 +59,9 @@ const HomePage = () => {
     );
   }
 
-  console.log(blogDataToShow);
+  useEffect(() => {
+    console.log(blogDataToShow);
+  }, [blogFilter]);
 
   return (
     <Layout handleSearch={debouncedHandleSearch}>
