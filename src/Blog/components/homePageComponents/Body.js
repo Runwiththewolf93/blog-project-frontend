@@ -18,7 +18,7 @@ import { LoadingComponent, ErrorComponent, NoPosts } from "./BodyComponents";
 // Body component
 const Body = ({ userInfo, blogDataToShow, isFiltering }) => {
   const { wasLoggedOut } = useAppContextState();
-  const { isLoadingFilter, errorFilter } = useBlogContextState();
+  const { isLoadingFilter, errorFilter, hasMore } = useBlogContextState();
   const { commentFilterLocalStorage } = useCommentContextState();
   const { getAllComments } = useCommentContextDispatch();
   const { voteFilterLocalStorage } = useVoteContextState();
@@ -27,10 +27,6 @@ const Body = ({ userInfo, blogDataToShow, isFiltering }) => {
   useEffect(() => {
     const fetchAllData = async () => {
       await Promise.all([getAllComments(), getAllVotes()]);
-
-      // if (userInfo && (commentInfo.length === 0 || voteInfo.length === 0)) {
-      //   window.location.reload();
-      // }
     };
     fetchAllData();
     // eslint-disable-next-line
@@ -78,6 +74,7 @@ const Body = ({ userInfo, blogDataToShow, isFiltering }) => {
         </Col>
         <Col md={10}>
           <BlogPosts blogDataToShow={blogDataToShow} userInfo={userInfo} />
+          {hasMore && <LoadingComponent />}
           <div className="d-flex justify-content-end">
             <ScrollToTopPopup />
           </div>

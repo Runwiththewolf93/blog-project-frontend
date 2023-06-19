@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { debounce } from "../../utils/helper";
 
+// useScrollToLoadMore hook
 const useScrollToLoadMore = ({ isLoadingFilter, hasMore, setPage }) => {
   useEffect(() => {
     const debouncedHandleScroll = debounce(() => {

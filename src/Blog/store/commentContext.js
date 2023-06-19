@@ -97,7 +97,6 @@ const CommentProvider = ({ children }) => {
       const { data } = await authFetch.get("/comment");
 
       dispatch({ type: GET_ALL_COMMENTS_SUCCESS, payload: data });
-      localStorage.setItem("commentInfo", JSON.stringify(data));
     } catch (error) {
       errorHandler(error, dispatch, GET_ALL_COMMENTS_ERROR);
     } finally {

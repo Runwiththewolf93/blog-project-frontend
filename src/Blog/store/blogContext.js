@@ -196,7 +196,7 @@ const BlogProvider = ({ children }) => {
         dataLoaded: true,
       };
 
-      // console.log(payload);
+      console.log(payload);
 
       // Save to local storage and dispatch
       if (newPosts.length > 0) {

@@ -40,9 +40,12 @@ function Message({
     if (!mounted.current) {
       // Ensure this runs on the first render
       console.log("Resetting filters...");
-      resetFilteredBlogPosts(() => {
-        getFilteredBlogPosts();
-      });
+      const executeGetFilteredBlogPosts = async () => {
+        await resetFilteredBlogPosts(() => {
+          getFilteredBlogPosts();
+        });
+      };
+      executeGetFilteredBlogPosts();
       mounted.current = true;
     }
     // eslint-disable-next-line
