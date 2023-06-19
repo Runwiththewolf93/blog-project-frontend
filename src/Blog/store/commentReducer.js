@@ -83,10 +83,11 @@ const commentReducer = (state, action) => {
     return { ...state, isLoadingComment: true };
   }
   if (action.type === ADD_COMMENT_BLOG_POST_SUCCESS) {
+    console.log("Updated comments:", action.payload);
     return {
       ...state,
-      commentInfo: [...state.commentInfo, action.payload],
       isLoadingComment: false,
+      commentFilter: action.payload,
       errorComment: null,
     };
   }
@@ -98,14 +99,11 @@ const commentReducer = (state, action) => {
     return { ...state, isLoadingComment: true };
   }
   if (action.type === EDIT_COMMENT_BLOG_POST_SUCCESS) {
-    const updatedComment = action.payload;
-    const updatedComments = state.commentInfo.map(comment =>
-      comment._id === updatedComment._id ? updatedComment : comment
-    );
+    console.log("Updated comments:", action.payload);
     return {
       ...state,
       isLoadingComment: false,
-      commentInfo: updatedComments,
+      commentFilter: action.payload,
       errorComment: null,
     };
   }
@@ -117,14 +115,11 @@ const commentReducer = (state, action) => {
     return { ...state, isLoadingComment: true };
   }
   if (action.type === DELETE_COMMENT_BLOG_POST_SUCCESS) {
-    const id = action.payload;
-    const updatedComments = state.commentInfo.filter(
-      comment => comment._id !== id
-    );
+    console.log("Updated comments:", action.payload);
     return {
       ...state,
       isLoadingComment: false,
-      commentInfo: updatedComments,
+      commentInfo: action.payload,
       errorComment: null,
     };
   }
@@ -136,14 +131,11 @@ const commentReducer = (state, action) => {
     return { ...state, isLoadingComment: true };
   }
   if (action.type === DELETE_ALL_COMMENTS_BLOG_POST_SUCCESS) {
-    const id = action.payload;
-    const updatedComments = state.commentInfo.filter(
-      comment => comment.blog !== id
-    );
+    console.log("Updated comments:", action.payload);
     return {
       ...state,
       isLoadingComment: false,
-      commentInfo: updatedComments,
+      commentInfo: action.payload,
       errorComment: null,
     };
   }

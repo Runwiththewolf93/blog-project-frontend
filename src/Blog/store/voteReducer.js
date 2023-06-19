@@ -51,8 +51,8 @@ const voteReducer = (state, action) => {
     return {
       ...state,
       isLoadingVote: false,
-      voteInfo: action.payload.updatedVoteInfo,
-      blogInfo: action.payload.updatedBlogInfo,
+      voteInfo: action.payload.updatedVoteFilter,
+      blogInfo: action.payload.updatedBlogFilter,
       errorVote: null,
     };
   }

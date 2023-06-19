@@ -1,5 +1,5 @@
 import React, { useReducer, useContext } from "react";
-
+import { useLocalStorageContext } from "./localStorageContext";
 import voteReducer from "./voteReducer";
 import createAuthFetch from "./createAuthFetch";
 import { errorHandler } from "../utils/helper";
@@ -26,8 +26,11 @@ import {
   LOGOUT_USER,
 } from "./actions";
 import { userInfoFromLocalStorage } from "./appContext";
-import { blogFilterFromLocalStorage } from "./blogContext";
-import { commentInfoFromLocalStorage } from "./commentContext";
+import {
+  blogFilterFromLocalStorage,
+  commentFilterFromLocalStorage,
+  voteFilterFromLocalStorage,
+} from "./blogContext";
 
 const voteInfoFromLocalStorage =
   JSON.parse(localStorage.getItem("voteInfo")) || [];
@@ -35,8 +38,9 @@ const voteInfoFromLocalStorage =
 // voteContext initialState object
 const initialState = {
   userInfo: userInfoFromLocalStorage,
-  blogInfo: blogFilterFromLocalStorage,
-  commentInfo: commentInfoFromLocalStorage,
+  blogFilter: blogFilterFromLocalStorage,
+  commentFilter: commentFilterFromLocalStorage,
+  voteFilter: voteFilterFromLocalStorage,
   isLoadingVote: true,
   voteInfo: voteInfoFromLocalStorage,
   errorVote: null,
@@ -47,6 +51,14 @@ const VoteContextDispatch = React.createContext();
 
 const VoteProvider = ({ children }) => {
   const [state, dispatch] = useReducer(voteReducer, initialState);
+  const {
+    blogFilterLocalStorage,
+    setBlogFilterLocalStorage,
+    commentFilterLocalStorage,
+    setCommentFilterLocalStorage,
+    voteFilterLocalStorage,
+    setVoteFilterLocalStorage,
+  } = useLocalStorageContext();
 
   const logoutUser = () => {
     dispatch({ type: LOGOUT_USER });
@@ -71,6 +83,7 @@ const VoteProvider = ({ children }) => {
     }
   };
 
+  // updateBlogVoteCount dispatch function
   const updateBlogVoteCount = async (blogId, voteCount) => {
     dispatch({ type: UPDATE_BLOG_VOTE_COUNT_BEGIN });
 
@@ -82,13 +95,13 @@ const VoteProvider = ({ children }) => {
       // Parse the data received from the backend
       const { vote, totalVotes } = data;
 
-      // Get the existing vote object from the voteInfo array
-      const existingVote = state.voteInfo.find(
+      // Get the existing vote object from the voteFilter array
+      const existingVote = voteFilterLocalStorage.find(
         v => v.post === vote.post && v.user === vote.user
       );
 
-      // Update the totalVotes property of the blogInfo object
-      const updatedBlogInfo = state.blogInfo.map(blog => {
+      // Update the totalVotes property of the blogFilter object
+      const updatedBlogFilter = blogFilterLocalStorage.map(blog => {
         if (blog._id === blogId) {
           return { ...blog, totalVotes };
         }
@@ -101,39 +114,41 @@ const VoteProvider = ({ children }) => {
           throw new Error("You have already voted with the same value!");
         }
 
-        // Update the voteInfo object with the existing vote
-        const updatedVoteInfo = state.voteInfo.map(v =>
+        // Update the voteFilter object with the existing vote
+        const updatedVoteFilter = voteFilterLocalStorage.map(v =>
           v === existingVote ? { ...v, ...vote } : v
         );
 
-        // Add updated blogInfo and voteInfo objects to state
+        // Add updated blogFilter and voteFilter objects to state
         dispatch({
           type: UPDATE_BLOG_VOTE_COUNT_SUCCESS,
-          payload: { updatedBlogInfo, updatedVoteInfo },
+          payload: { updatedBlogFilter, updatedVoteFilter },
         });
 
-        // Save the updated voteInfo to localStorage
-        localStorage.setItem("voteInfo", JSON.stringify(updatedVoteInfo));
+        // Save the updated voteFilter to localStorage
+        setVoteFilterLocalStorage(updatedVoteFilter);
       } else {
         // Add new vote to existing voteInfo object
-        const updatedVoteInfo = [...state.voteInfo, vote];
+        const updatedVoteFilter = [...voteFilterLocalStorage, vote];
 
-        // Add updated blogInfo and voteInfo objects to state
+        // Add updated blogFilter and voteInfo objects to state
         dispatch({
           type: UPDATE_BLOG_VOTE_COUNT_SUCCESS,
-          payload: { updatedBlogInfo, updatedVoteInfo },
+          payload: { updatedBlogFilter, updatedVoteFilter },
         });
 
         // Save the updated voteInfo to localStorage
-        localStorage.setItem("voteInfo", JSON.stringify(updatedVoteInfo));
+        setVoteFilterLocalStorage(updatedVoteFilter);
       }
 
-      // Save the updated blogInfo to localStorage
-      localStorage.setItem("blogInfo", JSON.stringify(updatedBlogInfo));
+      // Save the updated blogFilter to localStorage
+      setBlogFilterLocalStorage(updatedBlogFilter);
     } catch (error) {
       errorHandler(error, dispatch, UPDATE_BLOG_VOTE_COUNT_ERROR);
     }
   };
+
+  // check if the updateBlogVoteCount works properly, see about the dispatch, get it to work properly.
 
   const updateCommentVoteCount = async (commentId, voteCount) => {
     dispatch({ type: UPDATE_COMMENT_VOTE_COUNT_BEGIN });
@@ -151,8 +166,8 @@ const VoteProvider = ({ children }) => {
         v => v.post === vote.post && v.user === vote.user
       );
 
-      // Update the totalVotes property of the blogInfo object
-      const updatedCommentInfo = state.commentInfo.map(comment => {
+      // Update the totalVotes property of the blogFilter object
+      const updatedCommentInfo = state.commentFilter.map(comment => {
         if (comment._id === commentId) {
           return { ...comment, totalVotes };
         }
@@ -170,7 +185,7 @@ const VoteProvider = ({ children }) => {
           v === existingVote ? { ...v, ...vote } : v
         );
 
-        // Add updated commentInfo and voteInfo objects to state
+        // Add updated commentFilter and voteInfo objects to state
         dispatch({
           type: UPDATE_COMMENT_VOTE_COUNT_SUCCESS,
           payload: { updatedCommentInfo, updatedVoteInfo },
@@ -182,7 +197,7 @@ const VoteProvider = ({ children }) => {
         // Add new vote to existing voteInfo object
         const updatedVoteInfo = [...state.voteInfo, vote];
 
-        // Add updated commentInfo and voteInfo objects to state
+        // Add updated commentFilter and voteInfo objects to state
         dispatch({
           type: UPDATE_COMMENT_VOTE_COUNT_SUCCESS,
           payload: { updatedCommentInfo, updatedVoteInfo },
@@ -192,8 +207,8 @@ const VoteProvider = ({ children }) => {
         localStorage.setItem("voteInfo", JSON.stringify(updatedVoteInfo));
       }
 
-      // Save the updated commentInfo to localStorage
-      localStorage.setItem("commentInfo", JSON.stringify(updatedCommentInfo));
+      // Save the updated commentFilter to localStorage
+      localStorage.setItem("commentFilter", JSON.stringify(updatedCommentInfo));
     } catch (error) {
       errorHandler(error, dispatch, UPDATE_COMMENT_VOTE_COUNT_ERROR);
     }
@@ -208,8 +223,8 @@ const VoteProvider = ({ children }) => {
       // Parse the data received from the backend
       const { vote, totalVotes } = data;
 
-      // Update the totalVotes property of the blogInfo object
-      const updatedBlogInfo = state.blogInfo.map(blog => {
+      // Update the totalVotes property of the blogFilter object
+      const updatedBlogInfo = state.blogFilter.map(blog => {
         if (blog._id === blogId) {
           return { ...blog, totalVotes };
         }
@@ -221,7 +236,7 @@ const VoteProvider = ({ children }) => {
         v => !(v.post === vote.post && v.user === vote.user)
       );
 
-      // Add updated blogInfo and voteInfo objects to state
+      // Add updated blogFilter and voteInfo objects to state
       dispatch({
         type: DELETE_BLOG_VOTE_COUNT_SUCCESS,
         payload: { updatedBlogInfo, updatedVoteInfo },
@@ -230,8 +245,8 @@ const VoteProvider = ({ children }) => {
       // Save the updated voteInfo to localStorage
       localStorage.setItem("voteInfo", JSON.stringify(updatedVoteInfo));
 
-      // Save the updated blogInfo to localStorage
-      localStorage.setItem("blogInfo", JSON.stringify(updatedBlogInfo));
+      // Save the updated blogFilter to localStorage
+      localStorage.setItem("blogFilter", JSON.stringify(updatedBlogInfo));
     } catch (error) {
       errorHandler(error, dispatch, DELETE_BLOG_VOTE_COUNT_ERROR);
     }
@@ -246,8 +261,8 @@ const VoteProvider = ({ children }) => {
       // Parse the data received from the backend
       const { vote, totalVotes } = data;
 
-      // Update the totalVotes property of the commentInfo object
-      const updatedCommentInfo = state.commentInfo.map(comment => {
+      // Update the totalVotes property of the commentFilter object
+      const updatedCommentInfo = state.commentFilter.map(comment => {
         if (comment._id === commentId) {
           return { ...comment, totalVotes };
         }
@@ -259,7 +274,7 @@ const VoteProvider = ({ children }) => {
         v => !(v.post === vote.post && v.user === vote.user)
       );
 
-      // Add updated commentInfo and voteInfo objects to state
+      // Add updated commentFilter and voteInfo objects to state
       dispatch({
         type: DELETE_COMMENT_VOTE_COUNT_SUCCESS,
         payload: { updatedCommentInfo, updatedVoteInfo },
@@ -268,8 +283,8 @@ const VoteProvider = ({ children }) => {
       // Save the updated voteInfo to localStorage
       localStorage.setItem("voteInfo", JSON.stringify(updatedVoteInfo));
 
-      // Save the updated commentInfo to localStorage
-      localStorage.setItem("commentInfo", JSON.stringify(updatedCommentInfo));
+      // Save the updated commentFilter to localStorage
+      localStorage.setItem("commentFilter", JSON.stringify(updatedCommentInfo));
     } catch (error) {
       errorHandler(error, dispatch, DELETE_COMMENT_VOTE_COUNT_ERROR);
     }
@@ -284,7 +299,7 @@ const VoteProvider = ({ children }) => {
       // Remove the deleted votes from the voteInfo array
       const updatedVoteInfo = state.voteInfo.filter(vote => {
         // Only keep the votes that are not related to the deleted blog
-        return !state.commentInfo.some(
+        return !state.commentFilter.some(
           comment => comment.blog === blogId && comment._id === vote.post
         );
       });
@@ -310,6 +325,7 @@ const VoteProvider = ({ children }) => {
     <VoteContextState.Provider
       value={{
         ...state,
+        voteFilterLocalStorage,
       }}
     >
       <VoteContextDispatch.Provider

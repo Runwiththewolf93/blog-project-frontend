@@ -9,6 +9,7 @@ import {
   setErrorMessage,
 } from "./CommentsReducer";
 
+// CommentItemControls component
 const CommentItemControls = ({ comment, blogId, state, dispatch }) => {
   const { editCommentBlogPost, deleteCommentBlogPost } =
     useCommentContextDispatch();

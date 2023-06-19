@@ -5,6 +5,7 @@ import ModalFooterContent from "./ModalFooterContent";
 import FormInput from "./FormInput";
 import useModal from "./useModal";
 
+// ModalEdit component
 const ModalEdit = ({ post }) => {
   const {
     show,

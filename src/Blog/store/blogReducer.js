@@ -5,16 +5,13 @@ import {
   RESET_BLOG_LOADING,
   RESET_FILTERED_BLOG_POSTS,
   RESET_ERROR_FILTER,
+  SET_DATA_LOADED,
   GET_ALL_BLOG_POSTS_BEGIN,
   GET_ALL_BLOG_POSTS_SUCCESS,
   GET_ALL_BLOG_POSTS_ERROR,
   GET_FILTERED_BLOG_POSTS_BEGIN,
   GET_FILTERED_BLOG_POSTS_SUCCESS,
   ADD_FILTERED_BLOG_POSTS_SUCCESS,
-  GET_FILTERED_COMMENTS_SUCCESS,
-  ADD_FILTERED_COMMENTS_SUCCESS,
-  GET_FILTERED_VOTES_SUCCESS,
-  ADD_FILTERED_VOTES_SUCCESS,
   GET_FILTERED_BLOG_POSTS_ERROR,
   GET_FILTERED_COMMENTS_ERROR,
   GET_FILTERED_VOTES_ERROR,
@@ -63,11 +60,15 @@ const blogReducer = (state, action) => {
   }
   // reset filtered blog posts
   if (action.type === RESET_FILTERED_BLOG_POSTS) {
-    return { ...state, blogFilter: [] };
+    return { ...state, blogFilter: [], commentFilter: [], voteFilter: [] };
   }
   // reset errorFilter state
   if (action.type === RESET_ERROR_FILTER) {
     return { ...state, errorFilter: null };
+  }
+  // set isLoadingFilter to false if data loaded
+  if (action.type === SET_DATA_LOADED) {
+    return { ...state, isLoadingFilter: false };
   }
   // list available blog posts - keep blogInfo here
   if (action.type === GET_ALL_BLOG_POSTS_BEGIN) {
@@ -91,58 +92,28 @@ const blogReducer = (state, action) => {
   if (action.type === GET_FILTERED_BLOG_POSTS_SUCCESS) {
     return {
       ...state,
+      blogFilter: action.payload.newPosts,
+      commentFilter: action.payload.newComments,
+      voteFilter: action.payload.newVotes,
       isLoadingFilter: false,
-      blogFilter: action.payload,
       errorFilter: null,
     };
   }
   if (action.type === ADD_FILTERED_BLOG_POSTS_SUCCESS) {
     return {
       ...state,
+      blogFilter: [...state.blogFilter, ...action.payload.newPosts],
+      commentFilter: [...state.commentFilter, ...action.payload.newComments],
+      voteFilter: [...state.voteFilter, ...action.payload.newVotes],
       isLoadingFilter: false,
-      blogFilter: [...state.blogFilter, ...action.payload],
       errorFilter: null,
     };
   }
-  if (action.type === GET_FILTERED_COMMENTS_SUCCESS) {
-    return {
-      ...state,
-      isLoadingFilter: false,
-      commentFilter: action.payload,
-      errorFilter: null,
-    };
-  }
-  if (action.type === ADD_FILTERED_COMMENTS_SUCCESS) {
-    return {
-      ...state,
-      isLoadingFilter: false,
-      commentFilter: [...state.commentFilter, ...action.payload],
-      errorFilter: null,
-    };
-  }
-  if (action.type === GET_FILTERED_VOTES_SUCCESS) {
-    return {
-      ...state,
-      isLoadingFilter: false,
-      voteFilter: action.payload,
-      errorFilter: null,
-    };
-  }
-  if (action.type === ADD_FILTERED_VOTES_SUCCESS) {
-    return {
-      ...state,
-      isLoadingFilter: false,
-      voteFilter: [...state.voteFilter, ...action.payload],
-      errorFilter: null,
-    };
-  }
-  if (action.type === GET_FILTERED_BLOG_POSTS_ERROR) {
-    return { ...state, isLoadingFilter: false, errorFilter: action.payload };
-  }
-  if (action.type === GET_FILTERED_COMMENTS_ERROR) {
-    return { ...state, isLoadingFilter: false, errorFilter: action.payload };
-  }
-  if (action.type === GET_FILTERED_VOTES_ERROR) {
+  if (
+    action.type === GET_FILTERED_BLOG_POSTS_ERROR ||
+    action.type === GET_FILTERED_COMMENTS_ERROR ||
+    action.type === GET_FILTERED_VOTES_ERROR
+  ) {
     return { ...state, isLoadingFilter: false, errorFilter: action.payload };
   }
   // get single blog post
@@ -168,7 +139,7 @@ const blogReducer = (state, action) => {
     return {
       ...state,
       isLoadingBlog: false,
-      blogFilter: [...state.blogFilter, action.payload],
+      blogFilter: action.payload,
       errorBlog: null,
     };
   }
@@ -180,17 +151,10 @@ const blogReducer = (state, action) => {
     return { ...state, isLoadingBlog: true };
   }
   if (action.type === EDIT_BLOG_POST_SUCCESS) {
-    const updatedBlogInfo = state.blogFilter.map(post => {
-      if (post._id === action.payload._id) {
-        return action.payload;
-      } else {
-        return post;
-      }
-    });
     return {
       ...state,
       isLoadingBlog: false,
-      blogFilter: updatedBlogInfo,
+      blogFilter: action.payload,
       errorBlog: null,
     };
   }
@@ -202,13 +166,11 @@ const blogReducer = (state, action) => {
     return { ...state, isLoadingBlog: true };
   }
   if (action.type === DELETE_BLOG_POST_SUCCESS) {
-    const updatedBlogInfo = state.blogFilter.filter(
-      post => post._id !== action.payload
-    );
+    console.log("delete post action payload", action.payload);
     return {
       ...state,
       isLoadingBlog: false,
-      blogFilter: updatedBlogInfo,
+      blogFilter: action.payload,
       errorBlog: null,
     };
   }

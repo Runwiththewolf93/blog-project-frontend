@@ -1,5 +1,5 @@
 import React, { useReducer, useContext } from "react";
-
+import { useLocalStorageContext } from "./localStorageContext";
 import commentReducer from "./commentReducer";
 import createAuthFetch from "./createAuthFetch";
 import { errorHandler } from "../utils/helper";
@@ -31,15 +31,14 @@ import {
   LOGOUT_USER,
 } from "./actions";
 import { userInfoFromLocalStorage } from "./appContext";
-
-export const commentInfoFromLocalStorage =
-  JSON.parse(localStorage.getItem("commentInfo")) || [];
+import { commentFilterFromLocalStorage } from "./blogContext";
 
 // commentContext initialState object
 const initialState = {
   userInfo: userInfoFromLocalStorage,
   isLoadingComment: true,
-  commentInfo: commentInfoFromLocalStorage,
+  commentFilter: commentFilterFromLocalStorage,
+  commentInfo: [],
   blogCommentInfo: [],
   errorComment: null,
   isLoadingUserComment: true,
@@ -52,6 +51,10 @@ const CommentContextDispatch = React.createContext();
 
 const CommentProvider = ({ children }) => {
   const [state, dispatch] = useReducer(commentReducer, initialState);
+  const { commentFilterLocalStorage, setCommentFilterLocalStorage } =
+    useLocalStorageContext();
+
+  console.log("comment hook commentContext", commentFilterLocalStorage);
 
   const logoutUser = () => {
     dispatch({ type: LOGOUT_USER });
@@ -102,6 +105,7 @@ const CommentProvider = ({ children }) => {
     }
   };
 
+  // addCommentBlogPost dispatch function
   const addCommentBlogPost = async (blogId, comment) => {
     dispatch({ type: ADD_COMMENT_BLOG_POST_BEGIN });
 
@@ -111,15 +115,27 @@ const CommentProvider = ({ children }) => {
         comment
       );
 
-      dispatch({ type: ADD_COMMENT_BLOG_POST_SUCCESS, payload: data });
+      console.log("Received data:", data);
+      console.log("state commentFilter", state.commentFilter);
 
-      const updatedCommentInfo = [...commentInfoFromLocalStorage, data];
-      localStorage.setItem("commentInfo", JSON.stringify(updatedCommentInfo));
+      const updatedCommentFilter = [...commentFilterLocalStorage, data];
+
+      console.log("Modified data:", updatedCommentFilter);
+      console.log("state commentFilter", state.commentFilter);
+
+      dispatch({
+        type: ADD_COMMENT_BLOG_POST_SUCCESS,
+        payload: updatedCommentFilter,
+      });
+
+      // Update localStorage with the new commentFilter array
+      setCommentFilterLocalStorage(updatedCommentFilter);
     } catch (error) {
       errorHandler(error, dispatch, ADD_COMMENT_BLOG_POST_ERROR);
     }
   };
 
+  // editCommentBlogPost dispatch function
   const editCommentBlogPost = async (blogId, commentId, editedComment) => {
     dispatch({ type: EDIT_COMMENT_BLOG_POST_BEGIN });
 
@@ -129,17 +145,30 @@ const CommentProvider = ({ children }) => {
         editedComment
       );
 
-      dispatch({ type: EDIT_COMMENT_BLOG_POST_SUCCESS, payload: data });
+      console.log("Received data:", data);
+      console.log("state commentFilter", state.commentFilter);
 
-      const updatedCommentInfo = commentInfoFromLocalStorage.map(comment =>
+      // Update the state with the new comment
+      const updatedCommentFilter = commentFilterLocalStorage.map(comment =>
         comment._id === commentId ? data : comment
       );
-      localStorage.setItem("commentInfo", JSON.stringify(updatedCommentInfo));
+
+      console.log("Modified data:", updatedCommentFilter);
+      console.log("state commentFilter", state.commentFilter);
+
+      dispatch({
+        type: EDIT_COMMENT_BLOG_POST_SUCCESS,
+        payload: updatedCommentFilter,
+      });
+
+      // Update localStorage with the new commentFilter array
+      setCommentFilterLocalStorage(updatedCommentFilter);
     } catch (error) {
       errorHandler(error, dispatch, EDIT_COMMENT_BLOG_POST_ERROR);
     }
   };
 
+  // deleteCommentBlogPost dispatch function
   const deleteCommentBlogPost = async (blogId, commentId) => {
     dispatch({ type: DELETE_COMMENT_BLOG_POST_BEGIN });
 
@@ -148,32 +177,51 @@ const CommentProvider = ({ children }) => {
         `/comment/blogId/${blogId}/commentId/${commentId}`
       );
 
-      dispatch({ type: DELETE_COMMENT_BLOG_POST_SUCCESS, payload: commentId });
+      console.log("state commentFilter", state.commentFilter);
 
-      const updatedCommentInfo = commentInfoFromLocalStorage.filter(
+      // Update the state by removing the deleted comment
+      const updatedCommentFilter = commentFilterLocalStorage.filter(
         comment => comment._id !== commentId
       );
-      localStorage.setItem("commentInfo", JSON.stringify(updatedCommentInfo));
+
+      console.log("Modified data:", updatedCommentFilter);
+      console.log("state commentFilter", state.commentFilter);
+
+      dispatch({
+        type: DELETE_COMMENT_BLOG_POST_SUCCESS,
+        payload: updatedCommentFilter,
+      });
+
+      // Update localStorage with the new commentFilter array
+      setCommentFilterLocalStorage(updatedCommentFilter);
     } catch (error) {
       errorHandler(error, dispatch, DELETE_COMMENT_BLOG_POST_ERROR);
     }
   };
 
+  // deleteAllCommentsBlogPost dispatch function
   const deleteAllCommentsBlogPost = async blogId => {
     dispatch({ type: DELETE_ALL_COMMENTS_BLOG_POST_BEGIN });
 
     try {
       await authFetch.delete(`/comment/blogId/${blogId}`);
 
-      dispatch({
-        type: DELETE_ALL_COMMENTS_BLOG_POST_SUCCESS,
-        payload: blogId,
-      });
+      console.log("state commentFilter", state.commentFilter);
 
-      const updatedCommentInfo = commentInfoFromLocalStorage.filter(
+      const updatedCommentFilter = commentFilterLocalStorage.filter(
         comment => comment.blog !== blogId
       );
-      localStorage.setItem("commentInfo", JSON.stringify(updatedCommentInfo));
+
+      dispatch({
+        type: DELETE_ALL_COMMENTS_BLOG_POST_SUCCESS,
+        payload: updatedCommentFilter,
+      });
+
+      console.log("Modified data:", updatedCommentFilter);
+      console.log("state commentFilter", state.commentFilter);
+
+      // Update localStorage with the new commentFilter array
+      setCommentFilterLocalStorage(updatedCommentFilter);
     } catch (error) {
       errorHandler(error, dispatch, DELETE_ALL_COMMENTS_BLOG_POST_ERROR);
     }
@@ -187,6 +235,7 @@ const CommentProvider = ({ children }) => {
     <CommentContextState.Provider
       value={{
         ...state,
+        commentFilterLocalStorage,
       }}
     >
       <CommentContextDispatch.Provider

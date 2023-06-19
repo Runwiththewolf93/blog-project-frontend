@@ -111,9 +111,6 @@ const ModalAdd = () => {
     setPostUpdated(true);
   };
 
-  console.log(avatarField);
-  console.log(values.avatar);
-
   return (
     <>
       <Button variant="light" onClick={handleShow} className="mt-3">

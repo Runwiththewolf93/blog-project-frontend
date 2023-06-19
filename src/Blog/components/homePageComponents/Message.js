@@ -39,7 +39,10 @@ function Message({
   useEffect(() => {
     if (!mounted.current) {
       // Ensure this runs on the first render
-      getFilteredBlogPosts();
+      console.log("does this trigger?");
+      resetFilteredBlogPosts(() => {
+        getFilteredBlogPosts();
+      });
       mounted.current = true;
     }
     // eslint-disable-next-line
@@ -54,7 +57,7 @@ function Message({
     // eslint-disable-next-line
   }, [page, sort, order]);
 
-  // Reset the page and blogFilter state when sort or order changes
+  // Reset the page and blogFilter, commentFilter, voteFilter state when sort or order changes
   useEffect(() => {
     if (reset) {
       setPage(1);
@@ -67,7 +70,9 @@ function Message({
   // Fetch the first page of posts after the page and blogFilter state have been reset
   useEffect(() => {
     if (!reset) {
-      getFilteredBlogPosts(1, sort, 5, order);
+      resetFilteredBlogPosts(() => {
+        getFilteredBlogPosts(1, sort, 5, order);
+      });
     }
     // eslint-disable-next-line
   }, [sort, order, reset]);

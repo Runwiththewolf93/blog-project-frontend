@@ -39,7 +39,7 @@ const Vote = ({ type, itemId, userInfo }) => {
         className={`me-2 ${currentVote === 1 ? "text-primary" : ""}`}
         onClick={handleUpVoteClick}
       />
-      <VoteCount totalVotes={totalVotes} />
+      <VoteCount totalVotes={totalVotes || 0} />
       <VoteButton
         icon={faArrowDown}
         className={`ms-2 ${currentVote === -1 ? "text-danger" : ""}`}

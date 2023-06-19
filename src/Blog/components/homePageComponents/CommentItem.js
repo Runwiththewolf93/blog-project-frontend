@@ -3,6 +3,7 @@ import { ListGroup } from "react-bootstrap";
 import Vote from "../shared/Vote";
 import CommentItemControls from "./CommentItemControls";
 
+// CommentItem component, parent to CommentItemControls component
 const CommentItem = ({ comment, userInfo, blogId, state, dispatch }) => {
   const controlsProps = useMemo(
     () => ({

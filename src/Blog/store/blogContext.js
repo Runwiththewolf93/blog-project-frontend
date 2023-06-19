@@ -1,5 +1,5 @@
 import React, { useReducer, useContext, useState } from "react";
-
+import { useLocalStorageContext } from "./localStorageContext";
 import blogReducer from "./blogReducer";
 import axios from "axios";
 import createAuthFetch from "./createAuthFetch";
@@ -10,16 +10,13 @@ import {
   RESET_BLOG_LOADING,
   RESET_FILTERED_BLOG_POSTS,
   RESET_ERROR_FILTER,
+  SET_DATA_LOADED,
   GET_ALL_BLOG_POSTS_BEGIN,
   GET_ALL_BLOG_POSTS_SUCCESS,
   GET_ALL_BLOG_POSTS_ERROR,
   GET_FILTERED_BLOG_POSTS_BEGIN,
   GET_FILTERED_BLOG_POSTS_SUCCESS,
   ADD_FILTERED_BLOG_POSTS_SUCCESS,
-  GET_FILTERED_COMMENTS_SUCCESS,
-  ADD_FILTERED_COMMENTS_SUCCESS,
-  GET_FILTERED_VOTES_SUCCESS,
-  ADD_FILTERED_VOTES_SUCCESS,
   GET_FILTERED_BLOG_POSTS_ERROR,
   GET_FILTERED_COMMENTS_ERROR,
   GET_FILTERED_VOTES_ERROR,
@@ -45,6 +42,12 @@ import { userInfoFromLocalStorage } from "./appContext";
 export const blogFilterFromLocalStorage =
   JSON.parse(localStorage.getItem("blogFilter")) || [];
 
+export const commentFilterFromLocalStorage =
+  JSON.parse(localStorage.getItem("commentFilter")) || [];
+
+export const voteFilterFromLocalStorage =
+  JSON.parse(localStorage.getItem("voteFilter")) || [];
+
 const blogPostFromLocalStorage =
   JSON.parse(localStorage.getItem("blogPost")) || {};
 
@@ -57,8 +60,8 @@ const initialState = {
   errorBlog: null,
   isLoadingFilter: true,
   blogFilter: blogFilterFromLocalStorage,
-  commentFilter: [],
-  voteFilter: [],
+  commentFilter: commentFilterFromLocalStorage,
+  voteFilter: voteFilterFromLocalStorage,
   errorFilter: null,
 };
 
@@ -69,6 +72,12 @@ const BlogProvider = ({ children }) => {
   const [state, dispatch] = useReducer(blogReducer, initialState);
   const [postUpdated, setPostUpdated] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const {
+    blogFilterLocalStorage,
+    setBlogFilterLocalStorage,
+    setCommentFilterLocalStorage,
+    setVoteFilterLocalStorage,
+  } = useLocalStorageContext();
 
   const logoutUser = () => {
     dispatch({ type: LOGOUT_USER });
@@ -88,8 +97,11 @@ const BlogProvider = ({ children }) => {
     dispatch({ type: RESET_BLOG_ERROR });
   };
 
-  const resetFilteredBlogPosts = () => {
+  const resetFilteredBlogPosts = callback => {
     dispatch({ type: RESET_FILTERED_BLOG_POSTS });
+    if (callback) {
+      callback();
+    }
   };
 
   const resetErrorFilter = () => {
@@ -119,7 +131,6 @@ const BlogProvider = ({ children }) => {
     limit = 5,
     order = "asc"
   ) => {
-    // don't run dispatch function if user hasn't logged in
     if (!state.userInfo) return;
 
     dispatch({ type: GET_FILTERED_BLOG_POSTS_BEGIN });
@@ -129,62 +140,79 @@ const BlogProvider = ({ children }) => {
         `/blog/filtered/?page=${page}&sort=${sort}&limit=${limit}&order=${order}`
       );
 
-      // Extract blogIds from the response
+      // Extract ids and fetch data
       const blogIds = blogsData.posts.map(post => post._id);
 
-      // Fetch comments
+      console.log("commentFilter", state.commentFilter);
       const { data: commentsData } = await authFetch.post("/comment/filter", {
         blogIds,
       });
 
-      // Extract commentIds from the response
       const commentIds = commentsData.map(comment => comment._id);
 
       // Combine blogIds and commentIds into a single array
       const postIds = [...blogIds, ...commentIds];
 
-      // Fetch votes
+      console.log("voteFilter", state.voteFilter);
       const { data: votesData } = await authFetch.post("/vote/filter", {
         postIds,
       });
 
       // Set hasMore before filtering the posts and dispatching actions
       setHasMore(blogsData.hasMore);
-
+      // console.log("blogsData", blogsData);
+      console.log("commentsData", commentsData);
+      console.log("votesData", votesData);
+      // console.log("blogFilter", state.blogFilter);
       // Filter out any posts that are already in the blogFilter, commentFilter or voteFilter state
       const newPosts = filterNewItems(blogsData.posts, state.blogFilter);
       const newComments = filterNewItems(commentsData, state.commentFilter);
       const newVotes = filterNewItems(votesData, state.voteFilter);
+      // console.log('newPosts', newPosts);
+      // console.log('newComments', newComments);
+      console.log("newVotes", newVotes);
 
+      // Construct payload
+      const payload = {
+        newPosts,
+        newComments,
+        newVotes,
+        dataLoaded: true,
+      };
+
+      // console.log(payload);
+
+      // Save to local storage and dispatch
       if (newPosts.length > 0) {
         if (page === 1) {
+          setBlogFilterLocalStorage(newPosts);
+          setCommentFilterLocalStorage(newComments);
+          setVoteFilterLocalStorage(newVotes);
+
           dispatch({
-            // If this is the first page, replace the blogFilter state with the fetched posts
             type: GET_FILTERED_BLOG_POSTS_SUCCESS,
-            payload: newPosts,
+            payload,
           });
-          localStorage.setItem("blogFilter", JSON.stringify(newPosts));
-          dispatch({
-            type: GET_FILTERED_COMMENTS_SUCCESS,
-            payload: newComments,
-          });
-          dispatch({ type: GET_FILTERED_VOTES_SUCCESS, payload: newVotes });
         } else {
+          setBlogFilterLocalStorage([...state.blogFilter, ...newPosts]);
+          setCommentFilterLocalStorage([
+            ...state.commentFilter,
+            ...newComments,
+          ]);
+          setVoteFilterLocalStorage([...state.voteFilter, ...newVotes]);
+
           dispatch({
-            // If this is not the first page, add the fetched posts to the blogFilter state
             type: ADD_FILTERED_BLOG_POSTS_SUCCESS,
-            payload: newPosts,
+            payload,
           });
-          localStorage.setItem("blogFilter", JSON.stringify(newPosts));
-          dispatch({
-            type: ADD_FILTERED_COMMENTS_SUCCESS,
-            payload: newComments,
-          });
-          dispatch({ type: ADD_FILTERED_VOTES_SUCCESS, payload: newVotes });
         }
       }
+
+      // Check if all data fetched successfully
+      if (state.dataLoaded) {
+        dispatch({ type: SET_DATA_LOADED });
+      }
     } catch (error) {
-      // get the error to not trigger if the user isn't logged in.
       if (error.request?.url?.includes("/comment/filter")) {
         errorHandler(error, dispatch, GET_FILTERED_COMMENTS_ERROR);
       } else if (error.request?.url?.includes("/vote/filter")) {
@@ -208,16 +236,21 @@ const BlogProvider = ({ children }) => {
     }
   };
 
+  // addBlogPost dispatch function
   const addBlogPost = async newPostData => {
     dispatch({ type: ADD_BLOG_POST_BEGIN });
 
     try {
       const { data } = await authFetch.post("/blog", newPostData);
 
-      dispatch({ type: ADD_BLOG_POST_SUCCESS, payload: data });
+      // Update the blogFilterLocalStorage with the new post
+      const updatedBlogFilter = [...blogFilterLocalStorage, data];
 
-      const updatedBlogInfo = [...blogFilterFromLocalStorage, data];
-      localStorage.setItem("blogFilter", JSON.stringify(updatedBlogInfo));
+      // Dispatch the updated blogFilter
+      dispatch({ type: ADD_BLOG_POST_SUCCESS, payload: updatedBlogFilter });
+
+      // Save the updated blogFilter to localStorage
+      setBlogFilterLocalStorage(updatedBlogFilter);
     } catch (error) {
       errorHandler(error, dispatch, ADD_BLOG_POST_ERROR);
     }
@@ -234,7 +267,7 @@ const BlogProvider = ({ children }) => {
       });
 
       dispatch({ type: UPLOAD_BLOG_IMAGES_SUCCESS });
-      console.log(data);
+      console.log("image urls", data);
       return { avatar: data.avatar, images: data.images };
     } catch (error) {
       errorHandler(error, dispatch, UPLOAD_BLOG_IMAGES_ERROR);
@@ -248,30 +281,39 @@ const BlogProvider = ({ children }) => {
     try {
       const { data } = await authFetch.patch(`/blog/${id}`, updatedValues);
 
-      dispatch({ type: EDIT_BLOG_POST_SUCCESS, payload: data });
-      console.log(data);
-
-      const updatedBlogInfo = blogFilterFromLocalStorage.map(post =>
+      // Update the blogFilterLocalStorage with the edited post
+      const updatedBlogFilter = blogFilterLocalStorage.map(post =>
         post._id === id ? data : post
       );
-      localStorage.setItem("blogFilter", JSON.stringify(updatedBlogInfo));
+
+      // Dispatch the updated blogFilter
+      dispatch({ type: EDIT_BLOG_POST_SUCCESS, payload: data });
+      console.log("edited blog post", data);
+
+      // Save the updated blogFilter to localStorage
+      setBlogFilterLocalStorage(updatedBlogFilter);
     } catch (error) {
       errorHandler(error, dispatch, EDIT_BLOG_POST_ERROR);
     }
   };
 
+  // deleteBlogPost dispatch function
   const deleteBlogPost = async id => {
     dispatch({ type: DELETE_BLOG_POST_BEGIN });
 
     try {
       await authFetch.delete(`/blog/${id}`);
 
-      dispatch({ type: DELETE_BLOG_POST_SUCCESS, payload: id });
-
-      const updatedBlogInfo = blogFilterFromLocalStorage.filter(
+      // Update the blogFilterLocalStorage with the deleted post
+      const updatedBlogFilter = blogFilterLocalStorage.filter(
         post => post._id !== id
       );
-      localStorage.setItem("blogFilter", JSON.stringify(updatedBlogInfo));
+
+      // dispatch the updated blogFilter
+      dispatch({ type: DELETE_BLOG_POST_SUCCESS, payload: updatedBlogFilter });
+
+      // Save the updated blogFilter to localStorage
+      setBlogFilterLocalStorage(updatedBlogFilter);
     } catch (error) {
       errorHandler(error, dispatch, DELETE_BLOG_POST_ERROR);
     }
@@ -291,6 +333,7 @@ const BlogProvider = ({ children }) => {
         ...state,
         postUpdated,
         hasMore,
+        blogFilterLocalStorage,
       }}
     >
       <BlogContextDispatch.Provider

@@ -18,19 +18,19 @@ import { LoadingComponent, ErrorComponent, NoPosts } from "./BodyComponents";
 // Body component
 const Body = ({ userInfo, blogDataToShow, isFiltering }) => {
   const { wasLoggedOut } = useAppContextState();
-  const { isLoadingBlog, errorBlog, isLoadingFilter } = useBlogContextState();
-  const { isLoadingComment, commentInfo } = useCommentContextState();
+  const { isLoadingFilter, errorFilter } = useBlogContextState();
+  const { commentFilterLocalStorage } = useCommentContextState();
   const { getAllComments } = useCommentContextDispatch();
-  const { isLoadingVote, voteInfo } = useVoteContextState();
+  const { voteFilterLocalStorage } = useVoteContextState();
   const { getAllVotes } = useVoteContextDispatch();
 
   useEffect(() => {
     const fetchAllData = async () => {
       await Promise.all([getAllComments(), getAllVotes()]);
 
-      if (userInfo && (commentInfo.length === 0 || voteInfo.length === 0)) {
-        window.location.reload();
-      }
+      // if (userInfo && (commentInfo.length === 0 || voteInfo.length === 0)) {
+      //   window.location.reload();
+      // }
     };
     fetchAllData();
     // eslint-disable-next-line
@@ -48,24 +48,20 @@ const Body = ({ userInfo, blogDataToShow, isFiltering }) => {
     );
   }
 
-  if (errorBlog) {
-    return <ErrorComponent message={errorBlog} />;
+  if (errorFilter) {
+    return <ErrorComponent message={errorFilter} />;
   }
 
-  // loading state resolves quickly on local machine, can't see comp.
-  console.log(isLoadingBlog);
-  console.log(isLoadingComment);
-  console.log(isLoadingVote);
+  console.log(isLoadingFilter);
   console.log(blogDataToShow);
-  console.log(commentInfo);
-  console.log(voteInfo);
+  console.log(commentFilterLocalStorage);
+  console.log(voteFilterLocalStorage);
+  // loading state resolves quickly on local machine, can't see comp.
   if (
-    isLoadingBlog ||
-    isLoadingComment ||
-    isLoadingVote ||
+    isLoadingFilter ||
     !blogDataToShow ||
-    !commentInfo ||
-    !voteInfo
+    !commentFilterLocalStorage ||
+    !voteFilterLocalStorage
   ) {
     return <LoadingComponent />;
   }

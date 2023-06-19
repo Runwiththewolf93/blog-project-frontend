@@ -146,6 +146,7 @@ function debounce(func, wait) {
   };
 }
 
+// filter new items helper function
 const filterNewItems = (newItems, existingItems) =>
   newItems.filter(
     newItem =>

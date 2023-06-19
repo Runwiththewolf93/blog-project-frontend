@@ -1,6 +1,5 @@
 import { useEffect, useReducer } from "react";
 import { ListGroup } from "react-bootstrap";
-import { useBlogContextState } from "../../store/blogContext";
 import { useCommentContextState } from "../../store/commentContext";
 import CommentSort from "./CommentSort";
 import CommentItem from "./CommentItem";
@@ -10,17 +9,20 @@ import {
   initialState,
 } from "./CommentsReducer";
 
+// CommentList component
 const CommentList = ({ blogId, userInfo }) => {
-  const { commentFilter } = useBlogContextState();
-  const { commentInfo } = useCommentContextState();
+  const { commentFilterLocalStorage } = useCommentContextState();
   const [state, dispatch] = useReducer(commentsReducer, initialState);
 
   useEffect(() => {
-    const commentsPerBlogPost = commentFilter?.filter(
+    const commentsPerBlogPost = commentFilterLocalStorage.filter(
       comment => comment.blog === blogId
     );
+    // console.log("Filtered comments comment:", commentsPerBlogPost);
     dispatch(setSortedComments(commentsPerBlogPost));
-  }, [commentFilter, blogId]);
+  }, [commentFilterLocalStorage, blogId]);
+
+  // console.log("commentFilter comment", commentFilterLocalStorage);
 
   return (
     <>

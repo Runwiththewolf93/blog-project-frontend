@@ -15,13 +15,8 @@ const HomePage = () => {
   const [showMyPosts, setShowMyPosts] = useState(false);
   const [isFiltering, setIsFiltering] = useState(true);
   const { userInfo } = useAppContextState();
-  const { blogFilter, postUpdated, blogInfo } = useBlogContextState();
+  const { postUpdated, blogFilterLocalStorage } = useBlogContextState();
   const { getAllBlogPosts, setPostUpdated } = useBlogContextDispatch();
-
-  // figure it out tomorrow
-  console.log(blogFilter);
-  console.log(postUpdated);
-  console.log(blogInfo);
 
   useEffect(() => {
     getAllBlogPosts();
@@ -50,18 +45,18 @@ const HomePage = () => {
   let blogDataToShow;
 
   if (showMyPosts) {
-    blogDataToShow = blogFilter?.filter(
+    blogDataToShow = blogFilterLocalStorage?.filter(
       post => post.user?._id === userInfo?._id
     );
   } else {
-    blogDataToShow = blogFilter?.filter(post =>
+    blogDataToShow = blogFilterLocalStorage?.filter(post =>
       post.title?.toLowerCase().includes(searchQuery)
     );
   }
 
-  useEffect(() => {
-    console.log(blogDataToShow);
-  }, [blogFilter]);
+  // useEffect(() => {
+  //   console.log(blogDataToShow);
+  // }, [blogFilter]);
 
   return (
     <Layout handleSearch={debouncedHandleSearch}>
