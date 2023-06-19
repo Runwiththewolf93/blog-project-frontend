@@ -53,9 +53,9 @@ const Body = ({ userInfo, blogDataToShow, isFiltering }) => {
   }
 
   console.log(isLoadingFilter);
-  console.log(blogDataToShow);
-  console.log(commentFilterLocalStorage);
-  console.log(voteFilterLocalStorage);
+  console.log("blogFilterLocalStorage", blogDataToShow);
+  console.log("commentFilterLocalStorage", commentFilterLocalStorage);
+  console.log("voteFilterLocalStorage", voteFilterLocalStorage);
   // loading state resolves quickly on local machine, can't see comp.
   if (
     isLoadingFilter ||

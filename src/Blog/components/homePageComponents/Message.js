@@ -39,7 +39,7 @@ function Message({
   useEffect(() => {
     if (!mounted.current) {
       // Ensure this runs on the first render
-      console.log("does this trigger?");
+      console.log("Resetting filters...");
       resetFilteredBlogPosts(() => {
         getFilteredBlogPosts();
       });
@@ -57,19 +57,15 @@ function Message({
     // eslint-disable-next-line
   }, [page, sort, order]);
 
-  // Reset the page and blogFilter, commentFilter, voteFilter state when sort or order changes
   useEffect(() => {
+    // On 'sort' or 'order' change, reset all related state
     if (reset) {
       setPage(1);
       resetFilteredBlogPosts();
       setReset(false);
     }
-    // eslint-disable-next-line
-  }, [reset]);
-
-  // Fetch the first page of posts after the page and blogFilter state have been reset
-  useEffect(() => {
-    if (!reset) {
+    // Once reset is done, fetch the first page of posts
+    else {
       resetFilteredBlogPosts(() => {
         getFilteredBlogPosts(1, sort, 5, order);
       });

@@ -51,8 +51,8 @@ const voteReducer = (state, action) => {
     return {
       ...state,
       isLoadingVote: false,
-      voteInfo: action.payload.updatedVoteFilter,
-      blogInfo: action.payload.updatedBlogFilter,
+      voteFilter: action.payload.updatedVoteFilter,
+      blogFilter: action.payload.updatedBlogFilter,
       errorVote: null,
     };
   }
@@ -67,8 +67,8 @@ const voteReducer = (state, action) => {
     return {
       ...state,
       isLoadingVote: false,
-      voteInfo: action.payload.updatedVoteInfo,
-      commentInfo: action.payload.updatedCommentInfo,
+      voteFilter: action.payload.updatedVoteFilter,
+      blogFilter: action.payload.updatedCommentFilter,
       errorVote: null,
     };
   }
@@ -83,8 +83,8 @@ const voteReducer = (state, action) => {
     return {
       ...state,
       isLoadingVote: false,
-      voteInfo: action.payload.updatedVoteInfo,
-      blogInfo: action.payload.updatedBlogInfo,
+      voteFilter: action.payload.updatedVoteFilter,
+      blogFilter: action.payload.updatedBlogFilter,
       errorVote: null,
     };
   }
@@ -99,8 +99,8 @@ const voteReducer = (state, action) => {
     return {
       ...state,
       isLoadingVote: false,
-      voteInfo: action.payload.updatedVoteInfo,
-      commentInfo: action.payload.updatedCommentInfo,
+      voteFilter: action.payload.updatedVoteFilter,
+      commentFilter: action.payload.updatedCommentFilter,
       errorVote: null,
     };
   }
@@ -119,7 +119,7 @@ const voteReducer = (state, action) => {
     return {
       ...state,
       isLoadingVote: false,
-      voteInfo: action.payload.updatedVoteInfo,
+      voteFilter: action.payload.updatedVoteFilter,
       errorVote: null,
     };
   }

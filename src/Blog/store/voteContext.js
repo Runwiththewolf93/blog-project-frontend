@@ -32,9 +32,6 @@ import {
   voteFilterFromLocalStorage,
 } from "./blogContext";
 
-const voteInfoFromLocalStorage =
-  JSON.parse(localStorage.getItem("voteInfo")) || [];
-
 // voteContext initialState object
 const initialState = {
   userInfo: userInfoFromLocalStorage,
@@ -42,7 +39,7 @@ const initialState = {
   commentFilter: commentFilterFromLocalStorage,
   voteFilter: voteFilterFromLocalStorage,
   isLoadingVote: true,
-  voteInfo: voteInfoFromLocalStorage,
+  voteInfo: [],
   errorVote: null,
 };
 
@@ -75,7 +72,6 @@ const VoteProvider = ({ children }) => {
       const { data } = await authFetch.get("/vote");
 
       dispatch({ type: GET_ALL_VOTES_SUCCESS, payload: data });
-      localStorage.setItem("voteInfo", JSON.stringify(data));
     } catch (error) {
       errorHandler(error, dispatch, GET_ALL_VOTES_ERROR);
     } finally {
@@ -128,16 +124,16 @@ const VoteProvider = ({ children }) => {
         // Save the updated voteFilter to localStorage
         setVoteFilterLocalStorage(updatedVoteFilter);
       } else {
-        // Add new vote to existing voteInfo object
+        // Add new vote to existing voteFilter object
         const updatedVoteFilter = [...voteFilterLocalStorage, vote];
 
-        // Add updated blogFilter and voteInfo objects to state
+        // Add updated blogFilter and voteFilter objects to state
         dispatch({
           type: UPDATE_BLOG_VOTE_COUNT_SUCCESS,
           payload: { updatedBlogFilter, updatedVoteFilter },
         });
 
-        // Save the updated voteInfo to localStorage
+        // Save the updated voteFilter to localStorage
         setVoteFilterLocalStorage(updatedVoteFilter);
       }
 
@@ -148,8 +144,7 @@ const VoteProvider = ({ children }) => {
     }
   };
 
-  // check if the updateBlogVoteCount works properly, see about the dispatch, get it to work properly.
-
+  // updateCommentVoteCount dispatch function
   const updateCommentVoteCount = async (commentId, voteCount) => {
     dispatch({ type: UPDATE_COMMENT_VOTE_COUNT_BEGIN });
 
@@ -161,13 +156,13 @@ const VoteProvider = ({ children }) => {
       // Parse the data received from the backend
       const { vote, totalVotes } = data;
 
-      // Get the existing vote object from the voteInfo array
-      const existingVote = state.voteInfo.find(
+      // Get the existing vote object from the voteFilter array
+      const existingVote = voteFilterLocalStorage.find(
         v => v.post === vote.post && v.user === vote.user
       );
 
-      // Update the totalVotes property of the blogFilter object
-      const updatedCommentInfo = state.commentFilter.map(comment => {
+      // Update the totalVotes property of the commentFilter object
+      const updatedCommentFilter = commentFilterLocalStorage.map(comment => {
         if (comment._id === commentId) {
           return { ...comment, totalVotes };
         }
@@ -180,35 +175,35 @@ const VoteProvider = ({ children }) => {
           throw new Error("You have already voted with the same value!");
         }
 
-        // Update the voteInfo object with the existing vote
-        const updatedVoteInfo = state.voteInfo.map(v =>
+        // Update the voteFilter object with the existing vote
+        const updatedVoteFilter = voteFilterLocalStorage.map(v =>
           v === existingVote ? { ...v, ...vote } : v
         );
 
-        // Add updated commentFilter and voteInfo objects to state
+        // Add updated commentFilter and voteFilter objects to state
         dispatch({
           type: UPDATE_COMMENT_VOTE_COUNT_SUCCESS,
-          payload: { updatedCommentInfo, updatedVoteInfo },
+          payload: { updatedCommentFilter, updatedVoteFilter },
         });
 
-        // Save the updated voteInfo to localStorage
-        localStorage.setItem("voteInfo", JSON.stringify(updatedVoteInfo));
+        // Save the updated voteFilter to localStorage
+        setVoteFilterLocalStorage(updatedVoteFilter);
       } else {
-        // Add new vote to existing voteInfo object
-        const updatedVoteInfo = [...state.voteInfo, vote];
+        // Add new vote to existing voteFilter object
+        const updatedVoteFilter = [...voteFilterLocalStorage, vote];
 
-        // Add updated commentFilter and voteInfo objects to state
+        // Add updated commentFilter and voteFilter objects to state
         dispatch({
           type: UPDATE_COMMENT_VOTE_COUNT_SUCCESS,
-          payload: { updatedCommentInfo, updatedVoteInfo },
+          payload: { updatedCommentFilter, voteFilterLocalStorage },
         });
 
-        // Save the updated voteInfo to localStorage
-        localStorage.setItem("voteInfo", JSON.stringify(updatedVoteInfo));
+        // Save the updated voteFilter to localStorage
+        setVoteFilterLocalStorage(updatedVoteFilter);
       }
 
       // Save the updated commentFilter to localStorage
-      localStorage.setItem("commentFilter", JSON.stringify(updatedCommentInfo));
+      setCommentFilterLocalStorage(updatedCommentFilter);
     } catch (error) {
       errorHandler(error, dispatch, UPDATE_COMMENT_VOTE_COUNT_ERROR);
     }
@@ -224,29 +219,29 @@ const VoteProvider = ({ children }) => {
       const { vote, totalVotes } = data;
 
       // Update the totalVotes property of the blogFilter object
-      const updatedBlogInfo = state.blogFilter.map(blog => {
+      const updatedBlogFilter = blogFilterLocalStorage.map(blog => {
         if (blog._id === blogId) {
           return { ...blog, totalVotes };
         }
         return blog;
       });
 
-      // Remove the deleted vote from the voteInfo array
-      const updatedVoteInfo = state.voteInfo.filter(
+      // Remove the deleted vote from the voteFilter array
+      const updatedVoteFilter = voteFilterLocalStorage.filter(
         v => !(v.post === vote.post && v.user === vote.user)
       );
 
-      // Add updated blogFilter and voteInfo objects to state
+      // Add updated blogFilter and voteFilter objects to state
       dispatch({
         type: DELETE_BLOG_VOTE_COUNT_SUCCESS,
-        payload: { updatedBlogInfo, updatedVoteInfo },
+        payload: { updatedBlogFilter, updatedVoteFilter },
       });
 
-      // Save the updated voteInfo to localStorage
-      localStorage.setItem("voteInfo", JSON.stringify(updatedVoteInfo));
+      // Save the updated voteFilter to localStorage
+      setVoteFilterLocalStorage(updatedVoteFilter);
 
       // Save the updated blogFilter to localStorage
-      localStorage.setItem("blogFilter", JSON.stringify(updatedBlogInfo));
+      setBlogFilterLocalStorage(updatedBlogFilter);
     } catch (error) {
       errorHandler(error, dispatch, DELETE_BLOG_VOTE_COUNT_ERROR);
     }
@@ -262,29 +257,29 @@ const VoteProvider = ({ children }) => {
       const { vote, totalVotes } = data;
 
       // Update the totalVotes property of the commentFilter object
-      const updatedCommentInfo = state.commentFilter.map(comment => {
+      const updatedCommentFilter = commentFilterLocalStorage.map(comment => {
         if (comment._id === commentId) {
           return { ...comment, totalVotes };
         }
         return comment;
       });
 
-      // Remove the deleted vote from the voteInfo array
-      const updatedVoteInfo = state.voteInfo.filter(
+      // Remove the deleted vote from the voteFilter array
+      const updatedVoteFilter = voteFilterLocalStorage.filter(
         v => !(v.post === vote.post && v.user === vote.user)
       );
 
-      // Add updated commentFilter and voteInfo objects to state
+      // Add updated commentFilter and voteFilter objects to state
       dispatch({
         type: DELETE_COMMENT_VOTE_COUNT_SUCCESS,
-        payload: { updatedCommentInfo, updatedVoteInfo },
+        payload: { updatedCommentFilter, updatedVoteFilter },
       });
 
-      // Save the updated voteInfo to localStorage
-      localStorage.setItem("voteInfo", JSON.stringify(updatedVoteInfo));
+      // Save the updated voteFilter to localStorage
+      setVoteFilterLocalStorage(updatedVoteFilter);
 
       // Save the updated commentFilter to localStorage
-      localStorage.setItem("commentFilter", JSON.stringify(updatedCommentInfo));
+      setCommentFilterLocalStorage(updatedCommentFilter);
     } catch (error) {
       errorHandler(error, dispatch, DELETE_COMMENT_VOTE_COUNT_ERROR);
     }
@@ -296,22 +291,22 @@ const VoteProvider = ({ children }) => {
     try {
       await authFetch.delete(`/vote/blogId/${blogId}/comments`);
 
-      // Remove the deleted votes from the voteInfo array
-      const updatedVoteInfo = state.voteInfo.filter(vote => {
+      // Remove the deleted votes from the voteFilter array
+      const updatedVoteFilter = voteFilterLocalStorage.filter(vote => {
         // Only keep the votes that are not related to the deleted blog
-        return !state.commentFilter.some(
+        return !commentFilterLocalStorage.some(
           comment => comment.blog === blogId && comment._id === vote.post
         );
       });
 
-      // Add updated voteInfo object to state
+      // Add updated voteFilter object to state
       dispatch({
         type: DELETE_ALL_COMMENT_VOTES_FOR_BLOG_POST_SUCCESS,
-        payload: { updatedVoteInfo },
+        payload: { updatedVoteFilter },
       });
 
-      // Save the updated voteInfo to localStorage
-      localStorage.setItem("voteInfo", JSON.stringify(updatedVoteInfo));
+      // Save the updated voteFilter to localStorage
+      setVoteFilterLocalStorage(updatedVoteFilter);
     } catch (error) {
       errorHandler(
         error,

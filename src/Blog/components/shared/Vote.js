@@ -5,11 +5,11 @@ import {
   faArrowDown,
   faExclamationCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import { Spinner } from "react-bootstrap";
 import useVoteData from "./useVoteData";
 import useVoteActions from "./useVoteActions";
 import { VoteButton, VoteCount } from "./VoteComponents";
 
+// Vote component
 const Vote = ({ type, itemId, userInfo }) => {
   const { currVote, totalVotes } = useVoteData(type, itemId, userInfo);
   const {
@@ -21,30 +21,31 @@ const Vote = ({ type, itemId, userInfo }) => {
     error,
   } = useVoteActions(type, itemId, currVote);
 
-  return isLoading ? (
-    <Spinner />
-  ) : error ? (
-    <FontAwesomeIcon
-      icon={faExclamationCircle}
-      className="text-danger"
-      size="2x"
-      onClick={handleDismissError}
-      cursor="pointer"
-      title={error}
-    />
-  ) : (
+  return (
     <div className="d-flex align-items-center">
       <VoteButton
         icon={faArrowUp}
         className={`me-2 ${currentVote === 1 ? "text-primary" : ""}`}
-        onClick={handleUpVoteClick}
+        onClick={isLoading ? null : handleUpVoteClick}
+        disabled={isLoading}
       />
       <VoteCount totalVotes={totalVotes || 0} />
       <VoteButton
         icon={faArrowDown}
         className={`ms-2 ${currentVote === -1 ? "text-danger" : ""}`}
-        onClick={handleDownVoteClick}
+        onClick={isLoading ? null : handleDownVoteClick}
+        disabled={isLoading}
       />
+      {error && (
+        <FontAwesomeIcon
+          icon={faExclamationCircle}
+          className="text-danger"
+          size="2x"
+          onClick={handleDismissError}
+          cursor="pointer"
+          title={error}
+        />
+      )}
     </div>
   );
 };

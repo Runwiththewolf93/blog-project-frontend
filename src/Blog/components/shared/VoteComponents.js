@@ -1,12 +1,14 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const VoteButton = ({ icon, className, onClick }) => (
+// Vote components
+const VoteButton = ({ icon, className, onClick, disabled }) => (
   <FontAwesomeIcon
     icon={icon}
-    className={className}
+    className={`${className} ${disabled ? "text-muted" : ""}`}
     size="2x"
     onClick={onClick}
     cursor="pointer"
+    style={disabled ? { cursor: "not-allowed" } : {}}
   />
 );
 

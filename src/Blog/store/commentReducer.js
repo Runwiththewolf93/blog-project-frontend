@@ -119,7 +119,7 @@ const commentReducer = (state, action) => {
     return {
       ...state,
       isLoadingComment: false,
-      commentInfo: action.payload,
+      commentFilter: action.payload,
       errorComment: null,
     };
   }
@@ -135,7 +135,7 @@ const commentReducer = (state, action) => {
     return {
       ...state,
       isLoadingComment: false,
-      commentInfo: action.payload,
+      commentFilter: action.payload,
       errorComment: null,
     };
   }

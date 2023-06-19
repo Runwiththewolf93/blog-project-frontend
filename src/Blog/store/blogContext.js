@@ -97,8 +97,23 @@ const BlogProvider = ({ children }) => {
     dispatch({ type: RESET_BLOG_ERROR });
   };
 
+  // resetFilteredBlogPosts dispatch function
   const resetFilteredBlogPosts = callback => {
+    console.log("Resetting filters...");
     dispatch({ type: RESET_FILTERED_BLOG_POSTS });
+
+    // remove filters from local storage
+    localStorage.removeItem("blogFilter");
+    localStorage.removeItem("commentFilter");
+    localStorage.removeItem("voteFilter");
+
+    console.log("state after reset", state);
+    console.log(
+      "local storage after reset",
+      localStorage.getItem("blogFilter"),
+      localStorage.getItem("commentFilter"),
+      localStorage.getItem("voteFilter")
+    );
     if (callback) {
       callback();
     }
@@ -136,6 +151,7 @@ const BlogProvider = ({ children }) => {
     dispatch({ type: GET_FILTERED_BLOG_POSTS_BEGIN });
 
     try {
+      console.log("blogFilter", state.blogFilter);
       const { data: blogsData } = await authFetch.get(
         `/blog/filtered/?page=${page}&sort=${sort}&limit=${limit}&order=${order}`
       );
@@ -160,16 +176,16 @@ const BlogProvider = ({ children }) => {
 
       // Set hasMore before filtering the posts and dispatching actions
       setHasMore(blogsData.hasMore);
-      // console.log("blogsData", blogsData);
+      console.log("blogsData", blogsData);
       console.log("commentsData", commentsData);
       console.log("votesData", votesData);
-      // console.log("blogFilter", state.blogFilter);
+
       // Filter out any posts that are already in the blogFilter, commentFilter or voteFilter state
       const newPosts = filterNewItems(blogsData.posts, state.blogFilter);
       const newComments = filterNewItems(commentsData, state.commentFilter);
       const newVotes = filterNewItems(votesData, state.voteFilter);
-      // console.log('newPosts', newPosts);
-      // console.log('newComments', newComments);
+      console.log("newPosts", newPosts);
+      console.log("newComments", newComments);
       console.log("newVotes", newVotes);
 
       // Construct payload

@@ -2,25 +2,28 @@ import { useBlogContextState } from "../../store/blogContext";
 import { useCommentContextState } from "../../store/commentContext";
 import { useVoteContextState } from "../../store/voteContext";
 
+// useVoteData hook
 const useVoteData = (type, itemId, userInfo) => {
-  const { blogInfo } = useBlogContextState();
-  const { commentInfo } = useCommentContextState();
-  const { voteInfo } = useVoteContextState();
+  const { blogFilterLocalStorage } = useBlogContextState();
+  const { commentFilterLocalStorage } = useCommentContextState();
+  const { voteFilterLocalStorage } = useVoteContextState();
 
-  const info = type === "blog" ? blogInfo : commentInfo;
+  const info =
+    type === "blog" ? blogFilterLocalStorage : commentFilterLocalStorage;
 
   const item = info?.find(post => post._id === itemId);
 
   // Find the Vote object for the logged-in user
   const currentUserVote =
     item &&
-    voteInfo?.filter(
-      vote => vote.post === item._id && vote.user === userInfo._id
-    );
+    voteFilterLocalStorage?.filter(vote => {
+      return vote.post === item._id && vote.user === userInfo._id;
+    });
   const currVote = currentUserVote?.reduce((acc, curr) => acc + curr.vote, 0);
 
   // Calculate the totalVotes per blog / comment
-  const itemVotes = item && voteInfo?.filter(vote => vote.post === item._id);
+  const itemVotes =
+    item && voteFilterLocalStorage?.filter(vote => vote.post === item._id);
   const totalVotes = itemVotes?.reduce((acc, curr) => acc + curr.vote, 0);
 
   return { currVote, totalVotes };

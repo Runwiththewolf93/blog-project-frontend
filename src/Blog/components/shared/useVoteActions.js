@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useVoteContextDispatch } from "../../store/voteContext";
 
+// useVoteActions hook
 const useVoteActions = (type, itemId, currVote) => {
   const { updateBlogVoteCount, updateCommentVoteCount } =
     useVoteContextDispatch();
