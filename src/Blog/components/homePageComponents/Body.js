@@ -18,7 +18,7 @@ import { LoadingComponent, ErrorComponent, NoPosts } from "./BodyComponents";
 // Body component
 const Body = ({ userInfo, blogDataToShow, isFiltering }) => {
   const { wasLoggedOut } = useAppContextState();
-  const { isLoadingFilter, errorFilter, hasMore } = useBlogContextState();
+  const { isLoadingFilter, errorFilter, hasMore, page } = useBlogContextState();
   const { commentFilterLocalStorage } = useCommentContextState();
   const { getAllComments } = useCommentContextDispatch();
   const { voteFilterLocalStorage } = useVoteContextState();
@@ -48,13 +48,13 @@ const Body = ({ userInfo, blogDataToShow, isFiltering }) => {
     return <ErrorComponent message={errorFilter} />;
   }
 
-  console.log(isLoadingFilter);
+  console.log("isLoadingFilter", isLoadingFilter);
   console.log("blogFilterLocalStorage", blogDataToShow);
   console.log("commentFilterLocalStorage", commentFilterLocalStorage);
   console.log("voteFilterLocalStorage", voteFilterLocalStorage);
   // loading state resolves quickly on local machine, can't see comp.
   if (
-    isLoadingFilter ||
+    (isLoadingFilter && page === 1) ||
     !blogDataToShow ||
     !commentFilterLocalStorage ||
     !voteFilterLocalStorage

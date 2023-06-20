@@ -72,6 +72,8 @@ const BlogProvider = ({ children }) => {
   const [state, dispatch] = useReducer(blogReducer, initialState);
   const [postUpdated, setPostUpdated] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
+
   const {
     blogFilterLocalStorage,
     setBlogFilterLocalStorage,
@@ -156,7 +158,7 @@ const BlogProvider = ({ children }) => {
         `/blog/filtered/?page=${page}&sort=${sort}&limit=${limit}&order=${order}`
       );
 
-      // Extract ids and fetch data
+      // Extract ids and fetch data blogs
       const blogIds = blogsData.posts.map(post => post._id);
 
       console.log("commentFilter", state.commentFilter);
@@ -164,6 +166,7 @@ const BlogProvider = ({ children }) => {
         blogIds,
       });
 
+      // Extract ids and fetch data comments
       const commentIds = commentsData.map(comment => comment._id);
 
       // Combine blogIds and commentIds into a single array
@@ -193,7 +196,6 @@ const BlogProvider = ({ children }) => {
         newPosts,
         newComments,
         newVotes,
-        dataLoaded: true,
       };
 
       console.log(payload);
@@ -223,12 +225,8 @@ const BlogProvider = ({ children }) => {
           });
         }
       }
-
-      // Check if all data fetched successfully
-      if (state.dataLoaded) {
-        dispatch({ type: SET_DATA_LOADED });
-      }
     } catch (error) {
+      console.log("getFilteredBlogPosts error", error);
       if (error.request?.url?.includes("/comment/filter")) {
         errorHandler(error, dispatch, GET_FILTERED_COMMENTS_ERROR);
       } else if (error.request?.url?.includes("/vote/filter")) {
@@ -236,6 +234,8 @@ const BlogProvider = ({ children }) => {
       } else {
         errorHandler(error, dispatch, GET_FILTERED_BLOG_POSTS_ERROR);
       }
+    } finally {
+      dispatch({ type: SET_DATA_LOADED });
     }
   };
 
@@ -350,6 +350,7 @@ const BlogProvider = ({ children }) => {
         postUpdated,
         hasMore,
         blogFilterLocalStorage,
+        page,
       }}
     >
       <BlogContextDispatch.Provider
@@ -370,6 +371,7 @@ const BlogProvider = ({ children }) => {
           // state functions
           setPostUpdated,
           scrollToBlogPost,
+          setPage,
         }}
       >
         {children}
