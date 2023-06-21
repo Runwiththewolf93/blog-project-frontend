@@ -73,6 +73,7 @@ const BlogProvider = ({ children }) => {
   const [postUpdated, setPostUpdated] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
+  const [order, setOrder] = useState("asc");
 
   const {
     blogFilterLocalStorage,
@@ -100,7 +101,7 @@ const BlogProvider = ({ children }) => {
   };
 
   // resetFilteredBlogPosts dispatch function
-  const resetFilteredBlogPosts = callback => {
+  const resetFilteredBlogPosts = async callback => {
     console.log("Resetting filters...");
     dispatch({ type: RESET_FILTERED_BLOG_POSTS });
 
@@ -117,7 +118,7 @@ const BlogProvider = ({ children }) => {
       localStorage.getItem("voteFilter")
     );
     if (callback) {
-      callback();
+      await callback();
     }
   };
 
@@ -260,7 +261,12 @@ const BlogProvider = ({ children }) => {
       const { data } = await authFetch.post("/blog", newPostData);
 
       // Update the blogFilterLocalStorage with the new post
-      const updatedBlogFilter = [...blogFilterLocalStorage, data];
+      let updatedBlogFilter;
+      if (order === "asc") {
+        updatedBlogFilter = [...blogFilterLocalStorage, data];
+      } else {
+        updatedBlogFilter = [data, ...blogFilterLocalStorage];
+      }
 
       // Dispatch the updated blogFilter
       dispatch({ type: ADD_BLOG_POST_SUCCESS, payload: updatedBlogFilter });
@@ -351,6 +357,7 @@ const BlogProvider = ({ children }) => {
         hasMore,
         blogFilterLocalStorage,
         page,
+        order,
       }}
     >
       <BlogContextDispatch.Provider
@@ -372,6 +379,7 @@ const BlogProvider = ({ children }) => {
           setPostUpdated,
           scrollToBlogPost,
           setPage,
+          setOrder,
         }}
       >
         {children}

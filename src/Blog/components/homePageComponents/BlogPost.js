@@ -7,22 +7,37 @@ import PostButton from "../shared/PostButton";
 import UserActions from "./UserActions";
 import PostImages from "../shared/PostImages";
 import BlogPostWrapper from "../shared/BlogPostWrapper";
+import { useMediaQuery } from "react-responsive";
 
 const BlogPost = ({ post, userInfo }) => {
+  const isDesktopOrLaptop = useMediaQuery({
+    query: "(min-width: 1280px)",
+  });
+
+  const isTabletOrMobileDevice = useMediaQuery({ query: "(max-width: 768px)" });
+
   return (
     <BlogPostWrapper>
       <Row>
         <Col
-          xs={1}
+          xs={isDesktopOrLaptop ? 1 : 2}
           className="d-flex justify-content-center align-items-center"
         >
           <Vote type="blog" itemId={post._id} userInfo={userInfo} />
         </Col>
-        <Col xs={1} className="text-end">
-          <Avatar src={post.avatar} alt={`${post.title} Image 1`} />
-        </Col>
+        {isDesktopOrLaptop && (
+          <Col xs={1} className="text-end">
+            <Avatar src={post.avatar} alt={`${post.title} Image 1`} />
+          </Col>
+        )}
         <Col xs={10} className="d-flex justify-content-between">
-          <div className="d-flex align-items-center">
+          <div
+            className={
+              isTabletOrMobileDevice
+                ? "d-flex align-items-center me-3"
+                : "d-flex align-items-center"
+            }
+          >
             <UserInfo
               title={post.title}
               date={post.createdAt}

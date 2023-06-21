@@ -59,6 +59,8 @@ const ModalAdd = () => {
     }
   }, [postUpdated]);
 
+  console.log(values);
+
   const handleSubmit = async e => {
     e.preventDefault();
 

@@ -18,15 +18,17 @@ function Message({
   const mounted = useRef(false);
   const [showCard, setShowCard] = useState(false);
   const [sort, setSort] = useState("createdAt");
-  const [order, setOrder] = useState("asc");
+  // const [order, setOrder] = useState("asc");
   const [reset, setReset] = useState(false);
   const [show, setShow] = useState(true);
-  const { hasMore, isLoadingFilter, errorFilter, page } = useBlogContextState();
+  const { hasMore, isLoadingFilter, errorFilter, page, order } =
+    useBlogContextState();
   const {
     getFilteredBlogPosts,
     resetFilteredBlogPosts,
     resetErrorFilter,
     setPage,
+    setOrder,
   } = useBlogContextDispatch();
 
   const handleSortChange = newSort => {
@@ -94,16 +96,13 @@ function Message({
   return (
     <Container className="my-3">
       <Row>
-        <Col
-          md={2}
-          className="d-flex justify-content-center align-items-center"
-        >
+        <Col xs={2} className="d-flex justify-content-center">
           <Dropdowns
             onSortChange={handleSortChange}
             onOrderChange={handleOrderChange}
           />
         </Col>
-        <Col md={10}>
+        <Col xs={10}>
           <Card.Header className="h1 mb-3">Welcome to my Blog</Card.Header>
           <WelcomeCard
             {...{

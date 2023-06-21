@@ -13,11 +13,14 @@ import {
   useAppContextState,
   useAppContextDispatch,
 } from "../../store/appContext";
+import { useMediaQuery } from "react-responsive";
 
 function Navigation({ handleSearch }) {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const { userInfo } = useAppContextState();
   const { logoutUser } = useAppContextDispatch();
+
+  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 992px" });
 
   const handleLoginClick = () => {
     setShowLoginModal(true);
@@ -38,11 +41,13 @@ function Navigation({ handleSearch }) {
                   <FormControl
                     type="search"
                     placeholder="Search"
-                    className="me-2"
+                    className={`me-2 ${isTabletOrMobile ? "my-3" : ""}`}
                     aria-label="Search"
                     onChange={handleSearch}
                   />
-                  <Button variant="outline-dark">Search</Button>
+                  {!isTabletOrMobile && (
+                    <Button variant="outline-dark">Search</Button>
+                  )}
                 </Form>
               )}
               <Link to="/profile-page" className="nav-link">

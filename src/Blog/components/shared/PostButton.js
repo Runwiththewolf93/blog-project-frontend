@@ -6,11 +6,7 @@ const PostButton = ({ showPostOverlay, postId, resetBlogPost }) => {
     return <PostOverlay postId={postId} />;
   } else {
     return (
-      <Button
-        className="ms-3"
-        variant="light"
-        onClick={() => resetBlogPost && resetBlogPost()}
-      >
+      <Button variant="light" onClick={() => resetBlogPost && resetBlogPost()}>
         Unpin Post
       </Button>
     );

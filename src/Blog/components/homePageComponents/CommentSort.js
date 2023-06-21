@@ -1,5 +1,6 @@
 import { ListGroup, Button } from "react-bootstrap";
 import useCommentSort from "./useCommentSort";
+import { useMediaQuery } from "react-responsive";
 
 // CommentSort component
 const CommentSort = ({ state, dispatch }) => {
@@ -14,9 +15,13 @@ const CommentSort = ({ state, dispatch }) => {
     return sortState.field === field ? sortState.order : null;
   };
 
+  const isTabletOrMobileDevice = useMediaQuery({ query: "(max-width: 768px)" });
+
   return (
     <ListGroup className="mb-2">
-      <ListGroup.Item>
+      <ListGroup.Item
+        className={isTabletOrMobileDevice && "d-flex justify-content-around"}
+      >
         <Button
           variant="secondary"
           onClick={handleSortByCreatedAt}
