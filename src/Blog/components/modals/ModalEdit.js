@@ -20,7 +20,6 @@ const ModalEdit = ({ post }) => {
     isLoadingBlog,
     errorBlog,
     postUpdated,
-    setPostUpdated,
     uploadBlogImages,
     handleClose,
     handleShow,
@@ -31,7 +30,8 @@ const ModalEdit = ({ post }) => {
     setAvatarField,
   } = useModal(post);
 
-  const { editBlogPost, scrollToBlogPost } = useBlogContextDispatch();
+  const { editBlogPost, scrollToBlogPost, setPostUpdated } =
+    useBlogContextDispatch();
 
   useEffect(() => {
     setValues(post);
@@ -43,6 +43,8 @@ const ModalEdit = ({ post }) => {
     if (postUpdated) {
       scrollToBlogPost(values._id);
     }
+    setPostUpdated(false);
+    // eslint-disable-next-line
   }, [postUpdated, scrollToBlogPost, values._id]);
 
   const handleSubmit = async e => {

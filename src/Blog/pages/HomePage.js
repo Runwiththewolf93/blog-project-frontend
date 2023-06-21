@@ -1,4 +1,4 @@
-import { useRef, useCallback, useState, useEffect } from "react";
+import { useRef, useCallback, useState } from "react";
 import Message from "../components/homePageComponents/Message";
 import Body from "../components/homePageComponents/Body";
 import Layout from "../components/shared/Layout";
@@ -15,14 +15,8 @@ const HomePage = () => {
   const [showMyPosts, setShowMyPosts] = useState(false);
   const [isFiltering, setIsFiltering] = useState(true);
   const { userInfo } = useAppContextState();
-  const { postUpdated, blogFilterLocalStorage } = useBlogContextState();
-  const { getAllBlogPosts, setPostUpdated } = useBlogContextDispatch();
-
-  useEffect(() => {
-    getAllBlogPosts();
-    setPostUpdated(false);
-    // eslint-disable-next-line
-  }, [postUpdated]);
+  const { blogFilterLocalStorage } = useBlogContextState();
+  const { getAllBlogPosts } = useBlogContextDispatch();
 
   const debouncedHandleSearch = useCallback(
     event => {
@@ -53,10 +47,6 @@ const HomePage = () => {
       post.title?.toLowerCase().includes(searchQuery)
     );
   }
-
-  // useEffect(() => {
-  //   console.log(blogDataToShow);
-  // }, [blogFilter]);
 
   return (
     <Layout handleSearch={debouncedHandleSearch}>

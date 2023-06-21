@@ -19,7 +19,7 @@ const useModal = initialState => {
   const [avatarField, setAvatarField] = useState("");
 
   const { isLoadingBlog, errorBlog, postUpdated } = useBlogContextState();
-  const { setPostUpdated, uploadBlogImages } = useBlogContextDispatch();
+  const { uploadBlogImages } = useBlogContextDispatch();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -99,7 +99,6 @@ const useModal = initialState => {
     isLoadingBlog,
     errorBlog,
     postUpdated,
-    setPostUpdated,
     uploadBlogImages,
     handleClose,
     handleShow,

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./Blog/pages/HomePage";
 import ProfilePage from "./Blog/pages/ProfilePage";
@@ -7,8 +8,23 @@ import ResetPasswordPage from "./Blog/pages/ResetPasswordPage";
 import ConfirmationPage from "./Blog/components/resetPageComponents/ConfirmationPage";
 import ProtectedRoute from "./Blog/pages/ProtectedRoute";
 import "./App.css";
+import { useBlogContextDispatch } from "./Blog/store/blogContext";
+import { useCommentContextDispatch } from "./Blog/store/commentContext";
+import { useVoteContextDispatch } from "./Blog/store/voteContext";
 
 function App() {
+  const { getAllBlogPosts } = useBlogContextDispatch();
+  const { getAllComments } = useCommentContextDispatch();
+  const { getAllVotes } = useVoteContextDispatch();
+
+  useEffect(() => {
+    const fetchAllData = async () => {
+      await Promise.all([getAllBlogPosts(), getAllComments(), getAllVotes()]);
+    };
+    fetchAllData();
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>

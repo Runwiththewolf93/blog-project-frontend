@@ -1,15 +1,8 @@
-import React, { useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { useAppContextState } from "../../store/appContext";
 import { useBlogContextState } from "../../store/blogContext";
-import {
-  useCommentContextState,
-  useCommentContextDispatch,
-} from "../../store/commentContext";
-import {
-  useVoteContextState,
-  useVoteContextDispatch,
-} from "../../store/voteContext";
+import { useCommentContextState } from "../../store/commentContext";
+import { useVoteContextState } from "../../store/voteContext";
 import BlogSections from "./BlogSections";
 import BlogPosts from "./BlogPosts";
 import ScrollToTopPopup from "./ButtonOverlay";
@@ -20,17 +13,7 @@ const Body = ({ userInfo, blogDataToShow, isFiltering }) => {
   const { wasLoggedOut } = useAppContextState();
   const { isLoadingFilter, errorFilter, hasMore, page } = useBlogContextState();
   const { commentFilterLocalStorage } = useCommentContextState();
-  const { getAllComments } = useCommentContextDispatch();
   const { voteFilterLocalStorage } = useVoteContextState();
-  const { getAllVotes } = useVoteContextDispatch();
-
-  useEffect(() => {
-    const fetchAllData = async () => {
-      await Promise.all([getAllComments(), getAllVotes()]);
-    };
-    fetchAllData();
-    // eslint-disable-next-line
-  }, [userInfo]);
 
   if (!userInfo) {
     return (

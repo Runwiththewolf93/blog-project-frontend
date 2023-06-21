@@ -2,7 +2,9 @@ import { CardGroup, Card, Image, Spinner, Alert } from "react-bootstrap";
 import useRandomUsers from "../../hooks/useRandomUsers";
 import { processUsers, concatAndSliceData } from "../../utils/helper";
 import { useAppContextState } from "../../store/appContext";
+import { useMediaQuery } from "react-responsive";
 
+// Relationships component
 const Relationships = ({ userProfile, userInfo, blogInfo }) => {
   const { isLoading, users: allUsers, error } = useAppContextState();
 
@@ -15,6 +17,24 @@ const Relationships = ({ userProfile, userInfo, blogInfo }) => {
   const numAdditionalUsers = Math.max(0, 7 - filteredUsers?.length);
   const additionalUsers = useRandomUsers("female", numAdditionalUsers);
   const users = concatAndSliceData(filteredUsers, additionalUsers?.users, 7);
+
+  const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 1280px)" });
+
+  const imgStyle = isDesktopOrLaptop
+    ? { objectFit: "cover", width: "70px", height: "70px" }
+    : {
+        objectFit: "cover",
+        objectPosition: "center",
+        width: "100%",
+        height: "100%",
+        position: "absolute",
+        left: 0,
+        top: 0,
+      };
+
+  const imgContainerStyle = isDesktopOrLaptop
+    ? { width: "50px", height: "50px" }
+    : { width: "100%", aspectRatio: "1 / 1", position: "relative" };
 
   if (isLoading) {
     return <Spinner />;
@@ -33,13 +53,15 @@ const Relationships = ({ userProfile, userInfo, blogInfo }) => {
       <CardGroup>
         {users.map(user => (
           <Card key={user._id || user.login?.uuid} className="text-center">
-            <Image
-              variant="top"
-              src={userAvatars?.[user._id] || user.picture?.thumbnail}
-              roundedCircle
-              className="ms-2 me-2"
-              style={{ objectFit: "cover", height: "70px", width: "70px" }}
-            />
+            <div style={imgContainerStyle}>
+              <Image
+                variant="top"
+                src={userAvatars?.[user._id] || user.picture?.thumbnail}
+                roundedCircle
+                className="ms-2 me-2"
+                style={imgStyle}
+              />
+            </div>
             <Card.Text>
               {typeof user.name === "string"
                 ? `${user.name?.split(" ")[0]} ${user.name?.split(" ")[1][0]}.`

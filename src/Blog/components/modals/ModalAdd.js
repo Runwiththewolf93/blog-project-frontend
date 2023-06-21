@@ -31,7 +31,6 @@ const ModalAdd = () => {
     isLoadingBlog,
     errorBlog,
     postUpdated,
-    setPostUpdated,
     uploadBlogImages,
     handleClose,
     handleShow,
@@ -44,8 +43,7 @@ const ModalAdd = () => {
 
   const { userInfo } = useAppContextState();
   const { blogInfo } = useBlogContextState();
-  const { addBlogPost } = useBlogContextDispatch();
-
+  const { addBlogPost, setPostUpdated } = useBlogContextDispatch();
   const avatar = getLatestAvatar(blogInfo, userInfo) || "";
 
   useEffect(() => {
@@ -57,6 +55,8 @@ const ModalAdd = () => {
     if (postUpdated) {
       window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
     }
+    setPostUpdated(false);
+    // eslint-disable-next-line
   }, [postUpdated]);
 
   console.log(values);

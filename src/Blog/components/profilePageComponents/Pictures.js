@@ -1,6 +1,7 @@
 import { Row, Col, Card, Image } from "react-bootstrap";
 import useUnsplashImages from "../../hooks/useUnsplash";
 import { capitalizeFirstLetter, concatAndSliceData } from "../../utils/helper";
+import { useMediaQuery } from "react-responsive";
 
 function Pictures({ userProfile, userInfo, blogInfo }) {
   // filter blogInfo to only include objects that belong to logged in user
@@ -15,29 +16,36 @@ function Pictures({ userProfile, userInfo, blogInfo }) {
   const additionalImages = useUnsplashImages("nature", numAdditionalImages);
   const images = concatAndSliceData(userImages, additionalImages, 9);
 
+  // Detect screen size
+  const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 1280px)" });
+
+  const imgStyle = isDesktopOrLaptop
+    ? { objectFit: "cover", width: "200px", height: "100px" }
+    : { objectFit: "cover", maxWidth: "100%", height: "auto" };
+
   return (
     <Card className="mt-4">
       <Card.Title className="mt-1 ms-2">
         Some of {userProfile.gender === "male" ? "his" : "her"} interests
         include:
       </Card.Title>
-      <Row md={3} className="g-3 mb-3 mx-1 me-3">
+      <Row md={3} className="g-3 mx-1 mb-3">
         {images.map(image => (
           <Col key={image.image || image.blur_hash}>
-            <Card>
+            <div>
               <Image
                 src={image.image || image.urls.small}
                 rounded
-                style={{ objectFit: "cover", width: "200px", height: "100px" }}
+                style={imgStyle}
               />
               {image.content ? (
-                <Card.Text>{`${image.content.slice(0, 22)}...`}</Card.Text>
+                <Card.Text>{`${image.content.slice(0, 20)}...`}</Card.Text>
               ) : (
                 <Card.Text>{`${capitalizeFirstLetter(
                   image.alt_description.slice(0, 22)
                 )}...`}</Card.Text>
               )}
-            </Card>
+            </div>
           </Col>
         ))}
       </Row>
