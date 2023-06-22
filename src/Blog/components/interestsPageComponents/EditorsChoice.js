@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
-import { Card, CardGroup } from "react-bootstrap";
+import { Row, Col, CardGroup } from "react-bootstrap";
 import { sortData } from "../../utils/helper";
 import PostTypeSelector from "./PostTypeSelector";
+import { useMediaQuery } from "react-responsive";
+import CardComponent from "./CardComponent";
 
 const EditorsChoice = ({ blogInfo, commentInfo }) => {
   const [sortedComments, setSortedComments] = useState([]);
@@ -24,8 +26,16 @@ const EditorsChoice = ({ blogInfo, commentInfo }) => {
       comment.blogPostImage = blogPost.images[randomImageIndex];
     });
 
-    setSortedComments(sortedComments.slice(0, 5));
+    setSortedComments(sortedComments.slice(0, 6));
   }, [blogInfo, commentInfo, postType]);
+
+  // Use the useMediaQuery hook to check if the screen width is less than or equal to 768px
+  const isMediumScreenAndSmaller = useMediaQuery({
+    query: "(max-width: 768px)",
+  });
+  const isSmallScreenAndSmaller = useMediaQuery({
+    query: "(max-width: 576px)",
+  });
 
   return (
     <div className="m-3">
@@ -33,30 +43,30 @@ const EditorsChoice = ({ blogInfo, commentInfo }) => {
         See some of our most{" "}
         <PostTypeSelector setPostType={setPostType} typeText="comments" />
       </h1>
-      <CardGroup>
-        {sortedComments.map(comment => (
-          <Card key={comment._id}>
-            <Card.Img
-              variant="top"
-              src={comment.blogPostImage}
-              style={{ objectFit: "cover", height: "200px" }}
-            />
-            <Card.Body>
-              <Card.Title>{comment.blogPostTitle}</Card.Title>
-              <Card.Text>{comment.comment}</Card.Text>
-            </Card.Body>
-            <Card.Footer className="py-0">
-              <small className="text-muted me-2">{comment.user.name}</small>
-              <small className="text-muted me-2">{comment.user.email}</small>
-              <div style={{ marginTop: "-6px" }}>
-                <small className="text-muted">
-                  Total votes: {comment.totalVotes}
-                </small>
-              </div>
-            </Card.Footer>
-          </Card>
-        ))}
-      </CardGroup>
+      {isMediumScreenAndSmaller ? (
+        <>
+          <Row className={!isSmallScreenAndSmaller && "my-4"}>
+            {sortedComments.slice(0, 3).map(comment => (
+              <Col sm={4} key={comment._id}>
+                <CardComponent comment={comment} />
+              </Col>
+            ))}
+          </Row>
+          <Row>
+            {sortedComments.slice(3, 6).map(comment => (
+              <Col sm={4} key={comment._id}>
+                <CardComponent comment={comment} />
+              </Col>
+            ))}
+          </Row>
+        </>
+      ) : (
+        <CardGroup>
+          {sortedComments.map(comment => (
+            <CardComponent key={comment._id} comment={comment} />
+          ))}
+        </CardGroup>
+      )}
     </div>
   );
 };

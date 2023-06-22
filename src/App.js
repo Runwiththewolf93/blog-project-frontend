@@ -63,7 +63,7 @@ function App() {
             don't see it, check your spam folder."
             />
           }
-        ></Route>
+        />
       </Routes>
     </BrowserRouter>
   );

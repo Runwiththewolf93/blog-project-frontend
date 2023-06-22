@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Row, Col, Carousel, ListGroup, Card } from "react-bootstrap";
 import { truncateContent, sortData } from "../../utils/helper";
 import PostTypeSelector from "./PostTypeSelector";
+import { useMediaQuery } from "react-responsive";
 
 const CarouselComponent = ({ blogInfo }) => {
   const [currentPostIndex, setCurrentPostIndex] = useState(0);
@@ -30,13 +31,15 @@ const CarouselComponent = ({ blogInfo }) => {
     }
   };
 
+  const isTabletOrSmaller = useMediaQuery({ query: "(max-width: 768px)" });
+
   return (
-    <Row className="m-3">
+    <Row className={`m-3 ${isTabletOrSmaller && "fs-5"}`}>
       <h1 className="mx-0 px-0 mb-3">
         See some of our most{" "}
         <PostTypeSelector setPostType={setPostType} typeText="posts" />
       </h1>
-      <Col md={8} style={{ margin: 0, padding: 0 }}>
+      <Col md={8} className="m-0 p-0">
         <Carousel fade activeIndex={currentPostIndex} onSelect={handleSelect}>
           {topPosts.map((post, postIndex) => (
             <Carousel.Item key={post._id}>
@@ -54,14 +57,14 @@ const CarouselComponent = ({ blogInfo }) => {
           ))}
         </Carousel>
       </Col>
-      <Col style={{ margin: 0, padding: 0 }}>
-        <Card>
+      <Col className="m-0 p-0">
+        <Card className={isTabletOrSmaller && "text-center"}>
           {topPosts[currentPostIndex] && (
             <>
               <Card.Header>
                 By {topPosts[currentPostIndex].user.name}
               </Card.Header>
-              <ListGroup>
+              <ListGroup className={isTabletOrSmaller && "fs-6"}>
                 <ListGroup.Item>
                   {topPosts[currentPostIndex].title}
                 </ListGroup.Item>

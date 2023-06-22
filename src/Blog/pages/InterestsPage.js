@@ -12,6 +12,10 @@ const InterestsPage = () => {
   const { commentInfo } = useCommentContextState();
   const { voteInfo } = useVoteContextState();
 
+  console.log("blogInfo", blogInfo);
+  console.log("commentInfo", commentInfo);
+  console.log("voteInfo", voteInfo);
+
   return (
     <Layout>
       <Row>
