@@ -5,9 +5,11 @@ import {
   Alert,
   OverlayTrigger,
   Tooltip,
+  Spinner,
 } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { useMediaQuery } from "react-responsive";
 
 // FormInput component
 const FormInput = ({ label, placeholder, type, value, onChange }) => (
@@ -46,60 +48,73 @@ const SwapButton = ({ onClick }) => (
   </Col>
 );
 
-// ConvertButton component
-const ConvertButton = ({ onClick }) => (
-  <Button
-    type="submit"
-    style={{ height: "40px", marginTop: "auto" }}
-    onClick={onClick}
-  >
-    Convert
-  </Button>
-);
+// ButtonGroup component
+const ButtonGroup = ({ onClear, onConvert }) => {
+  const isLaptopScreenOrSmaller = useMediaQuery({
+    query: "(max-width: 992px)",
+  });
 
-// ClearButton component
-const ClearButton = ({ onClick }) => (
-  <Button
-    type="button"
-    style={{ height: "40px", marginTop: "auto", marginRight: "1rem" }}
-    onClick={onClick}
-  >
-    Clear
-  </Button>
-);
+  const buttonStyle = isLaptopScreenOrSmaller
+    ? { height: "40px" }
+    : { height: "40px", marginTop: "auto" };
 
-// ErrorMessage component
-const ErrorMessage = ({ message, handleClose }) =>
-  message && (
-    <Alert dismissible variant="danger" onClose={handleClose} className="mb-0">
-      {message}
-    </Alert>
+  return (
+    <Col
+      className={`d-flex ${
+        isLaptopScreenOrSmaller
+          ? "justify-content-center align-items-center mt-3"
+          : "justify-content-end"
+      }`}
+      md={isLaptopScreenOrSmaller ? 3 : 2}
+    >
+      <Button
+        type="button"
+        style={buttonStyle}
+        onClick={onClear}
+        className="me-3"
+      >
+        Clear
+      </Button>
+      <Button type="submit" style={buttonStyle} onClick={onConvert}>
+        Convert
+      </Button>
+    </Col>
   );
+};
 
 // DateInput component
-const DateInput = ({ value, onChange }) => (
-  <Col md={2}>
-    <Form.Group>
-      <Form.Label>Date</Form.Label>
-      <OverlayTrigger
-        placement="right"
-        overlay={
-          <Tooltip id="date-tooltip">
-            Please select a date that is at least 48 hours ago. The API does not
-            support later dates.
-          </Tooltip>
-        }
-      >
-        <Form.Control
-          placeholder="$1.00"
-          type="date"
-          value={value}
-          onChange={onChange}
-        />
-      </OverlayTrigger>
-    </Form.Group>
-  </Col>
-);
+const DateInput = ({ value, onChange }) => {
+  const isLaptopScreenOrSmaller = useMediaQuery({
+    query: "(max-width: 992px)",
+  });
+
+  return (
+    <Col
+      md={isLaptopScreenOrSmaller ? 3 : 2}
+      className={isLaptopScreenOrSmaller && "d-flex align-items-center pb-3"}
+    >
+      <Form.Group>
+        <Form.Label>Date</Form.Label>
+        <OverlayTrigger
+          placement="right"
+          overlay={
+            <Tooltip id="date-tooltip">
+              Please select a date that is at least 48 hours ago. The API does
+              not support later dates.
+            </Tooltip>
+          }
+        >
+          <Form.Control
+            placeholder="$1.00"
+            type="date"
+            value={value}
+            onChange={onChange}
+          />
+        </OverlayTrigger>
+      </Form.Group>
+    </Col>
+  );
+};
 
 // ConversionResult component
 const ConversionResult = ({
@@ -109,21 +124,51 @@ const ConversionResult = ({
   targetCurrency,
   exchangeRate,
   showExchangeRate,
-}) => (
-  <Col md={9} className="d-flex justify-content-around align-items-center">
-    {exchangeRate && showExchangeRate && (
-      <>
-        <p className="mt-4 mb-0">
-          {baseAmount} {baseCurrency} =
-        </p>
-        <h3 className="mt-4 mb-0">
-          {convertedAmount.toFixed(2)} {targetCurrency}
-        </h3>
-        <p className="mt-4 mb-0">
-          1 {baseCurrency} = {exchangeRate.toFixed(2)} {targetCurrency}
-        </p>
-      </>
-    )}
+}) => {
+  const isLaptopScreenOrSmaller = useMediaQuery({
+    query: "(max-width: 992px)",
+  });
+
+  return (
+    <Col
+      md={isLaptopScreenOrSmaller ? 6 : 8}
+      className={`d-flex justify-content-around align-items-center ${
+        isLaptopScreenOrSmaller && "flex-column text-center"
+      }`}
+    >
+      {exchangeRate && showExchangeRate && (
+        <>
+          <p className="mt-4 mb-0">
+            {baseAmount} {baseCurrency} =
+          </p>
+          <h3 className="mt-4 mb-0">
+            {convertedAmount.toFixed(2)} {targetCurrency}
+          </h3>
+          <p className="mt-4 mb-0">
+            1 {baseCurrency} = {exchangeRate.toFixed(2)} {targetCurrency}
+          </p>
+        </>
+      )}
+    </Col>
+  );
+};
+
+// ErrorMessage component
+const ErrorMessage = ({ message, handleClose }) =>
+  message && (
+    <Alert dismissible variant="danger" onClose={handleClose} className="mb-0">
+      {message}
+    </Alert>
+  );
+
+// SpinnerExchange component
+const SpinnerExchange = () => (
+  <Col>
+    <div className="d-flex justify-content-center align-items-center mt-4 pt-3">
+      <Spinner animation="border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </Spinner>
+    </div>
   </Col>
 );
 
@@ -131,9 +176,9 @@ export {
   FormInput,
   FormSelect,
   SwapButton,
-  ConvertButton,
-  ClearButton,
-  ErrorMessage,
+  ButtonGroup,
   DateInput,
   ConversionResult,
+  ErrorMessage,
+  SpinnerExchange,
 };

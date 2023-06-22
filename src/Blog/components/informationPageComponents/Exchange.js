@@ -2,11 +2,11 @@ import {
   FormInput,
   FormSelect,
   SwapButton,
-  ConvertButton,
-  ClearButton,
-  ErrorMessage,
+  ButtonGroup,
   DateInput,
   ConversionResult,
+  ErrorMessage,
+  SpinnerExchange,
 } from "./exchangeComponents/ExchangeElements";
 import { useReducer } from "react";
 import {
@@ -23,7 +23,7 @@ import {
   SHOW_EXCHANGE_RATE,
   CLEAR_ERROR_MESSAGE,
 } from "./exchangeComponents/ExchangeReducer";
-import { Card, Form, Col, Row, Spinner } from "react-bootstrap";
+import { Card, Form, Row, Col } from "react-bootstrap";
 import useFetchExchangeRates from "./exchangeComponents/useFetchExchangeRates";
 import useHandleFormSubmit from "./exchangeComponents/useHandleFormSubmit";
 import useCurrencyOptions from "./exchangeComponents/useCurrencyOptions";
@@ -53,7 +53,7 @@ const Exchange = () => {
   };
 
   return (
-    <div className="vh-100 mt-5">
+    <Col className="vh-100 mt-5">
       <Card className="mb-3">
         <Form className="m-3" onSubmit={handleFormSubmit}>
           <Row>
@@ -91,17 +91,13 @@ const Exchange = () => {
               baseExchangeRate={state.baseExchangeRate}
             />
           </Row>
-          <div className="d-flex justify-content-between mt-3">
+          <Col className="d-flex justify-content-between mt-3">
             <DateInput
               value={state.date}
               onChange={e => dispatch(setDate(e.target.value))}
             />
             {state.isLoading && state.convertedAmount ? (
-              <div className="d-flex justify-content-center align-items-center">
-                <Spinner animation="border" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </Spinner>
-              </div>
+              <SpinnerExchange />
             ) : (
               <ConversionResult
                 baseAmount={state.baseAmount}
@@ -112,17 +108,15 @@ const Exchange = () => {
                 showExchangeRate={state.showExchangeRate}
               />
             )}
-            <Col className="d-flex justify-content-end" md={1}>
-              <ClearButton onClick={handleClear} />
-              <ConvertButton
-                onClick={() => dispatch({ type: SHOW_EXCHANGE_RATE })}
-              />
-            </Col>
-          </div>
+            <ButtonGroup
+              onClear={handleClear}
+              onConvert={() => dispatch({ type: SHOW_EXCHANGE_RATE })}
+            />
+          </Col>
         </Form>
         <ErrorMessage message={state.errorMessage} handleClose={handleClose} />
       </Card>
-    </div>
+    </Col>
   );
 };
 
