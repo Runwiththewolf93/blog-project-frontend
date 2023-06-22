@@ -14,7 +14,9 @@ import {
 } from "../../utils/helper";
 import { Link } from "react-router-dom";
 import useFetchHighestVotedBlogComments from "./useFetchHighestVotedBlogComments";
+import { useMediaQuery } from "react-responsive";
 
+// ProfileCard component
 const ProfileCard = ({
   userProfile,
   userInfo,
@@ -32,6 +34,8 @@ const ProfileCard = ({
 
   const avatar = getLatestAvatar(blogInfo, userInfo);
 
+  const isLessThan1200px = useMediaQuery({ query: "(max-width: 1200px)" });
+
   if (isLoadingUserComment || isLoadingComment) {
     return <Spinner />;
   } else if (errorUserComment || errorComment) {
@@ -39,7 +43,7 @@ const ProfileCard = ({
   }
 
   return (
-    <Card>
+    <Card className={isLessThan1200px && "mb-4"}>
       {userProfile ? (
         <>
           <Card.Img variant="top" src={avatar || userProfile.picture?.large} />

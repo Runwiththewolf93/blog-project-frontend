@@ -19,17 +19,32 @@ function Pictures({ userProfile, userInfo, blogInfo }) {
   // Detect screen size
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 1280px)" });
 
+  const isMobile = useMediaQuery({ query: "(max-width: 576px)" });
+
   const imgStyle = isDesktopOrLaptop
     ? { objectFit: "cover", width: "200px", height: "100px" }
-    : { objectFit: "cover", maxWidth: "100%", height: "auto" };
+    : {
+        objectFit: "cover",
+        maxWidth: "100%",
+        height: "auto",
+        aspectRatio: "16 / 9",
+      };
+
+  const cardTextStyle = {
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    height: "1.5em",
+    lineHeight: "1.5em",
+  };
 
   return (
-    <Card className="mt-4">
+    <Card className={`mt-4 ${isMobile && "my-4"}`}>
       <Card.Title className="mt-1 ms-2">
         Some of {userProfile.gender === "male" ? "his" : "her"} interests
         include:
       </Card.Title>
-      <Row md={3} className="g-3 mx-1 mb-3">
+      <Row xs={3} className="g-3 mx-1 mb-3">
         {images.map(image => (
           <Col key={image.image || image.blur_hash}>
             <div>
@@ -39,9 +54,12 @@ function Pictures({ userProfile, userInfo, blogInfo }) {
                 style={imgStyle}
               />
               {image.content ? (
-                <Card.Text>{`${image.content.slice(0, 20)}...`}</Card.Text>
+                <Card.Text style={cardTextStyle}>{`${image.content.slice(
+                  0,
+                  20
+                )}...`}</Card.Text>
               ) : (
-                <Card.Text>{`${capitalizeFirstLetter(
+                <Card.Text style={cardTextStyle}>{`${capitalizeFirstLetter(
                   image.alt_description.slice(0, 22)
                 )}...`}</Card.Text>
               )}

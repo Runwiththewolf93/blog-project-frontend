@@ -18,7 +18,6 @@ function Message({
   const mounted = useRef(false);
   const [showCard, setShowCard] = useState(false);
   const [sort, setSort] = useState("createdAt");
-  // const [order, setOrder] = useState("asc");
   const [reset, setReset] = useState(false);
   const [show, setShow] = useState(true);
   const { hasMore, isLoadingFilter, errorFilter, page, order } =

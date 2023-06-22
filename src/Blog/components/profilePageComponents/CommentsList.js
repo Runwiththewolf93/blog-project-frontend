@@ -16,7 +16,7 @@ const CommentsList = ({
   );
 
   return (
-    <>
+    <div className="mb-5">
       {sortedComments.length > 0 ? (
         sortedComments.map(comment => (
           <UserComment key={comment._id} comment={comment} />
@@ -27,7 +27,7 @@ const CommentsList = ({
           text="No comments yet? Go to the home page and create one"
         />
       )}
-    </>
+    </div>
   );
 };
 

@@ -3,8 +3,9 @@ import { ProgressBar, Card } from "react-bootstrap";
 import { capitalizeName } from "../../utils/helper";
 import { shuffle } from "lodash";
 
+// Progress component
 const Progress = React.memo(({ userProfile, userInfo }) => {
-  const getRandomNumber = () => Math.floor(Math.random() * 81) + 20;
+  const getRandomNumber = () => Math.floor(Math.random() * 71) + 30;
 
   const labels = [
     "Security Audit",
@@ -27,7 +28,7 @@ const Progress = React.memo(({ userProfile, userInfo }) => {
   const shuffledVariants = useMemo(() => shuffle(variants), []);
 
   return (
-    <Card>
+    <Card className="p-1">
       <Card.Title>
         {capitalizeName(userInfo?.name) ||
           `${userProfile.name?.first} ${userProfile.name?.last}`}{" "}

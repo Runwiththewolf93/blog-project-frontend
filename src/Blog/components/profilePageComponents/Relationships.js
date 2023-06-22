@@ -2,9 +2,7 @@ import { CardGroup, Card, Image, Spinner, Alert } from "react-bootstrap";
 import useRandomUsers from "../../hooks/useRandomUsers";
 import { processUsers, concatAndSliceData } from "../../utils/helper";
 import { useAppContextState } from "../../store/appContext";
-import { useMediaQuery } from "react-responsive";
 
-// Relationships component
 const Relationships = ({ userProfile, userInfo, blogInfo }) => {
   const { isLoading, users: allUsers, error } = useAppContextState();
 
@@ -18,23 +16,36 @@ const Relationships = ({ userProfile, userInfo, blogInfo }) => {
   const additionalUsers = useRandomUsers("female", numAdditionalUsers);
   const users = concatAndSliceData(filteredUsers, additionalUsers?.users, 7);
 
-  const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 1280px)" });
+  const imgStyle = {
+    objectFit: "cover",
+    borderRadius: "50%",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "100%",
+    height: "100%",
+  };
 
-  const imgStyle = isDesktopOrLaptop
-    ? { objectFit: "cover", width: "70px", height: "70px" }
-    : {
-        objectFit: "cover",
-        objectPosition: "center",
-        width: "100%",
-        height: "100%",
-        position: "absolute",
-        left: 0,
-        top: 0,
-      };
+  const imgContainerStyle = {
+    width: "100%",
+    paddingBottom: "100%",
+    position: "relative",
+    margin: "auto",
+  };
 
-  const imgContainerStyle = isDesktopOrLaptop
-    ? { width: "50px", height: "50px" }
-    : { width: "100%", aspectRatio: "1 / 1", position: "relative" };
+  const cardStyle = {
+    flex: "1 0 30%",
+    maxWidth: "25%",
+  };
+
+  const cardTextStyle = {
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    height: "1.2em",
+    lineHeight: "1.2em",
+  };
 
   if (isLoading) {
     return <Spinner />;
@@ -45,24 +56,26 @@ const Relationships = ({ userProfile, userInfo, blogInfo }) => {
   }
 
   return (
-    <Card className="mt-4">
+    <Card className="mt-4 p-1">
       <Card.Title className="my-1">
         Spends most of {userProfile.gender === "male" ? "his" : "her"} time
         with:
       </Card.Title>
-      <CardGroup>
+      <CardGroup className="d-flex justify-content-around flex-wrap">
         {users.map(user => (
-          <Card key={user._id || user.login?.uuid} className="text-center">
+          <Card
+            key={user._id || user.login?.uuid}
+            className="text-center flex-fill"
+            style={cardStyle}
+          >
             <div style={imgContainerStyle}>
               <Image
                 variant="top"
                 src={userAvatars?.[user._id] || user.picture?.thumbnail}
-                roundedCircle
-                className="ms-2 me-2"
                 style={imgStyle}
               />
             </div>
-            <Card.Text>
+            <Card.Text style={cardTextStyle}>
               {typeof user.name === "string"
                 ? `${user.name?.split(" ")[0]} ${user.name?.split(" ")[1][0]}.`
                 : `${user.name.first} ${user.name.last.charAt(0)}.`}
