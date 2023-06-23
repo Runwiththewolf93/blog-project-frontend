@@ -1,6 +1,7 @@
 import { PieChart, Pie, Tooltip, Legend } from "recharts";
 
-const PieChartComponent = ({ voteInfo, users }) => {
+// PieChartComponent
+const PieChartComponent = ({ voteInfo, users, isLaptopScreenOrSmaller }) => {
   const data = voteInfo.reduce((acc, vote) => {
     const user = vote.user;
     acc[user] = (acc[user] || 0) + 1;
@@ -18,16 +19,18 @@ const PieChartComponent = ({ voteInfo, users }) => {
     value: count,
   }));
 
+  const size = Math.min(window.innerWidth, window.innerHeight) * 0.4;
+
   return (
     <div className="d-flex justify-content-center">
-      <PieChart width={600} height={300}>
+      <PieChart width={size} height={size}>
         <Pie
           dataKey="value"
           isAnimationActive={false}
           data={voteData}
           cx="50%"
           cy="50%"
-          outerRadius={100}
+          outerRadius={isLaptopScreenOrSmaller ? 65 : 85}
           fill="#8884d8"
           label
         />

@@ -1,5 +1,6 @@
 import { Card } from "react-bootstrap";
 
+// CustomCard component
 const CustomCard = ({ title, children }) => {
   return (
     <Card className="rounded-4">

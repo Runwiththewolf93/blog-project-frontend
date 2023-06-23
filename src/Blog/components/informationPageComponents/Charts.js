@@ -12,7 +12,9 @@ import BarChartComponent from "./BarChart";
 import AreaChartComponent from "./AreaChart";
 import PieChartComponent from "./PieChart";
 import CustomCard from "./CustomCard";
+import { useMediaQuery } from "react-responsive";
 
+// Charts component
 const Charts = () => {
   const { users } = useAppContextState();
   const { getAllUsers } = useAppContextDispatch();
@@ -25,30 +27,38 @@ const Charts = () => {
     // eslint-disable-next-line
   }, []);
 
+  const isLaptopScreenOrSmaller = useMediaQuery({
+    query: "(max-width: 992px)",
+  });
+
   return (
     <div className="mt-5">
       <Row>
-        <Col md={6}>
+        <Col lg={6} xs={12} className={isLaptopScreenOrSmaller && "mb-4"}>
           <CustomCard title="Blog Posts Over Time">
             <LineChartComponent blogInfo={blogInfo} />
           </CustomCard>
         </Col>
-        <Col md={6}>
+        <Col lg={6} xs={12}>
           <CustomCard title="Comments Over Time">
             <BarChartComponent commentInfo={commentInfo} />
           </CustomCard>
         </Col>
       </Row>
       <Row className="mt-4 mb-5">
-        <Col md={6}>
+        <Col lg={6} xs={12} className={isLaptopScreenOrSmaller && "mb-4"}>
           <CustomCard title="Votes Over Time">
             <AreaChartComponent blogInfo={blogInfo} />
           </CustomCard>
         </Col>
-        <Col md={6} className="d-flex align-items-stretch">
+        <Col lg={6} xs={12}>
           {users.length > 0 && (
             <CustomCard title="Votes By User">
-              <PieChartComponent voteInfo={voteInfo} users={users} />
+              <PieChartComponent
+                voteInfo={voteInfo}
+                users={users}
+                isLaptopScreenOrSmaller={isLaptopScreenOrSmaller}
+              />
             </CustomCard>
           )}
         </Col>

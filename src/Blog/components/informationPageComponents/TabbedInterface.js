@@ -35,33 +35,17 @@ function TabbedInterface({
           <Tab.Content>
             <Tab.Pane eventKey="first">
               <Row>
-                <Col md={1}>
-                  <FontAwesomeIcon icon={faLocationCrosshairs} size="2x" />
-                  <FontAwesomeIcon
-                    style={{ marginLeft: "8px", marginTop: "24px" }}
-                    icon={faCircle}
-                  />
-                  <FontAwesomeIcon
-                    style={{ marginLeft: "8px", marginTop: "18px" }}
-                    icon={faCircle}
-                  />
-                  {Array(7)
-                    .fill(null)
-                    .map((_, index) => (
-                      <FontAwesomeIcon
-                        key={index}
-                        style={{ marginLeft: "8px", marginTop: "20px" }}
-                        icon={faCircle}
-                      />
-                    ))}
-                  <FontAwesomeIcon
-                    style={{ marginLeft: "8px", marginTop: "37px" }}
-                    icon={faCircle}
-                  />
-                </Col>
-                <Col md={11}>
-                  <h4 className="mb-4">
-                    <strong>Location Information:</strong>
+                <Col sm={12}>
+                  <h4
+                    className="mb-4"
+                    style={{ transform: "translateX(-15px)" }}
+                  >
+                    <FontAwesomeIcon
+                      icon={faLocationCrosshairs}
+                      size="2x"
+                      style={{ transform: "translateY(10px)" }}
+                    />
+                    <strong className="ps-1">Location Information:</strong>
                   </h4>
                   {isLoadingGeolocation ? (
                     <Spinner animation="border" role="status">
@@ -70,49 +54,73 @@ function TabbedInterface({
                   ) : errorGeolocation ? (
                     <Alert variant="danger">{errorGeolocation}</Alert>
                   ) : (
-                    <>
-                      <p>
-                        <strong>Continent:</strong> {locationData.continent}
-                      </p>
-                      <p>
-                        <strong>Country:</strong> {locationData.country} (
-                        {locationData.country_code})
-                      </p>
-                      <p>
-                        <strong>City:</strong> {locationData.city}
-                      </p>
-                      <p>
-                        <strong>Region:</strong> {locationData.region}
-                      </p>
-                      <p>
-                        <strong>Postal Code:</strong> {locationData.postal_code}
-                      </p>
-                      <p>
-                        <strong>Latitude:</strong> {locationData.latitude}
-                      </p>
-                      <p>
-                        <strong>Longitude:</strong> {locationData.longitude}
-                      </p>
-                      <p>
-                        <strong>Currency:</strong> {locationData.currency_name}{" "}
-                        ({locationData.currency_code || "No info"})
-                      </p>
-                      <p>
-                        <strong>Current Time:</strong>{" "}
-                        {locationData.current_time}
-                      </p>
-                      <p>
-                        <strong>Flag:</strong>
-                        <Image
-                          src={locationData.png}
-                          style={{
-                            width: "120px",
-                            height: "60px",
-                            marginLeft: "1rem",
-                          }}
+                    <Row className="align-items-start">
+                      <Col xs={1}>
+                        <FontAwesomeIcon icon={faCircle} />
+                        <FontAwesomeIcon
+                          style={{ marginTop: "20px" }}
+                          icon={faCircle}
                         />
-                      </p>
-                    </>
+                        {Array(7)
+                          .fill(null)
+                          .map((_, index) => (
+                            <FontAwesomeIcon
+                              key={index}
+                              style={{ marginTop: "20px" }}
+                              icon={faCircle}
+                            />
+                          ))}
+                        <FontAwesomeIcon
+                          style={{ marginTop: "37px" }}
+                          icon={faCircle}
+                        />
+                      </Col>
+                      <Col xs={11}>
+                        <p>
+                          <strong>Continent:</strong> {locationData.continent}
+                        </p>
+                        <p>
+                          <strong>Country:</strong> {locationData.country} (
+                          {locationData.country_code})
+                        </p>
+                        <p>
+                          <strong>City:</strong> {locationData.city}
+                        </p>
+                        <p>
+                          <strong>Region:</strong> {locationData.region}
+                        </p>
+                        <p>
+                          <strong>Postal Code:</strong>{" "}
+                          {locationData.postal_code}
+                        </p>
+                        <p>
+                          <strong>Latitude:</strong> {locationData.latitude}
+                        </p>
+                        <p>
+                          <strong>Longitude:</strong> {locationData.longitude}
+                        </p>
+                        <p>
+                          <strong>Currency:</strong>{" "}
+                          {locationData.currency_name} (
+                          {locationData.currency_code || "No info"})
+                        </p>
+                        <p>
+                          <strong>Current Time:</strong>{" "}
+                          {locationData.current_time}
+                        </p>
+                        <p>
+                          <strong>Flag:</strong>
+                          <Image
+                            src={locationData.png}
+                            style={{
+                              width: "120px",
+                              height: "60px",
+                              marginLeft: "1rem",
+                            }}
+                          />
+                        </p>
+                      </Col>
+                    </Row>
                   )}
                 </Col>
               </Row>
@@ -134,5 +142,7 @@ function TabbedInterface({
     </Tab.Container>
   );
 }
+
+// images tomorrow
 
 export default TabbedInterface;

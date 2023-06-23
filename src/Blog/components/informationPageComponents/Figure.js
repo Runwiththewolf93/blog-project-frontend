@@ -1,12 +1,27 @@
 import { Figure, Image } from "react-bootstrap";
+import { useMediaQuery } from "react-responsive";
+import classNames from "classnames";
 
 function FigureComponent({ images }) {
+  const isTabletScreenOrSmaller = useMediaQuery({
+    query: "(max-width: 768px)",
+  });
+  const isMobileScreenOrSmaller = useMediaQuery({
+    query: "(max-width: 576px)",
+  });
+
   if (!images) return null;
 
   return (
     images &&
     images.map(image => (
-      <Figure key={image.id} className="m-1">
+      <Figure
+        key={image.id}
+        className={classNames("m-1", {
+          "text-center": isTabletScreenOrSmaller,
+          "mt-4": isMobileScreenOrSmaller,
+        })}
+      >
         <Image
           style={{ width: "200px", height: "150px", objectFit: "cover" }}
           alt={image?.description || "No info"}

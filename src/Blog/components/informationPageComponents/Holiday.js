@@ -1,6 +1,7 @@
 import { Table, Spinner, Alert } from "react-bootstrap";
 import useFetchPublicHolidays from "./useFetchPublicHolidays";
 
+// Holiday component
 const Holiday = ({ locationData, isLoadingGeolocation, errorGeolocation }) => {
   const {
     loading,
@@ -28,7 +29,7 @@ const Holiday = ({ locationData, isLoadingGeolocation, errorGeolocation }) => {
   return !holidayData || holidayData.length === 0 ? (
     <p>No holidays found</p>
   ) : (
-    <div className="vh-100 mt-5">
+    <div className="min-vh-100 mt-5">
       <h3>A list of all the holidays at destination:</h3>
       <Table
         striped
