@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Container, Row, Col, Modal } from "react-bootstrap";
 import CarouselLogin from "../components/loginPageComponents/CarouselLogin";
 import { useAppContextState, useAppContextDispatch } from "../store/appContext";
@@ -14,6 +14,7 @@ const initialState = {
   isMember: true,
 };
 
+// LoginPage component
 const LoginPage = ({ show, handleClose }) => {
   const { isLoading, error, success } = useAppContextState();
   const { registerUser, loginUser, resetUserError, resetUserSuccess } =
@@ -64,6 +65,34 @@ const LoginPage = ({ show, handleClose }) => {
     }
   }, [error]);
 
+  // Create a state for the LoginForm height
+  const [loginFormHeight, setLoginFormHeight] = useState(0);
+
+  // Create a callback ref for the LoginForm
+  const loginFormRef = useCallback(node => {
+    if (node !== null) {
+      setLoginFormHeight(node.offsetHeight);
+    }
+  }, []);
+
+  // Update the LoginForm height whenever the window is resized
+  useEffect(() => {
+    const updateLoginFormHeight = () => {
+      if (loginFormRef.current) {
+        setLoginFormHeight(loginFormRef.current.offsetHeight);
+      }
+    };
+
+    window.addEventListener("resize", updateLoginFormHeight);
+    updateLoginFormHeight();
+
+    return () => {
+      window.removeEventListener("resize", updateLoginFormHeight);
+    };
+  }, [loginFormRef]);
+
+  console.log(loginFormHeight);
+
   return (
     <Modal
       show={show}
@@ -75,26 +104,28 @@ const LoginPage = ({ show, handleClose }) => {
       <Modal.Body>
         <Container>
           <Row>
-            <Col md={6}>
-              <h1 className="text-center mb-4">
-                {values.isMember ? "Login to blog" : "Create an account"}
-              </h1>
-              <LoginForm
-                onSubmit={handleSubmit}
-                values={values}
-                handleChange={handleChange}
-                formValid={formValid}
-                isLoading={isLoading}
-                toggleMember={toggleMember}
-              />
-              <ErrorAlert
-                error={error}
-                showError={showError}
-                setShowError={setShowError}
-              />
+            <Col lg={6} xs={12}>
+              <div ref={loginFormRef}>
+                <h1 className="text-center mb-4">
+                  {values.isMember ? "Login to blog" : "Create an account"}
+                </h1>
+                <LoginForm
+                  onSubmit={handleSubmit}
+                  values={values}
+                  handleChange={handleChange}
+                  formValid={formValid}
+                  isLoading={isLoading}
+                  toggleMember={toggleMember}
+                />
+                <ErrorAlert
+                  error={error}
+                  showError={showError}
+                  setShowError={setShowError}
+                />
+              </div>
             </Col>
-            <Col md={6}>
-              <CarouselLogin />
+            <Col lg={6} xs={12}>
+              <CarouselLogin loginFormHeight={loginFormHeight} />
             </Col>
           </Row>
         </Container>

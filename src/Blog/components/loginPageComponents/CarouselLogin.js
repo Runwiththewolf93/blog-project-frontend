@@ -1,7 +1,8 @@
 import { Carousel, Image } from "react-bootstrap";
 import useUnsplashImages from "../../hooks/useUnsplash";
 
-const CarouselLogin = () => {
+// CarouselLogin component
+const CarouselLogin = ({ loginFormHeight }) => {
   const images = useUnsplashImages("blog", 3);
 
   const carouselText = [
@@ -25,7 +26,7 @@ const CarouselLogin = () => {
         images.map((image, index) => (
           <Carousel.Item interval={10000} key={image.id}>
             <Image
-              style={{ objectFit: "cover", height: "500px" }}
+              style={{ objectFit: "cover", height: loginFormHeight }}
               src={image.urls?.regular}
               alt={image.alt_description}
               rounded
