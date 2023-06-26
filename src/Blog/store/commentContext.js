@@ -1,4 +1,4 @@
-import React, { useReducer, useContext } from "react";
+import React, { useReducer, useContext, useState } from "react";
 import { useLocalStorageContext } from "./localStorageContext";
 import commentReducer from "./commentReducer";
 import createAuthFetch from "./createAuthFetch";
@@ -13,6 +13,9 @@ import {
   GET_ALL_COMMENTS_BEGIN,
   GET_ALL_COMMENTS_SUCCESS,
   GET_ALL_COMMENTS_ERROR,
+  GET_MORE_FILTERED_COMMENTS_BEGIN,
+  GET_MORE_FILTERED_COMMENTS_SUCCESS,
+  GET_MORE_FILTERED_COMMENTS_ERROR,
   ADD_COMMENT_BLOG_POST_BEGIN,
   ADD_COMMENT_BLOG_POST_SUCCESS,
   ADD_COMMENT_BLOG_POST_ERROR,
@@ -51,6 +54,8 @@ const CommentContextDispatch = React.createContext();
 
 const CommentProvider = ({ children }) => {
   const [state, dispatch] = useReducer(commentReducer, initialState);
+  const [hasMoreComments, setHasMoreComments] = useState({});
+
   const { commentFilterLocalStorage, setCommentFilterLocalStorage } =
     useLocalStorageContext();
 
@@ -226,8 +231,61 @@ const CommentProvider = ({ children }) => {
     }
   };
 
+  // resetCommentError dispatch function
   const resetCommentError = () => {
     dispatch({ type: RESET_COMMENT_ERROR });
+  };
+
+  // getMoreFilteredComments dispatch function
+  const getMoreFilteredComments = async (
+    blogId,
+    skip = 5,
+    limit = 5,
+    sort = "createdAt",
+    order = "asc"
+  ) => {
+    dispatch({ type: GET_MORE_FILTERED_COMMENTS_BEGIN });
+
+    try {
+      const { data } = await authFetch.post("/comment/more", {
+        blogId,
+        skip,
+        limit,
+        sort,
+        order,
+      });
+
+      // console.log("Received data:", data);
+      // console.log("state commentFilter", state.commentFilter);
+
+      const updatedCommentFilter = [...commentFilterLocalStorage, ...data];
+
+      // Count the number of comments for the current blog post in updatedCommentFilter
+      const commentCount = updatedCommentFilter.filter(
+        comment => comment.blog === blogId
+      ).length;
+      console.log(commentCount);
+
+      // If the number of comments for the current blog post is less than or equal to the current skip value, there are no more comments
+      setHasMoreComments(prevState => ({
+        ...prevState,
+        [blogId]: commentCount > skip,
+      }));
+      console.log(hasMoreComments);
+
+      dispatch({
+        type: GET_MORE_FILTERED_COMMENTS_SUCCESS,
+        payload: updatedCommentFilter,
+      });
+
+      // console.log("Modified data:", updatedCommentFilter);
+      // console.log("state commentFilter", state.commentFilter);
+
+      // Update localStorage with the new commentFilter array
+      setCommentFilterLocalStorage(updatedCommentFilter);
+    } catch (error) {
+      errorHandler(error, dispatch, GET_MORE_FILTERED_COMMENTS_ERROR);
+    }
   };
 
   return (
@@ -235,6 +293,7 @@ const CommentProvider = ({ children }) => {
       value={{
         ...state,
         commentFilterLocalStorage,
+        hasMoreComments,
       }}
     >
       <CommentContextDispatch.Provider
@@ -248,6 +307,7 @@ const CommentProvider = ({ children }) => {
           deleteCommentBlogPost,
           resetCommentError,
           deleteAllCommentsBlogPost,
+          getMoreFilteredComments,
         }}
       >
         {children}

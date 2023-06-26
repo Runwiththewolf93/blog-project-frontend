@@ -1,13 +1,8 @@
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 import { setSortedComments } from "./CommentsReducer";
 
 // useCommentSort hook
-const useCommentSort = (sortedComments, dispatch) => {
-  const [sortState, setSortState] = useState({
-    field: "createdAt",
-    order: "asc",
-  });
-
+const useCommentSort = (sortedComments, dispatch, sortState, setSortState) => {
   const sortComments = useCallback(
     (comments, field, state) => {
       const sorted = [...comments].sort((a, b) => {
@@ -45,6 +40,7 @@ const useCommentSort = (sortedComments, dispatch) => {
       setSortState(newState);
       sortComments(sortedComments, field, newState);
     },
+    // eslint-disable-next-line
     [sortState, sortedComments, sortComments]
   );
 

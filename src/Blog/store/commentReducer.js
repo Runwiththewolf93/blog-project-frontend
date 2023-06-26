@@ -8,6 +8,9 @@ import {
   GET_ALL_COMMENTS_BEGIN,
   GET_ALL_COMMENTS_SUCCESS,
   GET_ALL_COMMENTS_ERROR,
+  GET_MORE_FILTERED_COMMENTS_BEGIN,
+  GET_MORE_FILTERED_COMMENTS_SUCCESS,
+  GET_MORE_FILTERED_COMMENTS_ERROR,
   ADD_COMMENT_BLOG_POST_BEGIN,
   ADD_COMMENT_BLOG_POST_SUCCESS,
   ADD_COMMENT_BLOG_POST_ERROR,
@@ -163,6 +166,25 @@ const commentReducer = (state, action) => {
       isLoadingUserComment: false,
       errorComment: null,
       errorUserComment: null,
+    };
+  }
+  // get more filtered comments
+  if (action.payload === GET_MORE_FILTERED_COMMENTS_BEGIN) {
+    return { ...state, isLoadingUserComment: true };
+  }
+  if (action.payload === GET_MORE_FILTERED_COMMENTS_SUCCESS) {
+    return {
+      ...state,
+      isLoadingUserComment: false,
+      commentFilter: action.payload,
+      errorUserComment: null,
+    };
+  }
+  if (action.payload === GET_MORE_FILTERED_COMMENTS_ERROR) {
+    return {
+      ...state,
+      isLoadingUserComment: false,
+      errorUserComment: action.payload,
     };
   }
   return { ...state, isLoadingComment: false };

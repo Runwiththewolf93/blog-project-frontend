@@ -126,6 +126,8 @@ const BlogProvider = ({ children }) => {
       } catch (error) {
         reject(error);
       }
+    }).catch(error => {
+      console.error("Error in resetFilteredBlogPosts:", error);
     });
   };
 
