@@ -1,5 +1,5 @@
-import { useEffect, useReducer } from "react";
-import { ListGroup } from "react-bootstrap";
+import React, { useState, useEffect, useReducer } from "react";
+import { ListGroup, Button } from "react-bootstrap";
 import { useCommentContextState } from "../../store/commentContext";
 import CommentSort from "./CommentSort";
 import CommentItem from "./CommentItem";
@@ -13,16 +13,16 @@ import {
 const CommentList = ({ blogId, userInfo }) => {
   const { commentFilterLocalStorage } = useCommentContextState();
   const [state, dispatch] = useReducer(commentsReducer, initialState);
+  const [showComments, setShowComments] = useState(true);
 
   useEffect(() => {
     const commentsPerBlogPost = commentFilterLocalStorage.filter(
       comment => comment.blog === blogId
     );
-    // console.log("Filtered comments comment:", commentsPerBlogPost);
     dispatch(setSortedComments(commentsPerBlogPost));
   }, [commentFilterLocalStorage, blogId]);
 
-  // console.log("commentFilter comment", commentFilterLocalStorage);
+  // Make a backend function to fetch remaining comments per blog post, but pay attention to totalVotes, createdAt or updatedAt states
 
   return (
     <>
@@ -35,18 +35,42 @@ const CommentList = ({ blogId, userInfo }) => {
       ) : (
         <ListGroup>
           <CommentSort {...{ state, dispatch }} />
-          {state.sortedComments.map(comment => (
-            <CommentItem
-              key={comment._id}
-              {...{
-                comment,
-                userInfo,
-                blogId,
-                state,
-                dispatch,
-              }}
-            />
-          ))}
+          {showComments &&
+            state.sortedComments.map((comment, index) => (
+              <React.Fragment key={comment._id}>
+                <CommentItem
+                  {...{
+                    comment,
+                    userInfo,
+                    blogId,
+                    state,
+                    dispatch,
+                  }}
+                />
+                {(index + 1) % 5 === 0 && (
+                  <div className="d-flex">
+                    <Button variant="light" className="w-50">
+                      Load more comments
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      onClick={() => setShowComments(!showComments)}
+                      className="w-50"
+                    >
+                      Hide comments
+                    </Button>
+                  </div>
+                )}
+              </React.Fragment>
+            ))}
+          {!showComments && (
+            <Button
+              variant="secondary"
+              onClick={() => setShowComments(!showComments)}
+            >
+              Show comments
+            </Button>
+          )}
         </ListGroup>
       )}
     </>

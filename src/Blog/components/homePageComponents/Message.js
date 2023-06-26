@@ -20,6 +20,7 @@ function Message({
   const [sort, setSort] = useState("createdAt");
   const [reset, setReset] = useState(false);
   const [show, setShow] = useState(true);
+  const [isResetting, setIsResetting] = useState(false);
   const { hasMore, isLoadingFilter, errorFilter, page, order } =
     useBlogContextState();
   const {
@@ -40,20 +41,21 @@ function Message({
     setReset(true);
   };
 
+  console.log(isResetting);
+
   useEffect(() => {
-    if (!mounted.current) {
+    if (!mounted.current && !isResetting) {
       // Ensure this runs on the first render
+      setIsResetting(true);
       console.log("Resetting filters...");
-      const executeGetFilteredBlogPosts = async () => {
-        await resetFilteredBlogPosts(() => {
-          getFilteredBlogPosts();
-        });
-      };
-      executeGetFilteredBlogPosts();
+      resetFilteredBlogPosts().then(() => {
+        getFilteredBlogPosts();
+        setIsResetting(false);
+      });
       mounted.current = true;
     }
     // eslint-disable-next-line
-  }, []);
+  }, [isResetting]);
 
   // Condition that prevents the useEffect from running if reset is true
   useEffect(() => {
@@ -66,19 +68,24 @@ function Message({
 
   useEffect(() => {
     // On 'sort' or 'order' change, reset all related state
-    if (reset) {
+    if (reset && !isResetting) {
+      setIsResetting(true);
       setPage(1);
-      resetFilteredBlogPosts();
+      resetFilteredBlogPosts().then(() => {
+        setIsResetting(false);
+      });
       setReset(false);
     }
     // Once reset is done, fetch the first page of posts
-    else {
-      resetFilteredBlogPosts(() => {
+    else if (!reset && !isResetting) {
+      setIsResetting(true);
+      resetFilteredBlogPosts().then(() => {
         getFilteredBlogPosts(1, sort, 5, order);
+        setIsResetting(false);
       });
     }
     // eslint-disable-next-line
-  }, [sort, order, reset]);
+  }, [sort, order, reset, isResetting]);
 
   useScrollToLoadMore({ isLoadingFilter, hasMore, setPage });
 
@@ -96,10 +103,12 @@ function Message({
     <Container className="my-3">
       <Row>
         <Col xs={2} className="d-flex justify-content-center">
-          <Dropdowns
-            onSortChange={handleSortChange}
-            onOrderChange={handleOrderChange}
-          />
+          {userInfo && (
+            <Dropdowns
+              onSortChange={handleSortChange}
+              onOrderChange={handleOrderChange}
+            />
+          )}
         </Col>
         <Col xs={10}>
           <Card.Header className="h1 mb-3">Welcome to my Blog</Card.Header>

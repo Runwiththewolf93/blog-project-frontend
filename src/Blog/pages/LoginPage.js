@@ -91,8 +91,6 @@ const LoginPage = ({ show, handleClose }) => {
     };
   }, [loginFormRef]);
 
-  console.log(loginFormHeight);
-
   return (
     <Modal
       show={show}

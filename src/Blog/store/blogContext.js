@@ -101,25 +101,32 @@ const BlogProvider = ({ children }) => {
   };
 
   // resetFilteredBlogPosts dispatch function
-  const resetFilteredBlogPosts = async callback => {
-    console.log("Resetting filters...");
-    dispatch({ type: RESET_FILTERED_BLOG_POSTS });
+  const resetFilteredBlogPosts = callback => {
+    return new Promise((resolve, reject) => {
+      try {
+        console.log("Resetting filters...");
+        dispatch({ type: RESET_FILTERED_BLOG_POSTS });
 
-    // remove filters from local storage
-    localStorage.removeItem("blogFilter");
-    localStorage.removeItem("commentFilter");
-    localStorage.removeItem("voteFilter");
+        // remove filters from local storage
+        localStorage.removeItem("blogFilter");
+        localStorage.removeItem("commentFilter");
+        localStorage.removeItem("voteFilter");
 
-    console.log("state after reset", state);
-    console.log(
-      "local storage after reset",
-      localStorage.getItem("blogFilter"),
-      localStorage.getItem("commentFilter"),
-      localStorage.getItem("voteFilter")
-    );
-    if (callback) {
-      await callback();
-    }
+        console.log("state after reset", state);
+        console.log(
+          "local storage after reset",
+          localStorage.getItem("blogFilter"),
+          localStorage.getItem("commentFilter"),
+          localStorage.getItem("voteFilter")
+        );
+        if (callback) {
+          callback();
+        }
+        resolve();
+      } catch (error) {
+        reject(error);
+      }
+    });
   };
 
   const resetErrorFilter = () => {
@@ -147,7 +154,8 @@ const BlogProvider = ({ children }) => {
     page = 1,
     sort = "createdAt",
     limit = 5,
-    order = "asc"
+    // order should be asc, we are setting desc for now only.
+    order = "desc"
   ) => {
     if (!state.userInfo) return;
 
