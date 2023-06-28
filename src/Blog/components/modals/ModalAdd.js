@@ -59,7 +59,7 @@ const ModalAdd = () => {
     // eslint-disable-next-line
   }, [postUpdated]);
 
-  console.log(values);
+  // console.log(values);
 
   const handleSubmit = async e => {
     e.preventDefault();

@@ -41,7 +41,7 @@ function Message({
     setReset(true);
   };
 
-  console.log(isResetting);
+  // console.log(isResetting);
 
   useEffect(() => {
     if (!mounted.current && !isResetting) {

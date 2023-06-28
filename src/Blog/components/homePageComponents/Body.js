@@ -31,10 +31,10 @@ const Body = ({ userInfo, blogDataToShow, isFiltering }) => {
     return <ErrorComponent message={errorFilter} />;
   }
 
-  console.log("isLoadingFilter", isLoadingFilter);
-  console.log("blogFilterLocalStorage", blogDataToShow);
-  console.log("commentFilterLocalStorage", commentFilterLocalStorage);
-  console.log("voteFilterLocalStorage", voteFilterLocalStorage);
+  // console.log("isLoadingFilter", isLoadingFilter);
+  // console.log("blogFilterLocalStorage", blogDataToShow);
+  // console.log("commentFilterLocalStorage", commentFilterLocalStorage);
+  // console.log("voteFilterLocalStorage", voteFilterLocalStorage);
   // loading state resolves quickly on local machine, can't see comp.
   if (
     (isLoadingFilter && page === 1) ||

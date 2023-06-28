@@ -2,7 +2,7 @@ import React, { useReducer, useContext, useState } from "react";
 import { useLocalStorageContext } from "./localStorageContext";
 import commentReducer from "./commentReducer";
 import createAuthFetch from "./createAuthFetch";
-import { errorHandler } from "../utils/helper";
+import { errorHandler, filterNewItems } from "../utils/helper";
 import {
   GET_ALL_COMMENTS_BLOG_POST_BEGIN,
   GET_ALL_COMMENTS_BLOG_POST_SUCCESS,
@@ -55,11 +55,10 @@ const CommentContextDispatch = React.createContext();
 const CommentProvider = ({ children }) => {
   const [state, dispatch] = useReducer(commentReducer, initialState);
   const [hasMoreComments, setHasMoreComments] = useState({});
-
   const { commentFilterLocalStorage, setCommentFilterLocalStorage } =
     useLocalStorageContext();
 
-  console.log("comment hook commentContext", commentFilterLocalStorage);
+  // console.log("comment hook commentContext", commentFilterLocalStorage);
 
   const logoutUser = () => {
     dispatch({ type: LOGOUT_USER });
@@ -239,50 +238,60 @@ const CommentProvider = ({ children }) => {
   // getMoreFilteredComments dispatch function
   const getMoreFilteredComments = async (
     blogId,
-    skip = 5,
+    commentIds,
     limit = 5,
     sort = "createdAt",
     order = "asc"
   ) => {
     dispatch({ type: GET_MORE_FILTERED_COMMENTS_BEGIN });
+    console.log({ sort });
+    console.log({ order });
 
     try {
       const { data } = await authFetch.post("/comment/more", {
         blogId,
-        skip,
+        commentIds,
         limit,
         sort,
         order,
       });
+      console.log(
+        "server data",
+        data.map(i => i._id)
+      );
 
-      // console.log("Received data:", data);
-      // console.log("state commentFilter", state.commentFilter);
+      // Filter out any comments that are already in the commentFilter state
+      const newComments = filterNewItems(data, state.commentFilter);
+      console.log(
+        "newComments",
+        newComments.map(c => c._id)
+      );
+      console.log(
+        "state.commentFilter",
+        state.commentFilter.map(c => c._id)
+      );
 
-      const updatedCommentFilter = [...commentFilterLocalStorage, ...data];
-
-      // Count the number of comments for the current blog post in updatedCommentFilter
-      const commentCount = updatedCommentFilter.filter(
-        comment => comment.blog === blogId
-      ).length;
-      console.log(commentCount);
-
-      // If the number of comments for the current blog post is less than or equal to the current skip value, there are no more comments
+      // If there are no new comments, there are no more comments
       setHasMoreComments(prevState => ({
         ...prevState,
-        [blogId]: commentCount > skip,
+        [blogId]: newComments.length > 0,
       }));
-      console.log(hasMoreComments);
 
       dispatch({
         type: GET_MORE_FILTERED_COMMENTS_SUCCESS,
-        payload: updatedCommentFilter,
+        payload: newComments,
       });
 
-      // console.log("Modified data:", updatedCommentFilter);
-      // console.log("state commentFilter", state.commentFilter);
+      console.log("localStorage state", [
+        ...state.commentFilter.map(c => c._id),
+        ...newComments.map(c => c._id),
+      ]);
 
       // Update localStorage with the new commentFilter array
-      setCommentFilterLocalStorage(updatedCommentFilter);
+      setCommentFilterLocalStorage([...state.commentFilter, ...newComments]);
+
+      // Return newComments
+      return newComments;
     } catch (error) {
       errorHandler(error, dispatch, GET_MORE_FILTERED_COMMENTS_ERROR);
     }

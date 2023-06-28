@@ -145,13 +145,11 @@ function debounce(func, wait) {
     timeout = setTimeout(later, wait);
   };
 }
-
-// filter new items helper function
-const filterNewItems = (newItems, existingItems) =>
-  newItems.filter(
-    newItem =>
-      !existingItems.some(existingItem => existingItem._id === newItem._id)
-  );
+// filter new comments helper function - much more performant
+const filterNewItems = (serverData, existingItems) => {
+  const existingIds = existingItems.map(item => item._id);
+  return serverData.filter(item => !existingIds.includes(item._id));
+};
 
 export {
   capitalizeFirstLetter,

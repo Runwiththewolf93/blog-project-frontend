@@ -173,10 +173,11 @@ const commentReducer = (state, action) => {
     return { ...state, isLoadingUserComment: true };
   }
   if (action.payload === GET_MORE_FILTERED_COMMENTS_SUCCESS) {
+    console.log("state.commentFilter", state.commentFilter);
     return {
       ...state,
       isLoadingUserComment: false,
-      commentFilter: action.payload,
+      commentFilter: [...state.commentFilter, ...action.payload],
       errorUserComment: null,
     };
   }

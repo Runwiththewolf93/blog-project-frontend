@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useReducer } from "react";
-import { ListGroup, Button } from "react-bootstrap";
+import { ListGroup, Button, Alert } from "react-bootstrap";
+import { useBlogContextDispatch } from "../../store/blogContext";
 import {
   useCommentContextState,
   useCommentContextDispatch,
@@ -14,8 +15,13 @@ import {
 
 // CommentList component
 const CommentList = ({ blogId, userInfo }) => {
-  const { hasMoreComments, commentFilterLocalStorage } =
-    useCommentContextState();
+  const { scrollToBlogPost } = useBlogContextDispatch();
+  const {
+    hasMoreComments,
+    commentFilterLocalStorage,
+    isLoadingUserComment,
+    errorUserComment,
+  } = useCommentContextState();
   const { getMoreFilteredComments } = useCommentContextDispatch();
   const [state, dispatch] = useReducer(commentsReducer, initialState);
   const [showComments, setShowComments] = useState(true);
@@ -25,31 +31,46 @@ const CommentList = ({ blogId, userInfo }) => {
   });
 
   useEffect(() => {
+    console.log("blogId", blogId);
+    console.log(
+      "commentFilterLocalStorage",
+      commentFilterLocalStorage.map(c => c._id)
+    );
+    // Initialize the sortedComments state with the existing comments for this blog post
     const commentsPerBlogPost = commentFilterLocalStorage.filter(
       comment => comment.blog === blogId
     );
+    console.log(
+      "commentsPerBlogPost",
+      commentsPerBlogPost.map(c => c._id)
+    );
     dispatch(setSortedComments(commentsPerBlogPost));
-  }, [commentFilterLocalStorage, blogId]);
+    // eslint-disable-next-line
+  }, [blogId]); // Only re-run the useEffect hook when the blogId changes
 
+  // handleLoadMoreComments function activated on click
   const handleLoadMoreComments = () => {
-    // Invoke the getMoreFilteredComments function from commentContext
-    const skip = state.sortedComments.length;
+    console.log(
+      "state.sortedComments",
+      state.sortedComments.map(c => c._id)
+    );
     const limit = 5;
-    const { field: sort, order } = sortState;
-    getMoreFilteredComments(blogId, skip, limit, sort, order);
+    getMoreFilteredComments(
+      blogId,
+      state.sortedComments.map(c => c._id),
+      limit,
+      sortState.field,
+      sortState.order
+    ).then(newComments => {
+      console.log("newComments:", newComments);
+      // Append the new comments to the sortedComments state
+      dispatch(setSortedComments([...state.sortedComments, ...newComments]));
+    });
   };
 
   // Check if hasMoreComments[blogId] is undefined or true
   const shouldLoadMoreComments =
     hasMoreComments[blogId] === undefined || hasMoreComments[blogId];
-
-  console.log("hasMoreComments[blogId]", hasMoreComments[blogId]);
-  console.log("showComments", showComments);
-  console.log(
-    "state.sortedComments.length > 0",
-    state.sortedComments.length > 0
-  );
-  console.log("shouldLoadMoreComments", shouldLoadMoreComments);
 
   return (
     <>
@@ -82,13 +103,19 @@ const CommentList = ({ blogId, userInfo }) => {
                           variant="light"
                           className="w-50"
                           onClick={handleLoadMoreComments}
+                          disabled={!isLoadingUserComment}
                         >
-                          Load more comments
+                          {!isLoadingUserComment
+                            ? "Loading comments..."
+                            : "Load more comments"}
                         </Button>
                       )}
                       <Button
                         variant="secondary"
-                        onClick={() => setShowComments(!showComments)}
+                        onClick={() => {
+                          setShowComments(!showComments);
+                          scrollToBlogPost(blogId);
+                        }}
                         className={
                           state.sortedComments.length % 5 === 0
                             ? "w-50"
@@ -109,6 +136,7 @@ const CommentList = ({ blogId, userInfo }) => {
               Show comments
             </Button>
           )}
+          {errorUserComment && <Alert>{errorUserComment}</Alert>}
         </ListGroup>
       )}
     </>
@@ -116,3 +144,12 @@ const CommentList = ({ blogId, userInfo }) => {
 };
 
 export default CommentList;
+
+// test out some more tomorrow, see about votes what can be done.
+// console.log("hasMoreComments[blogId]", hasMoreComments[blogId]);
+// console.log("showComments", showComments);
+// console.log(
+//   "state.sortedComments.length > 0",
+//   state.sortedComments.length > 0
+// );
+// console.log("shouldLoadMoreComments", shouldLoadMoreComments);
