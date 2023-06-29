@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Card, Container, Row, Col } from "react-bootstrap";
+import { useAppContextState } from "../../store/appContext";
 import {
   useBlogContextState,
   useBlogContextDispatch,
@@ -18,9 +19,8 @@ function Message({
   const mounted = useRef(false);
   const [showCard, setShowCard] = useState(false);
   const [sort, setSort] = useState("createdAt");
-  const [reset, setReset] = useState(false);
   const [show, setShow] = useState(true);
-  const [isResetting, setIsResetting] = useState(false);
+  const { success } = useAppContextState();
   const { hasMore, isLoadingFilter, errorFilter, page, order } =
     useBlogContextState();
   const {
@@ -33,59 +33,41 @@ function Message({
 
   const handleSortChange = newSort => {
     setSort(newSort);
-    setReset(true);
   };
 
   const handleOrderChange = newOrder => {
     setOrder(newOrder);
-    setReset(true);
   };
 
-  // console.log(isResetting);
-
+  // Initial fetch and reset of data from server
   useEffect(() => {
-    if (!mounted.current && !isResetting) {
-      // Ensure this runs on the first render
-      setIsResetting(true);
-      console.log("Resetting filters...");
-      resetFilteredBlogPosts().then(() => {
-        getFilteredBlogPosts();
-        setIsResetting(false);
-      });
-      mounted.current = true;
-    }
+    const resetAndFetchPosts = async () => {
+      if (userInfo && success && !mounted.current) {
+        console.log("Resetting filters...");
+        await resetFilteredBlogPosts(() =>
+          getFilteredBlogPosts(1, sort, 5, order)
+        );
+        mounted.current = true;
+      }
+    };
+
+    resetAndFetchPosts();
     // eslint-disable-next-line
-  }, [isResetting]);
+  }, [userInfo, sort, order, success]);
 
-  // Condition that prevents the useEffect from running if reset is true
+  console.log("userInfo", userInfo);
+  console.log("success", success);
+  console.log("mounted.current", mounted.current);
+  // see what can be done with the mounted.current state tomorrow, get the app working again
+
+  // Fetch additional data from server
   useEffect(() => {
-    if (mounted.current && page !== 1 && !isLoadingFilter && !reset) {
-      // Ensure this is not the first render and isLoadingFilter and reset are false
+    if (mounted.current && page !== 1 && !isLoadingFilter) {
+      // Ensure this is not the first render and isLoadingFilter is false
       getFilteredBlogPosts(page, sort, 5, order);
     }
     // eslint-disable-next-line
-  }, [page, sort, order]);
-
-  useEffect(() => {
-    // On 'sort' or 'order' change, reset all related state
-    if (reset && !isResetting) {
-      setIsResetting(true);
-      setPage(1);
-      resetFilteredBlogPosts().then(() => {
-        setIsResetting(false);
-      });
-      setReset(false);
-    }
-    // Once reset is done, fetch the first page of posts
-    else if (!reset && !isResetting) {
-      setIsResetting(true);
-      resetFilteredBlogPosts().then(() => {
-        getFilteredBlogPosts(1, sort, 5, order);
-        setIsResetting(false);
-      });
-    }
-    // eslint-disable-next-line
-  }, [sort, order, reset, isResetting]);
+  }, [page]);
 
   useScrollToLoadMore({ isLoadingFilter, hasMore, setPage });
 

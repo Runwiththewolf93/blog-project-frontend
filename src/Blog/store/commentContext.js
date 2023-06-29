@@ -33,7 +33,7 @@ import {
   RESET_COMMENT_LOADING,
   LOGOUT_USER,
 } from "./actions";
-import { userInfoFromLocalStorage } from "./appContext";
+import { userInfoFromLocalStorage, useAppContextState } from "./appContext";
 import { commentFilterFromLocalStorage } from "./blogContext";
 
 // commentContext initialState object
@@ -57,6 +57,7 @@ const CommentProvider = ({ children }) => {
   const [hasMoreComments, setHasMoreComments] = useState({});
   const { commentFilterLocalStorage, setCommentFilterLocalStorage } =
     useLocalStorageContext();
+  const { userInfo } = useAppContextState();
 
   // console.log("comment hook commentContext", commentFilterLocalStorage);
 
@@ -66,7 +67,7 @@ const CommentProvider = ({ children }) => {
   };
 
   // axios
-  const authFetch = createAuthFetch(state?.userInfo, logoutUser);
+  const authFetch = createAuthFetch(userInfo, logoutUser);
 
   // dispatching below
   const getAllCommentsBlogPost = async blogId => {

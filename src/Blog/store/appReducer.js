@@ -99,6 +99,7 @@ const appReducer = (state, action) => {
       error: null,
       errorBlog: null,
       wasLoggedOut: action.manualLogout,
+      success: false,
     };
   }
   // reset error state

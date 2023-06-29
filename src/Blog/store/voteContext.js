@@ -25,7 +25,7 @@ import {
   RESET_VOTE_LOADING,
   LOGOUT_USER,
 } from "./actions";
-import { userInfoFromLocalStorage } from "./appContext";
+import { userInfoFromLocalStorage, useAppContextState } from "./appContext";
 import {
   blogFilterFromLocalStorage,
   commentFilterFromLocalStorage,
@@ -56,6 +56,7 @@ const VoteProvider = ({ children }) => {
     voteFilterLocalStorage,
     setVoteFilterLocalStorage,
   } = useLocalStorageContext();
+  const {userInfo} = useAppContextState()
 
   const logoutUser = () => {
     dispatch({ type: LOGOUT_USER });
@@ -63,7 +64,7 @@ const VoteProvider = ({ children }) => {
   };
 
   // axios
-  const authFetch = createAuthFetch(state?.userInfo, logoutUser);
+  const authFetch = createAuthFetch(userInfo, logoutUser);
 
   const getAllVotes = async () => {
     dispatch({ type: GET_ALL_VOTES_BEGIN });

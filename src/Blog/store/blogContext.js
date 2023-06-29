@@ -37,7 +37,7 @@ import {
   UPLOAD_BLOG_IMAGES_ERROR,
   LOGOUT_USER,
 } from "./actions";
-import { userInfoFromLocalStorage } from "./appContext";
+import { userInfoFromLocalStorage, useAppContextState } from "./appContext";
 
 export const blogFilterFromLocalStorage =
   JSON.parse(localStorage.getItem("blogFilter")) || [];
@@ -74,6 +74,7 @@ const BlogProvider = ({ children }) => {
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
   const [order, setOrder] = useState("asc");
+  const { userInfo } = useAppContextState();
 
   const {
     blogFilterLocalStorage,
@@ -88,7 +89,7 @@ const BlogProvider = ({ children }) => {
   };
 
   // axios
-  const authFetch = createAuthFetch(state?.userInfo, logoutUser);
+  const authFetch = createAuthFetch(userInfo, logoutUser);
 
   // dispatching below
   const resetBlogPost = () => {
@@ -101,8 +102,8 @@ const BlogProvider = ({ children }) => {
   };
 
   // resetFilteredBlogPosts dispatch function
-  const resetFilteredBlogPosts = callback => {
-    return new Promise((resolve, reject) => {
+  const resetFilteredBlogPosts = async callback => {
+    return new Promise(async (resolve, reject) => {
       try {
         console.log("Resetting filters...");
         dispatch({ type: RESET_FILTERED_BLOG_POSTS });
@@ -112,22 +113,22 @@ const BlogProvider = ({ children }) => {
         localStorage.removeItem("commentFilter");
         localStorage.removeItem("voteFilter");
 
-        console.log("state after reset", state);
-        console.log(
-          "local storage after reset",
-          localStorage.getItem("blogFilter"),
-          localStorage.getItem("commentFilter"),
-          localStorage.getItem("voteFilter")
-        );
+        // console.log("state after reset", state);
+        // console.log(
+        //   "local storage after reset",
+        //   localStorage.getItem("blogFilter"),
+        //   localStorage.getItem("commentFilter"),
+        //   localStorage.getItem("voteFilter")
+        // );
         if (callback) {
-          callback();
+          await callback();
         }
+        console.log("Resolving promise...");
         resolve();
       } catch (error) {
+        console.error("Error in resetFilteredBlogPosts:", error);
         reject(error);
       }
-    }).catch(error => {
-      console.error("Error in resetFilteredBlogPosts:", error);
     });
   };
 
@@ -159,7 +160,8 @@ const BlogProvider = ({ children }) => {
     // order should be asc, we are setting desc for now only.
     order = "desc"
   ) => {
-    if (!state.userInfo) return;
+    console.log("getFilteredBlogPosts called");
+    console.log("state.userInfo", state.userInfo);
 
     dispatch({ type: GET_FILTERED_BLOG_POSTS_BEGIN });
 
@@ -190,17 +192,35 @@ const BlogProvider = ({ children }) => {
 
       // Set hasMore before filtering the posts and dispatching actions
       setHasMore(blogsData.hasMore);
-      console.log("blogsData", blogsData);
-      console.log("commentsData", commentsData);
-      console.log("votesData", votesData);
+      console.log(
+        "blogsData",
+        blogsData.posts.map(b => b._id)
+      );
+      console.log(
+        "commentsData",
+        commentsData.map(c => c._id)
+      );
+      console.log(
+        "votesData",
+        votesData.map(v => v._id)
+      );
 
       // Filter out any posts that are already in the blogFilter, commentFilter or voteFilter state
       const newPosts = filterNewItems(blogsData.posts, state.blogFilter);
       const newComments = filterNewItems(commentsData, state.commentFilter);
       const newVotes = filterNewItems(votesData, state.voteFilter);
-      console.log("newPosts", newPosts);
-      console.log("newComments", newComments);
-      console.log("newVotes", newVotes);
+      console.log(
+        "newPosts",
+        newPosts.map(p => p._id)
+      );
+      console.log(
+        "newComments",
+        newComments.map(c => c._id)
+      );
+      console.log(
+        "newVotes",
+        newVotes.map(v => v._id)
+      );
 
       // Construct payload
       const payload = {
