@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { Card, Container, Row, Col } from "react-bootstrap";
-import { useAppContextState } from "../../store/appContext";
 import {
   useBlogContextState,
   useBlogContextDispatch,
@@ -15,12 +14,13 @@ function Message({
   toggleShowMyPosts,
   setSearchQuery,
   setShowMyPosts,
+  blogFilterLocalStorage,
 }) {
   const mounted = useRef(false);
+  const sortOrOrderChanged = useRef(false);
   const [showCard, setShowCard] = useState(false);
   const [sort, setSort] = useState("createdAt");
   const [show, setShow] = useState(true);
-  const { success } = useAppContextState();
   const { hasMore, isLoadingFilter, errorFilter, page, order } =
     useBlogContextState();
   const {
@@ -33,41 +33,60 @@ function Message({
 
   const handleSortChange = newSort => {
     setSort(newSort);
+    sortOrOrderChanged.current = true;
   };
 
   const handleOrderChange = newOrder => {
     setOrder(newOrder);
+    sortOrOrderChanged.current = true;
   };
 
   // Initial fetch and reset of data from server
   useEffect(() => {
     const resetAndFetchPosts = async () => {
-      if (userInfo && success && !mounted.current) {
+      if ((userInfo && !mounted.current) || sortOrOrderChanged.current) {
         console.log("Resetting filters...");
+        setPage(1);
         await resetFilteredBlogPosts(() =>
-          getFilteredBlogPosts(1, sort, 5, order)
+          getFilteredBlogPosts([], 1, sort, 5, order)
         );
         mounted.current = true;
+        sortOrOrderChanged.current = false;
       }
     };
 
     resetAndFetchPosts();
     // eslint-disable-next-line
-  }, [userInfo, sort, order, success]);
+  }, [userInfo, sort, order]);
 
   console.log("userInfo", userInfo);
-  console.log("success", success);
   console.log("mounted.current", mounted.current);
-  // see what can be done with the mounted.current state tomorrow, get the app working again
+  console.log("sortOrOrderChanged.current", sortOrOrderChanged.current);
+  console.log(
+    "blogFilterLocalStorage",
+    blogFilterLocalStorage.map(b => b._id)
+  );
 
   // Fetch additional data from server
   useEffect(() => {
     if (mounted.current && page !== 1 && !isLoadingFilter) {
+      console.log("2nd useEffect in Message");
       // Ensure this is not the first render and isLoadingFilter is false
-      getFilteredBlogPosts(page, sort, 5, order);
+      getFilteredBlogPosts(
+        blogFilterLocalStorage.map(b => b._id),
+        page,
+        sort,
+        5,
+        order
+      );
     }
     // eslint-disable-next-line
   }, [page]);
+
+  console.log("sort", sort);
+  console.log("order", order);
+  console.log("page", page);
+  console.log("hasMore", hasMore);
 
   useScrollToLoadMore({ isLoadingFilter, hasMore, setPage });
 

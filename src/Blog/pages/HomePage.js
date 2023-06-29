@@ -56,6 +56,7 @@ const HomePage = () => {
         toggleShowMyPosts={toggleShowMyPosts}
         setSearchQuery={setSearchQuery}
         setShowMyPosts={setShowMyPosts}
+        blogFilterLocalStorage={blogFilterLocalStorage}
       />
       <Body
         userInfo={userInfo}

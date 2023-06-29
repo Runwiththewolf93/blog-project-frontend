@@ -8,18 +8,22 @@ import ResetPasswordPage from "./Blog/pages/ResetPasswordPage";
 import ConfirmationPage from "./Blog/components/resetPageComponents/ConfirmationPage";
 import ProtectedRoute from "./Blog/pages/ProtectedRoute";
 import "./App.css";
+import { useAppContextState } from "./Blog/store/appContext";
 import { useBlogContextDispatch } from "./Blog/store/blogContext";
 import { useCommentContextDispatch } from "./Blog/store/commentContext";
 import { useVoteContextDispatch } from "./Blog/store/voteContext";
 
 function App() {
+  const { userInfo } = useAppContextState();
   const { getAllBlogPosts } = useBlogContextDispatch();
   const { getAllComments } = useCommentContextDispatch();
   const { getAllVotes } = useVoteContextDispatch();
 
   useEffect(() => {
     const fetchAllData = async () => {
-      await Promise.all([getAllBlogPosts(), getAllComments(), getAllVotes()]);
+      if (userInfo) {
+        await Promise.all([getAllBlogPosts(), getAllComments(), getAllVotes()]);
+      }
     };
     fetchAllData();
     // eslint-disable-next-line

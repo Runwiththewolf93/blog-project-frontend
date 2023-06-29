@@ -73,7 +73,8 @@ const BlogProvider = ({ children }) => {
   const [postUpdated, setPostUpdated] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
-  const [order, setOrder] = useState("asc");
+  // set this back to asc
+  const [order, setOrder] = useState("desc");
   const { userInfo } = useAppContextState();
 
   const {
@@ -154,6 +155,7 @@ const BlogProvider = ({ children }) => {
 
   // getFilteredBlogPosts dispatch function
   const getFilteredBlogPosts = async (
+    blogFilterIds,
     page = 1,
     sort = "createdAt",
     limit = 5,
@@ -166,15 +168,25 @@ const BlogProvider = ({ children }) => {
     dispatch({ type: GET_FILTERED_BLOG_POSTS_BEGIN });
 
     try {
-      console.log("blogFilter", state.blogFilter);
-      const { data: blogsData } = await authFetch.get(
-        `/blog/filtered/?page=${page}&sort=${sort}&limit=${limit}&order=${order}`
+      console.log(
+        "blogFilter",
+        state.blogFilter.map(b => b._id)
       );
+      const { data: blogsData } = await authFetch.post("/blog/filtered", {
+        blogIds: blogFilterIds,
+        page,
+        limit,
+        sort,
+        order,
+      });
 
       // Extract ids and fetch data blogs
       const blogIds = blogsData.posts.map(post => post._id);
 
-      console.log("commentFilter", state.commentFilter);
+      console.log(
+        "commentFilter",
+        state.commentFilter.map(c => c._id)
+      );
       const { data: commentsData } = await authFetch.post("/comment/filter", {
         blogIds,
       });
@@ -185,7 +197,10 @@ const BlogProvider = ({ children }) => {
       // Combine blogIds and commentIds into a single array
       const postIds = [...blogIds, ...commentIds];
 
-      console.log("voteFilter", state.voteFilter);
+      console.log(
+        "voteFilter",
+        state.voteFilter.map(v => v._id)
+      );
       const { data: votesData } = await authFetch.post("/vote/filter", {
         postIds,
       });
