@@ -75,6 +75,7 @@ const BlogProvider = ({ children }) => {
   const [page, setPage] = useState(1);
   // set this back to asc
   const [order, setOrder] = useState("desc");
+  const [isStateReset, setIsStateReset] = useState(false);
   const { userInfo } = useAppContextState();
 
   const {
@@ -104,33 +105,34 @@ const BlogProvider = ({ children }) => {
 
   // resetFilteredBlogPosts dispatch function
   const resetFilteredBlogPosts = async callback => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        console.log("Resetting filters...");
-        dispatch({ type: RESET_FILTERED_BLOG_POSTS });
+    try {
+      console.log("Resetting filters...");
 
-        // remove filters from local storage
-        localStorage.removeItem("blogFilter");
-        localStorage.removeItem("commentFilter");
-        localStorage.removeItem("voteFilter");
+      // remove filters from local storage
+      localStorage.removeItem("blogFilter");
+      localStorage.removeItem("commentFilter");
+      localStorage.removeItem("voteFilter");
 
-        // console.log("state after reset", state);
-        // console.log(
-        //   "local storage after reset",
-        //   localStorage.getItem("blogFilter"),
-        //   localStorage.getItem("commentFilter"),
-        //   localStorage.getItem("voteFilter")
-        // );
-        if (callback) {
-          await callback();
-        }
-        console.log("Resolving promise...");
-        resolve();
-      } catch (error) {
-        console.error("Error in resetFilteredBlogPosts:", error);
-        reject(error);
+      dispatch({ type: RESET_FILTERED_BLOG_POSTS });
+
+      // We've finalized the resetting of state
+      setIsStateReset(true);
+
+      // console.log("state after reset", state);
+      // console.log(
+      //   "local storage after reset",
+      //   localStorage.getItem("blogFilter"),
+      //   localStorage.getItem("commentFilter"),
+      //   localStorage.getItem("voteFilter")
+      // );
+      if (callback) {
+        await callback();
       }
-    });
+      console.log("Resolving promise...");
+    } catch (error) {
+      console.error("Error in resetFilteredBlogPosts:", error);
+      throw error;
+    }
   };
 
   const resetErrorFilter = () => {
@@ -174,14 +176,13 @@ const BlogProvider = ({ children }) => {
       );
       const { data: blogsData } = await authFetch.post("/blog/filtered", {
         blogIds: blogFilterIds,
-        page,
         limit,
         sort,
         order,
       });
 
       // Extract ids and fetch data blogs
-      const blogIds = blogsData.posts.map(post => post._id);
+      const blogIds = blogsData.map(post => post._id);
 
       console.log(
         "commentFilter",
@@ -205,11 +206,9 @@ const BlogProvider = ({ children }) => {
         postIds,
       });
 
-      // Set hasMore before filtering the posts and dispatching actions
-      setHasMore(blogsData.hasMore);
       console.log(
         "blogsData",
-        blogsData.posts.map(b => b._id)
+        blogsData.map(b => b._id)
       );
       console.log(
         "commentsData",
@@ -219,11 +218,21 @@ const BlogProvider = ({ children }) => {
         "votesData",
         votesData.map(v => v._id)
       );
+      console.log("isStateReset", isStateReset);
 
       // Filter out any posts that are already in the blogFilter, commentFilter or voteFilter state
-      const newPosts = filterNewItems(blogsData.posts, state.blogFilter);
-      const newComments = filterNewItems(commentsData, state.commentFilter);
-      const newVotes = filterNewItems(votesData, state.voteFilter);
+      const newPosts = filterNewItems(
+        blogsData,
+        isStateReset ? [] : state.blogFilter
+      );
+      const newComments = filterNewItems(
+        commentsData,
+        isStateReset ? [] : state.commentFilter
+      );
+      const newVotes = filterNewItems(
+        votesData,
+        isStateReset ? [] : state.voteFilter
+      );
       console.log(
         "newPosts",
         newPosts.map(p => p._id)
@@ -271,6 +280,13 @@ const BlogProvider = ({ children }) => {
           });
         }
       }
+
+      // Set hasMore before filtering the posts and dispatching actions
+      setHasMore(newPosts.length === limit || isStateReset);
+      console.log("newPosts.length", newPosts.length);
+      console.log("limit", limit);
+      // Set the isStateReset flag back to false
+      setIsStateReset(false);
     } catch (error) {
       console.log("getFilteredBlogPosts error", error);
       if (error.request?.url?.includes("/comment/filter")) {
@@ -425,6 +441,7 @@ const BlogProvider = ({ children }) => {
           scrollToBlogPost,
           setPage,
           setOrder,
+          setIsStateReset,
         }}
       >
         {children}

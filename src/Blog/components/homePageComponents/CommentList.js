@@ -31,19 +31,19 @@ const CommentList = ({ blogId, userInfo }) => {
   });
 
   useEffect(() => {
-    console.log("blogId", blogId);
-    console.log(
-      "commentFilterLocalStorage",
-      commentFilterLocalStorage.map(c => c._id)
-    );
+    // console.log("blogId", blogId);
+    // console.log(
+    //   "commentFilterLocalStorage",
+    //   commentFilterLocalStorage.map(c => c._id)
+    // );
     // Initialize the sortedComments state with the existing comments for this blog post
     const commentsPerBlogPost = commentFilterLocalStorage.filter(
       comment => comment.blog === blogId
     );
-    console.log(
-      "commentsPerBlogPost",
-      commentsPerBlogPost.map(c => c._id)
-    );
+    // console.log(
+    //   "commentsPerBlogPost",
+    //   commentsPerBlogPost.map(c => c._id)
+    // );
     dispatch(setSortedComments(commentsPerBlogPost));
     // eslint-disable-next-line
   }, [blogId]); // Only re-run the useEffect hook when the blogId changes

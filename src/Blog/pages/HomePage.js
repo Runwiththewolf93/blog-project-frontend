@@ -3,10 +3,7 @@ import Message from "../components/homePageComponents/Message";
 import Body from "../components/homePageComponents/Body";
 import Layout from "../components/shared/Layout";
 import { useAppContextState } from "../store/appContext";
-import {
-  useBlogContextState,
-  useBlogContextDispatch,
-} from "../store/blogContext";
+import { useBlogContextState } from "../store/blogContext";
 
 // HomePage component
 const HomePage = () => {
@@ -16,7 +13,6 @@ const HomePage = () => {
   const [isFiltering, setIsFiltering] = useState(true);
   const { userInfo } = useAppContextState();
   const { blogFilterLocalStorage } = useBlogContextState();
-  const { getAllBlogPosts } = useBlogContextDispatch();
 
   const debouncedHandleSearch = useCallback(
     event => {
@@ -52,7 +48,6 @@ const HomePage = () => {
     <Layout handleSearch={debouncedHandleSearch}>
       <Message
         userInfo={userInfo}
-        getAllBlogPosts={getAllBlogPosts}
         toggleShowMyPosts={toggleShowMyPosts}
         setSearchQuery={setSearchQuery}
         setShowMyPosts={setShowMyPosts}

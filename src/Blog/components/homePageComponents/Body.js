@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { useAppContextState } from "../../store/appContext";
 import { useBlogContextState } from "../../store/blogContext";
@@ -7,6 +8,7 @@ import BlogSections from "./BlogSections";
 import BlogPosts from "./BlogPosts";
 import ScrollToTopPopup from "./ButtonOverlay";
 import { LoadingComponent, ErrorComponent, NoPosts } from "./BodyComponents";
+import useIntersectionObserver from "./useIntersectionObserver";
 
 // Body component
 const Body = ({ userInfo, blogDataToShow, isFiltering }) => {
@@ -14,6 +16,15 @@ const Body = ({ userInfo, blogDataToShow, isFiltering }) => {
   const { isLoadingFilter, errorFilter, hasMore, page } = useBlogContextState();
   const { commentFilterLocalStorage } = useCommentContextState();
   const { voteFilterLocalStorage } = useVoteContextState();
+  const [loadingRef, isLoaderVisible] = useIntersectionObserver();
+
+  useEffect(() => {
+    if (isLoaderVisible) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [isLoaderVisible]);
 
   if (!userInfo) {
     return (
@@ -49,6 +60,8 @@ const Body = ({ userInfo, blogDataToShow, isFiltering }) => {
     return <NoPosts />;
   }
 
+  console.log("hasMore", hasMore);
+
   return (
     <Container>
       <Row className="my-3" id={`category1`}>
@@ -57,7 +70,11 @@ const Body = ({ userInfo, blogDataToShow, isFiltering }) => {
         </Col>
         <Col md={10}>
           <BlogPosts blogDataToShow={blogDataToShow} userInfo={userInfo} />
-          {hasMore && <LoadingComponent />}
+          {hasMore && (
+            <div ref={loadingRef}>
+              <LoadingComponent />
+            </div>
+          )}
           <div className="d-flex justify-content-end">
             <ScrollToTopPopup />
           </div>

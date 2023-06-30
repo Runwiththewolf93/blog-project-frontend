@@ -275,7 +275,7 @@ const CommentProvider = ({ children }) => {
       // If there are no new comments, there are no more comments
       setHasMoreComments(prevState => ({
         ...prevState,
-        [blogId]: newComments.length > 0,
+        [blogId]: newComments.length === limit,
       }));
 
       dispatch({

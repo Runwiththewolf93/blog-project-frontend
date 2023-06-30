@@ -10,7 +10,6 @@ import useScrollToLoadMore from "./useScroll";
 // Message component
 function Message({
   userInfo,
-  getAllBlogPosts,
   toggleShowMyPosts,
   setSearchQuery,
   setShowMyPosts,
@@ -18,6 +17,7 @@ function Message({
 }) {
   const mounted = useRef(false);
   const sortOrOrderChanged = useRef(false);
+  const blogFilterLocalStorageRef = useRef(blogFilterLocalStorage);
   const [showCard, setShowCard] = useState(false);
   const [sort, setSort] = useState("createdAt");
   const [show, setShow] = useState(true);
@@ -29,25 +29,34 @@ function Message({
     resetErrorFilter,
     setPage,
     setOrder,
+    setIsStateReset,
   } = useBlogContextDispatch();
+
+  // Test out the app further
 
   const handleSortChange = newSort => {
     setSort(newSort);
+    setIsStateReset(true);
     sortOrOrderChanged.current = true;
   };
 
   const handleOrderChange = newOrder => {
     setOrder(newOrder);
+    setIsStateReset(true);
     sortOrOrderChanged.current = true;
   };
 
+  useEffect(() => {
+    blogFilterLocalStorageRef.current = blogFilterLocalStorage;
+  }, [blogFilterLocalStorage]);
+
   // Initial fetch and reset of data from server
   useEffect(() => {
-    const resetAndFetchPosts = async () => {
+    const resetAndFetchPosts = () => {
       if ((userInfo && !mounted.current) || sortOrOrderChanged.current) {
         console.log("Resetting filters...");
         setPage(1);
-        await resetFilteredBlogPosts(() =>
+        resetFilteredBlogPosts(() =>
           getFilteredBlogPosts([], 1, sort, 5, order)
         );
         mounted.current = true;
@@ -73,7 +82,9 @@ function Message({
       console.log("2nd useEffect in Message");
       // Ensure this is not the first render and isLoadingFilter is false
       getFilteredBlogPosts(
-        blogFilterLocalStorage.map(b => b._id),
+        blogFilterLocalStorageRef.current
+          ? blogFilterLocalStorageRef.current.map(b => b._id)
+          : [],
         page,
         sort,
         5,
@@ -95,7 +106,8 @@ function Message({
   };
 
   const handleRefresh = () => {
-    getAllBlogPosts();
+    setPage(1);
+    resetFilteredBlogPosts(() => getFilteredBlogPosts([], 1, sort, 5, order));
     setSearchQuery("");
     setShowMyPosts(false);
   };
