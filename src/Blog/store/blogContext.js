@@ -115,9 +115,6 @@ const BlogProvider = ({ children }) => {
 
       dispatch({ type: RESET_FILTERED_BLOG_POSTS });
 
-      // We've finalized the resetting of state
-      setIsStateReset(true);
-
       // console.log("state after reset", state);
       // console.log(
       //   "local storage after reset",

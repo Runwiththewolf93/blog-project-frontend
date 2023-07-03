@@ -17,7 +17,6 @@ function Message({
 }) {
   const mounted = useRef(false);
   const sortOrOrderChanged = useRef(false);
-  const blogFilterLocalStorageRef = useRef(blogFilterLocalStorage);
   const [showCard, setShowCard] = useState(false);
   const [sort, setSort] = useState("createdAt");
   const [show, setShow] = useState(true);
@@ -33,7 +32,6 @@ function Message({
   } = useBlogContextDispatch();
 
   // Test out the app further
-
   const handleSortChange = newSort => {
     setSort(newSort);
     setIsStateReset(true);
@@ -45,10 +43,6 @@ function Message({
     setIsStateReset(true);
     sortOrOrderChanged.current = true;
   };
-
-  useEffect(() => {
-    blogFilterLocalStorageRef.current = blogFilterLocalStorage;
-  }, [blogFilterLocalStorage]);
 
   // Initial fetch and reset of data from server
   useEffect(() => {
@@ -81,10 +75,9 @@ function Message({
     if (mounted.current && page !== 1 && !isLoadingFilter) {
       console.log("2nd useEffect in Message");
       // Ensure this is not the first render and isLoadingFilter is false
+      // Perhaps remove the ref, not much point using it here
       getFilteredBlogPosts(
-        blogFilterLocalStorageRef.current
-          ? blogFilterLocalStorageRef.current.map(b => b._id)
-          : [],
+        blogFilterLocalStorage.map(b => b._id),
         page,
         sort,
         5,
