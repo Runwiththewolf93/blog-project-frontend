@@ -46,6 +46,7 @@ const HomePage = () => {
 
   return (
     <Layout handleSearch={debouncedHandleSearch}>
+      <div data-testid="homepage" />
       <Message
         userInfo={userInfo}
         toggleShowMyPosts={toggleShowMyPosts}

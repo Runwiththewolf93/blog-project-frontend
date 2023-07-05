@@ -61,6 +61,12 @@ const CommentProvider = ({ children }) => {
 
   // console.log("comment hook commentContext", commentFilterLocalStorage);
 
+  /**
+   * Logs out the user by dispatching the LOGOUT_USER action and clearing the local storage.
+   *
+   * @param {type} dispatch - the dispatch function from the useReducer
+   * @return {type} undefined
+   */
   const logoutUser = () => {
     dispatch({ type: LOGOUT_USER });
     localStorage.clear();
@@ -70,6 +76,7 @@ const CommentProvider = ({ children }) => {
   const authFetch = createAuthFetch(userInfo, logoutUser);
 
   // dispatching below
+
   const getAllCommentsBlogPost = async blogId => {
     dispatch({ type: GET_ALL_COMMENTS_BLOG_POST_BEGIN });
     try {
@@ -339,4 +346,6 @@ export {
   initialState,
   useCommentContextState,
   useCommentContextDispatch,
+  CommentContextState,
+  CommentContextDispatch,
 };

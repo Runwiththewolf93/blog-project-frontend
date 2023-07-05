@@ -9,7 +9,7 @@ const useVoteActions = (type, itemId, currVote) => {
   const updateVoteCount =
     type === "blog" ? updateBlogVoteCount : updateCommentVoteCount;
 
-  const [currentVote, setCurrentVote] = useState(currVote);
+  const [currentVote, setCurrentVote] = useState(currVote || 0);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 

@@ -56,7 +56,7 @@ const VoteProvider = ({ children }) => {
     voteFilterLocalStorage,
     setVoteFilterLocalStorage,
   } = useLocalStorageContext();
-  const {userInfo} = useAppContextState()
+  const { userInfo } = useAppContextState();
 
   const logoutUser = () => {
     dispatch({ type: LOGOUT_USER });
@@ -354,4 +354,6 @@ export {
   initialState,
   useVoteContextState,
   useVoteContextDispatch,
+  VoteContextState,
+  VoteContextDispatch,
 };

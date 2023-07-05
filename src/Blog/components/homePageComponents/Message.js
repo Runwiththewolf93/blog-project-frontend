@@ -67,7 +67,7 @@ function Message({
   console.log("sortOrOrderChanged.current", sortOrOrderChanged.current);
   console.log(
     "blogFilterLocalStorage",
-    blogFilterLocalStorage.map(b => b._id)
+    blogFilterLocalStorage?.map(b => b._id || [])
   );
 
   // Fetch additional data from server

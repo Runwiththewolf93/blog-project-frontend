@@ -460,4 +460,6 @@ export {
   initialState,
   useBlogContextState,
   useBlogContextDispatch,
+  BlogContextState,
+  BlogContextDispatch,
 };

@@ -11,6 +11,10 @@ import { VoteButton, VoteCount } from "./VoteComponents";
 
 // Vote component
 const Vote = ({ type, itemId, userInfo }) => {
+  console.log("type", type);
+  console.log("itemId", itemId);
+  console.log("userInfo", userInfo);
+
   const { currVote, totalVotes } = useVoteData(type, itemId, userInfo);
   const {
     currentVote,

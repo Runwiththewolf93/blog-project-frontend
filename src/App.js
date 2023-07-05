@@ -13,6 +13,11 @@ import { useBlogContextDispatch } from "./Blog/store/blogContext";
 import { useCommentContextDispatch } from "./Blog/store/commentContext";
 import { useVoteContextDispatch } from "./Blog/store/voteContext";
 
+/**
+ * Renders the main application component.
+ *
+ * @return {JSX.Element} The rendered application component.
+ */
 function App() {
   const { userInfo } = useAppContextState();
   const { getAllBlogPosts } = useBlogContextDispatch();
@@ -20,6 +25,11 @@ function App() {
   const { getAllVotes } = useVoteContextDispatch();
 
   useEffect(() => {
+    /**
+     * Fetches all blog, comment, vote data.
+     *
+     * @return {Promise<void>} - A promise that resolves when all data is fetched.
+     */
     const fetchAllData = async () => {
       if (userInfo) {
         await Promise.all([getAllBlogPosts(), getAllComments(), getAllVotes()]);
@@ -27,7 +37,9 @@ function App() {
     };
     fetchAllData();
     // eslint-disable-next-line
-  }, []);
+  }, [userInfo]);
+
+  // continue tomorrow get some tests working at least.
 
   return (
     <BrowserRouter>
