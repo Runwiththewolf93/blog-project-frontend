@@ -8,5 +8,5 @@ module.exports = {
   transform: {
     "^.+\\.[t|j]sx?$": "babel-jest",
   },
-  setupFiles: ["<rootDir>/__mocks__/jest.setup.js"],
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
 };

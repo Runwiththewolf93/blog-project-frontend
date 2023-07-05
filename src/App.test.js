@@ -142,7 +142,7 @@ it("renders all routes without errors", () => {
 });
 
 // Delay due to complexity of HomePage component
-jest.setTimeout(20000);
+// jest.setTimeout(20000);
 
 // Tests that HomePage component is rendered when the path is '/'
 it("renders_homepage_on_root_path", async () => {

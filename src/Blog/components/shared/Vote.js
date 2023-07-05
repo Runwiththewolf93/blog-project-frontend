@@ -11,11 +11,13 @@ import { VoteButton, VoteCount } from "./VoteComponents";
 
 // Vote component
 const Vote = ({ type, itemId, userInfo }) => {
-  console.log("type", type);
-  console.log("itemId", itemId);
-  console.log("userInfo", userInfo);
+  // console.log("type", type);
+  // console.log("itemId", itemId);
+  // console.log("userInfo", userInfo);
 
   const { currVote, totalVotes } = useVoteData(type, itemId, userInfo);
+  // console.log("currVote", currVote);
+  // console.log("totalVotes", totalVotes);
   const {
     currentVote,
     handleUpVoteClick,
@@ -24,6 +26,12 @@ const Vote = ({ type, itemId, userInfo }) => {
     isLoading,
     error,
   } = useVoteActions(type, itemId, currVote);
+  // console.log("currentVote", currentVote);
+  // console.log("handleUpVoteClick", handleUpVoteClick);
+  // console.log("handleDownVoteClick", handleDownVoteClick);
+  // console.log("handleDismissError", handleDismissError);
+  // console.log("isLoading", isLoading);
+  // console.log("errorr", error);
 
   return (
     <div className="d-flex align-items-center">
@@ -32,6 +40,7 @@ const Vote = ({ type, itemId, userInfo }) => {
         className={`me-2 ${currentVote === 1 ? "text-primary" : ""}`}
         onClick={isLoading ? null : handleUpVoteClick}
         disabled={isLoading}
+        testId="upvote-button"
       />
       <VoteCount totalVotes={totalVotes || 0} />
       <VoteButton
@@ -39,6 +48,7 @@ const Vote = ({ type, itemId, userInfo }) => {
         className={`ms-2 ${currentVote === -1 ? "text-danger" : ""}`}
         onClick={isLoading ? null : handleDownVoteClick}
         disabled={isLoading}
+        testId="downvote-button"
       />
       {error && (
         <FontAwesomeIcon
