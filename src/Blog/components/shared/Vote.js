@@ -10,14 +10,24 @@ import useVoteActions from "./useVoteActions";
 import { VoteButton, VoteCount } from "./VoteComponents";
 
 // Vote component
+/**
+ * A React component that displays a voting interface with upvote and downvote buttons, vote count display, and an error icon for displaying error messages.
+ *
+ * @param {Object} props - The properties passed to the component.
+ * @param {string} props.type - A string which determines if the voting action is for a blog post or a comment.
+ * @param {string} props.itemId - The _id property of either a blog post or a comment, used to identify the specific item.
+ * @param {object} props.userInfo - An object containing information about the currently logged-in user.
+ * @param {string} props.userInfo._id - The MongoDB assigned unique identifier for the user.
+ * @param {string} props.userInfo.name - The name of the user.
+ * @param {string} props.userInfo.email - The email of the user.
+ * @param {boolean} props.userInfo.isAdmin - A boolean indicating if the user has admin privileges.
+ * @param {string} props.userInfo.token - The authentication token for the user.
+ *
+ * @returns {JSX.Element} A voting interface with two voting buttons (upvote and downvote), a vote count display, and an error icon for displaying error messages.
+ */
 const Vote = ({ type, itemId, userInfo }) => {
-  // console.log("type", type);
-  // console.log("itemId", itemId);
-  // console.log("userInfo", userInfo);
-
   const { currVote, totalVotes } = useVoteData(type, itemId, userInfo);
-  // console.log("currVote", currVote);
-  // console.log("totalVotes", totalVotes);
+
   const {
     currentVote,
     handleUpVoteClick,
@@ -26,12 +36,6 @@ const Vote = ({ type, itemId, userInfo }) => {
     isLoading,
     error,
   } = useVoteActions(type, itemId, currVote);
-  // console.log("currentVote", currentVote);
-  // console.log("handleUpVoteClick", handleUpVoteClick);
-  // console.log("handleDownVoteClick", handleDownVoteClick);
-  // console.log("handleDismissError", handleDismissError);
-  // console.log("isLoading", isLoading);
-  // console.log("errorr", error);
 
   return (
     <div className="d-flex align-items-center">

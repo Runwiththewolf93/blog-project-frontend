@@ -5,6 +5,14 @@ import { useBlogContextDispatch } from "../../store/blogContext";
 import { useCommentContextDispatch } from "../../store/commentContext";
 import { useVoteContextDispatch } from "../../store/voteContext";
 
+/**
+ * Renders the UserActions component.
+ *
+ * @param {Object} userInfo - The user information.
+ * @param {Object} post - The post information.
+ * @return {JSX.Element} The rendered UserActions component.
+ */
+// UserActions component
 const UserActions = ({ userInfo, post }) => {
   const { deleteBlogPost } = useBlogContextDispatch();
   const { deleteAllCommentsBlogPost } = useCommentContextDispatch();
@@ -45,7 +53,7 @@ const UserActions = ({ userInfo, post }) => {
               delay={{ show: 250, hide: 400 }}
               overlay={renderTooltip}
             >
-              <span className="d-inline-block">
+              <span className="d-inline-block" data-testid="error-overlay">
                 <Button
                   variant="light"
                   className="ms-3"

@@ -9,6 +9,14 @@ import PostImages from "../shared/PostImages";
 import BlogPostWrapper from "../shared/BlogPostWrapper";
 import { useMediaQuery } from "react-responsive";
 
+/**
+ * Renders a blog post component.
+ *
+ * @param {Object} post - The blog post object.
+ * @param {Object} userInfo - The user information object.
+ * @return {JSX.Element} The rendered blog post component.
+ */
+// BlogPost component
 const BlogPost = ({ post, userInfo }) => {
   const isDesktopOrLaptop = useMediaQuery({
     query: "(min-width: 1280px)",
@@ -41,7 +49,7 @@ const BlogPost = ({ post, userInfo }) => {
             <UserInfo
               title={post.title}
               date={post.createdAt}
-              name={post.user.name}
+              name={post.user?.name}
             />
             <PostButton showPostOverlay={true} postId={post._id} />
           </div>
@@ -49,7 +57,9 @@ const BlogPost = ({ post, userInfo }) => {
         </Col>
       </Row>
       <Card.Text className="mt-3">{post.content}</Card.Text>
-      {post.images && <PostImages images={post.images} title={post.title} />}
+      {post.images && (
+        <PostImages images={post.images || []} title={post.title} />
+      )}
     </BlogPostWrapper>
   );
 };

@@ -2,8 +2,45 @@ import { ListGroup, Button } from "react-bootstrap";
 import useCommentSort from "./useCommentSort";
 import { useMediaQuery } from "react-responsive";
 
+/**
+ * Component for sorting comments based on 'Created At', 'Updated At', or 'Total Votes'.
+ *
+ * @component
+ * @param {Object} props
+ * @param {Object} props.state - The current state of the reducer from useReducer hook.
+ * @param {string|null} props.state.editCommentId - The ID of the comment being edited.
+ * @param {string} props.state.editedComment - The edited text of the comment.
+ * @param {string|null} props.state.loadingCommentId - The ID of the comment that is being loaded.
+ * @param {string|null} props.state.errorCommentId - The ID of the comment that had an error during loading.
+ * @param {string} props.state.errorMessage - The error message associated with the comment.
+ * @param {Array} props.state.sortedComments - An array of comments that are sorted.
+ * @param {Function} props.dispatch - The dispatch function from the useReducer hook.
+ * @param {Object} props.sortState - The current state of sorting from useState hook.
+ * @param {string} props.sortState.field - The field by which comments are currently sorted.
+ * @param {string} props.sortState.order - The current sorting order, either "asc" or "desc".
+ * @param {Function} props.setSortState - Function to set the state of sorting.
+ *
+ * @example
+ * const initialState = {
+ *   editCommentId: null,
+ *   editedComment: "",
+ *   loadingCommentId: null,
+ *   errorCommentId: null,
+ *   errorMessage: "",
+ *   sortedComments: []
+ * };
+ * const reducer = (state, action) => { ... };
+ * const [state, dispatch] = useReducer(reducer, initialState);
+ * const [sortState, setSortState] = useState({ field: '', order: '' });
+ *
+ * return <CommentSort state={state} dispatch={dispatch} sortState={sortState} setSortState={setSortState} />;
+ */
 // CommentSort component
 const CommentSort = ({ state, dispatch, sortState, setSortState }) => {
+  console.log(state);
+  console.log(dispatch);
+  console.log(sortState);
+  console.log(setSortState);
   const { handleSortByCreatedAt, handleSortByUpdatedAt, handleSortByVotes } =
     useCommentSort(state.sortedComments, dispatch, sortState, setSortState);
 

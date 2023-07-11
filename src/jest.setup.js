@@ -19,3 +19,7 @@ global.IntersectionObserver = class IntersectionObserver {
     return null;
   }
 };
+
+global.FormData = jest.fn(() => ({
+  append: jest.fn(),
+}));

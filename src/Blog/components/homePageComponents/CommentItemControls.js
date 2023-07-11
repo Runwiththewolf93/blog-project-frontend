@@ -15,16 +15,33 @@ const CommentItemControls = ({ comment, blogId, state, dispatch }) => {
     useCommentContextDispatch();
   const { deleteCommentVoteCount } = useVoteContextDispatch();
 
+  /**
+   * Handles canceling the edit of a comment.
+   *
+   * @return {undefined} No return value.
+   */
   const handleCancelEditComment = () => {
     dispatch(setEditCommentId(null));
     dispatch(setEditedComment(""));
   };
 
+  /**
+   * Handles dismissing an error.
+   *
+   * @return {undefined} No return value.
+   */
   const handleDismissError = () => {
     dispatch(setErrorCommentId(null));
     dispatch(setErrorMessage(""));
   };
 
+  /**
+   * Handles saving a comment by editing it.
+   *
+   * @param {string} commentId - The ID of the comment to be edited.
+   * @param {string} editedComment - The edited content of the comment.
+   * @return {void} Returns nothing.
+   */
   const handleSaveComment = async (commentId, editedComment) => {
     dispatch(setLoadingCommentId(commentId));
     try {
@@ -40,26 +57,30 @@ const CommentItemControls = ({ comment, blogId, state, dispatch }) => {
   };
 
   return state.loadingCommentId === comment._id ? (
-    <Spinner />
+    <Spinner data-testid="spinner" />
   ) : state.errorCommentId === comment._id ? (
     <Alert
       variant="danger"
       dismissible
       onClose={handleDismissError}
       style={{ maxWidth: "400px" }}
+      data-testid="alert"
     >
       {state.errorMessage}
     </Alert>
   ) : state.editCommentId === comment._id ? (
     <Form className="mx-3">
-      <Form.Label className="mb-0">Edit a comment</Form.Label>
-      <Form.Control
-        as="textarea"
-        rows={3}
-        value={state.editedComment}
-        onChange={event => dispatch(setEditedComment(event.target.value))}
-        style={{ backgroundColor: "#D0D0D0" }}
-      />
+      <Form.Group controlId="editComment">
+        <Form.Label className="mb-0">Edit a comment</Form.Label>
+        <Form.Control
+          as="textarea"
+          rows={3}
+          value={state.editedComment}
+          onChange={event => dispatch(setEditedComment(event.target.value))}
+          style={{ backgroundColor: "#D0D0D0" }}
+          data-testid="edit-comment-textarea"
+        />
+      </Form.Group>
       <Button
         type="button"
         variant="secondary"

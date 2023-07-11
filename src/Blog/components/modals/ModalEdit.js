@@ -5,6 +5,12 @@ import ModalFooterContent from "./ModalFooterContent";
 import FormInput from "./FormInput";
 import useModal from "./useModal";
 
+/**
+ * Renders a modal for editing a blog post.
+ *
+ * @component
+ * @param {Object} post - The post object to be edited.
+ */
 // ModalEdit component
 const ModalEdit = ({ post }) => {
   const {
@@ -48,6 +54,8 @@ const ModalEdit = ({ post }) => {
   }, [postUpdated, scrollToBlogPost, values._id]);
 
   const handleSubmit = async e => {
+    console.log("Is this even triggered 1?");
+
     e.preventDefault();
 
     const hasFilesToUpload =
@@ -60,6 +68,7 @@ const ModalEdit = ({ post }) => {
       images: values.images,
     };
 
+    console.log("Is this even triggered 2?");
     if (hasFilesToUpload) {
       const formData = new FormData();
 
@@ -75,7 +84,9 @@ const ModalEdit = ({ post }) => {
         });
       }
 
+      console.log("Is this even triggered 3?");
       const { avatar, images } = await uploadBlogImages(formData);
+      console.log("Is this even triggered 4?");
 
       // Merge uploaded image URLs with the existing URLs
       let newImages = [...values.images];
@@ -93,7 +104,7 @@ const ModalEdit = ({ post }) => {
         images: newImages,
       };
     }
-
+    console.log("Is this even triggered 5?");
     await editBlogPost({ id: values._id, updatedValues: newValues });
 
     setValues(post);
