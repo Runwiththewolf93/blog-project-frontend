@@ -18,41 +18,41 @@ This project is complete. Tests remain to be conducted on some components, but t
 
 ## Project Screen Shot(s)  
 
-Before login
+**Before login**
 ![Screenshot](./public/assets/Frontend-1.png)
 
-Login
+**Login**
 ![Screenshot](./public/assets/Frontend-2.png)
 
-Logged in
+**Logged in**
 ![Screenshot](./public/assets/Frontend-3.png)
 
-Add blog post modal
+**Add blog post modal**
 ![Screenshot](./public/assets/Frontend-4.png)
 
-Profile Page
+**Profile Page**
 ![Screenshot](./public/assets/Frontend-5.png)
 
-Interests Page
+**Interests Page**
 ![Screenshot](./public/assets/Frontend-6.png)
 
-Information Page - part 1
+**Information Page - part 1**
 ![Screenshot](./public/assets/Frontend-7.png)
 
-Information Page - part 2
+**Information Page - part 2**
 ![Screenshot](./public/assets/Frontend-8.png)
 
-Information Page - part 3
+**Information Page - part 3**
 ![Screenshot](./public/assets/Frontend-9.png)
 
-Information Page - part 4
+**Information Page - part 4**
 ![Screenshot](./public/assets/Frontend-10.png)
 
 ## Installation and Setup Instructions
 
 Clone down this repository. You will need `node` and `npm` installed globally on your machine. You will also need to clone my other repository, the blog-project-backend. To use the blog-project-backend, please create a new .env file at the root of the directory. You will need to provide the port on which you would like for the project to run locally on (PORT), your own mongoDB credentails (MONGO_URL), a jwt secret and lifetime (JWT_SECRET, JWT_LIFETIME), your own cloudinary name, api key, secret (CLOUDINARY_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET), as well as a sendgrid api key (SENDGRID_API_KEY). Once this process is completed, please move into the blog-project-frontend directory. In the root of the directory, please create another .env file. In this .env file, you will need to add an unsplash access key (REACT_APP_UNSPLASH_ACCESS_KEY), as well as an abstract exchange, location, and holiday api key (REACT_APP_ABSTRACT_EXCHANGE_API_KEY, REACT_APP_ABSTRACT_LOCATION_API_KEY, and REACT_APP_ABSTRACT_HOLIDAY_API_KEY).      
 
-Installation:
+**Installation:**
 
 Once the .env files are populated on the backend and the frontend, please run the npm install command in both directories.  
 To Run Test Suite:  
@@ -69,45 +69,45 @@ To Visit App:
 
 ## Features
 
-Complex State Management: The application manages a complex state operation with over 30 routes going to the backend. This was achieved using the useContext and useReducer React hooks across 5 different context files and corresponding reducer files.
+**Complex State Management:** The application manages a complex state operation with over 30 routes going to the backend. This was achieved using the useContext and useReducer React hooks across 5 different context files and corresponding reducer files.
 
-Password Reset Functionality: The application provides a comprehensive password reset functionality. Users can reset their password if they know their current password. If they don't, the application provides a secure way to reset it via email.
+**Password Reset Functionality:** The application provides a comprehensive password reset functionality. Users can reset their password if they know their current password. If they don't, the application provides a secure way to reset it via email.
 
-Image Upload: Users can upload images for their profile picture and blog posts. The application supports both file uploads and URL inputs. This was implemented using Cloudinary for image hosting.
+**Image Upload:** Users can upload images for their profile picture and blog posts. The application supports both file uploads and URL inputs. This was implemented using Cloudinary for image hosting.
 
-Voting System: The application features a Reddit-like voting system for blog posts and comments. Users can upvote, downvote, or remove their vote from a blog post or a comment. The voting system is implemented in a way that a user can change their vote from upvote to downvote and vice versa.
+**Voting System:** The application features a Reddit-like voting system for blog posts and comments. Users can upvote, downvote, or remove their vote from a blog post or a comment. The voting system is implemented in a way that a user can change their vote from upvote to downvote and vice versa.
 
-Optimized Data Fetching: To improve performance, the application implements an optimized data fetching system. It includes features like limit, sort, and order for blog posts, and a debounced scroll to load more function. This was achieved by creating separate routes for blogs, comments, and votes on the backend.
+**Optimized Data Fetching:** To improve performance, the application implements an optimized data fetching system. It includes features like limit, sort, and order for blog posts, and a debounced scroll to load more function. This was achieved by creating separate routes for blogs, comments, and votes on the backend.
 
-Custom Hooks: The application uses custom hooks throughout the project to encapsulate and reuse stateful logic.
+**Custom Hooks:** The application uses custom hooks throughout the project to encapsulate and reuse stateful logic.
 
-Additional Features: The application includes a currency exchange converter and a visual representation of blog, comments, and votes data using the Recharts library.
+**Additional Features:** The application includes a currency exchange converter and a visual representation of blog, comments, and votes data using the Recharts library.
 
 ## Technologies
 
 This project was built using a variety of technologies and libraries to provide a rich, interactive user experience. Here are some of the key technologies used:
 
-React: The application's UI was built using React, a popular JavaScript library for building user interfaces.
+*React:* The application's UI was built using React, a popular JavaScript library for building user interfaces.
 
-React Router DOM: This was used for managing the routing in the application, allowing for seamless navigation across different components.
+*React Router DOM:* This was used for managing the routing in the application, allowing for seamless navigation across different components.
 
-Bootstrap: This was used for styling the application and making it responsive across different screen sizes.
+*Bootstrap:* This was used for styling the application and making it responsive across different screen sizes.
 
-Axios: This was used for making HTTP requests to the backend.
+*Axios:* This was used for making HTTP requests to the backend.
 
-Classnames: This was used for conditional rendering of class names in the application.
+*Classnames:* This was used for conditional rendering of class names in the application.
 
-History: This was used for managing session history in the application.
+*History:* This was used for managing session history in the application.
 
-Leaflet and React-Leaflet: These were used for implementing interactive maps in the application.
+*Leaflet and React-Leaflet:* These were used for implementing interactive maps in the application.
 
-React-Responsive: This was used for making the application responsive and optimizing the UI for different screen sizes.
+*React-Responsive:* This was used for making the application responsive and optimizing the UI for different screen sizes.
 
-Recharts: This was used for visualizing blog, comments, and votes data in the application.
+*Recharts:* This was used for visualizing blog, comments, and votes data in the application.
 
-UUID: This was used for generating unique identifiers.
+*UUID:* This was used for generating unique identifiers.
 
-Moment: This was used for parsing, validating, manipulating, and displaying dates and times in JavaScript.
+*Moment:* This was used for parsing, validating, manipulating, and displaying dates and times in JavaScript.
 
 The application was bootstrapped with create-react-app to minimize initial setup and allow more time for feature development. In the future, I'm excited to explore and implement different technologies in other projects!
 
