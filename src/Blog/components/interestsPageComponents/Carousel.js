@@ -1,14 +1,26 @@
 import { useState, useEffect } from "react";
-import { Row, Col, Carousel, ListGroup, Card } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Carousel,
+  ListGroup,
+  Card,
+  Spinner,
+  Alert,
+} from "react-bootstrap";
 import { truncateContent, sortData } from "../../utils/helper";
 import PostTypeSelector from "./PostTypeSelector";
 import { useMediaQuery } from "react-responsive";
+import { Link } from "react-router-dom";
 
-const CarouselComponent = ({ blogInfo }) => {
+// CarouselComponent
+const CarouselComponent = ({ blogInfo, isLoadingBlog }) => {
   const [currentPostIndex, setCurrentPostIndex] = useState(0);
   const [postImageIndices, setPostImageIndices] = useState([0, 0, 0]);
   const [postType, setPostType] = useState("popular");
   const [topPosts, setTopPosts] = useState([]);
+
+  console.log("blogInfo", blogInfo);
 
   // Sort the blogInfo by the value of totalVotes and get the top 3 posts
   useEffect(() => {
@@ -32,6 +44,19 @@ const CarouselComponent = ({ blogInfo }) => {
   };
 
   const isTabletOrSmaller = useMediaQuery({ query: "(max-width: 768px)" });
+
+  if (isLoadingBlog) {
+    return <Spinner variant="primary" />;
+  }
+
+  if (topPosts.length === 0) {
+    return (
+      <Alert variant="primary">
+        Looks like no blog posts have been added. Head over to the{" "}
+        <Link to="/">home page</Link> to add some!
+      </Alert>
+    );
+  }
 
   return (
     <Row className={`m-3 ${isTabletOrSmaller && "fs-5"}`}>

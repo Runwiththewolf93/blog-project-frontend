@@ -83,7 +83,13 @@ const countUserVoteObjects = voteInfo => {
   return userVoteCounts;
 };
 
+// sortData helper function
 const sortData = (data, postType) => {
+  // just in case
+  if (!Array.isArray(data) || data.length === 0) {
+    return [];
+  }
+
   let sortedData = [...data];
 
   if (postType === "popular") {
@@ -97,17 +103,19 @@ const sortData = (data, postType) => {
   return sortedData;
 };
 
+// calculateMostPost helper function
 const calculateMostPost = (data, countProp, calcCount, blogInfo) => {
-  const counts = data.reduce((acc, curr) => {
+  const counts = data?.reduce((acc, curr) => {
     acc[curr[countProp]] = (acc[curr[countProp]] || 0) + calcCount(curr);
     return acc;
   }, {});
 
-  const mostPostId = Object.keys(counts).reduce((a, b) =>
-    counts[a] > counts[b] ? a : b
-  );
+  const mostPostId =
+    Object.keys(counts).length > 0
+      ? Object.keys(counts).reduce((a, b) => (counts[a] > counts[b] ? a : b))
+      : null;
 
-  return blogInfo.find(post => post._id === mostPostId);
+  return mostPostId ? blogInfo.find(post => post._id === mostPostId) : null;
 };
 
 const generateChartData = (data, labelKey, valueKey) => {

@@ -67,6 +67,8 @@ const useGeolocation = apiKey => {
       .finally(() => setIsLoading(false));
   }, [apiKey]);
 
+  console.log(locationData);
+
   return { locationData, isLoading, error };
 };
 

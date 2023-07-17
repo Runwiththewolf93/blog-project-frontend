@@ -31,6 +31,7 @@ function App() {
      * @return {Promise<void>} - A promise that resolves when all data is fetched.
      */
     const fetchAllData = async () => {
+      console.log("does this trigger?");
       if (userInfo) {
         await Promise.all([getAllBlogPosts(), getAllComments(), getAllVotes()]);
       }

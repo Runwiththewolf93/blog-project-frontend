@@ -7,10 +7,11 @@ import { useBlogContextState } from "../store/blogContext";
 import { useCommentContextState } from "../store/commentContext";
 import { useVoteContextState } from "../store/voteContext";
 
+// InterestsPage component
 const InterestsPage = () => {
-  const { blogInfo } = useBlogContextState();
-  const { commentInfo } = useCommentContextState();
-  const { voteInfo } = useVoteContextState();
+  const { blogInfo, isLoadingBlog } = useBlogContextState();
+  const { commentInfo, isLoadingComment } = useCommentContextState();
+  const { voteInfo, isLoadingVote } = useVoteContextState();
 
   console.log("blogInfo", blogInfo);
   console.log("commentInfo", commentInfo);
@@ -20,13 +21,21 @@ const InterestsPage = () => {
     <Layout>
       <Row>
         <Col>
-          <CarouselComponent blogInfo={blogInfo} />
+          <CarouselComponent
+            blogInfo={blogInfo}
+            isLoadingComment={isLoadingBlog}
+          />
         </Col>
       </Row>
       <hr />
       <Row>
         <Col>
-          <EditorsChoice blogInfo={blogInfo} commentInfo={commentInfo} />
+          <EditorsChoice
+            blogInfo={blogInfo}
+            commentInfo={commentInfo}
+            isLoadingBlog={isLoadingBlog}
+            isLoadingComment={isLoadingComment}
+          />
         </Col>
       </Row>
       <hr />
@@ -36,6 +45,9 @@ const InterestsPage = () => {
             blogInfo={blogInfo}
             commentInfo={commentInfo}
             voteInfo={voteInfo}
+            isLoadingBlog={isLoadingBlog}
+            isLoadingComment={isLoadingComment}
+            isLoadingVote={isLoadingVote}
           />
         </Col>
       </Row>

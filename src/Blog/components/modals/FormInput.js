@@ -24,7 +24,7 @@ const FormInput = ({
 
   return (
     <Form.Group className="mb-3" controlId={uniqueControlId}>
-      <Form.Label>{label}</Form.Label>
+      <Form.Label className="mb-0">{label}</Form.Label>
       {isFileInput ? (
         <>
           <Form.Control

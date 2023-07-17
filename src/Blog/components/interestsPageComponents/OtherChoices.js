@@ -1,13 +1,21 @@
 import { useState, useMemo } from "react";
-import { Accordion } from "react-bootstrap";
+import { Accordion, Spinner } from "react-bootstrap";
 import { calculateMostPost } from "../../utils/helper";
 
-const OtherChoices = ({ blogInfo = [], commentInfo = [], voteInfo = [] }) => {
+// OtherChoices component
+const OtherChoices = ({
+  blogInfo,
+  commentInfo,
+  voteInfo,
+  isLoadingBlog,
+  isLoadingComment,
+  isLoadingVote,
+}) => {
   const setActiveItem = useState(0)[1];
 
   // Calculate the controversial posts
   const controversialPosts = useMemo(() => {
-    const voteCounts = voteInfo.reduce((acc, curr) => {
+    const voteCounts = voteInfo?.reduce((acc, curr) => {
       acc[curr.post] = acc[curr.post] || { upvotes: 0, downvotes: 0 };
       if (curr.vote === 1) acc[curr.post].upvotes += 1;
       else if (curr.vote === -1) acc[curr.post].downvotes += 1;
@@ -43,6 +51,10 @@ const OtherChoices = ({ blogInfo = [], commentInfo = [], voteInfo = [] }) => {
     { post: mostCommentedPost, title: "Most Commented Post" },
     { post: mostVotedPost, title: "Most Voted Post" },
   ];
+
+  if (isLoadingBlog || isLoadingComment || isLoadingVote) {
+    return <Spinner variant="primary" />;
+  }
 
   return (
     <div className="m-3">

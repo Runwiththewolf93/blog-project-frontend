@@ -8,6 +8,7 @@ import TabletLayout from "../components/profilePageComponents/TabletLayout";
 import MobileLayout from "../components/profilePageComponents/MobileLayout";
 import { useMediaQuery } from "react-responsive";
 
+// ProfilePage component
 const ProfilePage = () => {
   const { userProfile } = useRandomUsers("male");
   const { userInfo } = useAppContextState();
@@ -22,6 +23,8 @@ const ProfilePage = () => {
     query: "(min-width: 577px) and (max-width: 1199px)",
   });
   const isMobile = useMediaQuery({ query: "(max-width: 576px)" });
+
+  console.log("blogInfo", blogInfo);
 
   if (isDesktopOrLaptop) {
     return (

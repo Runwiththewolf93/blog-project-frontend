@@ -1,11 +1,18 @@
 import { useState, useEffect } from "react";
-import { Row, Col, CardGroup } from "react-bootstrap";
+import { Row, Col, CardGroup, Spinner, Alert } from "react-bootstrap";
 import { sortData } from "../../utils/helper";
 import PostTypeSelector from "./PostTypeSelector";
 import { useMediaQuery } from "react-responsive";
 import CardComponent from "./CardComponent";
+import { Link } from "react-router-dom";
 
-const EditorsChoice = ({ blogInfo, commentInfo }) => {
+// EditorsChoice component
+const EditorsChoice = ({
+  blogInfo,
+  commentInfo,
+  isLoadingBlog,
+  isLoadingComment,
+}) => {
   const [sortedComments, setSortedComments] = useState([]);
   const [postType, setPostType] = useState("popular");
 
@@ -19,11 +26,13 @@ const EditorsChoice = ({ blogInfo, commentInfo }) => {
 
     sortedComments.forEach(comment => {
       const blogPost = blogInfoMap[comment.blog];
-      const randomImageIndex = Math.floor(
-        Math.random() * blogPost.images.length
-      );
-      comment.blogPostTitle = blogPost.title;
-      comment.blogPostImage = blogPost.images[randomImageIndex];
+      if (blogPost) {
+        const randomImageIndex = Math.floor(
+          Math.random() * blogPost.images.length
+        );
+        comment.blogPostTitle = blogPost.title;
+        comment.blogPostImage = blogPost.images[randomImageIndex];
+      }
     });
 
     setSortedComments(sortedComments.slice(0, 6));
@@ -36,6 +45,19 @@ const EditorsChoice = ({ blogInfo, commentInfo }) => {
   const isSmallScreenAndSmaller = useMediaQuery({
     query: "(max-width: 576px)",
   });
+
+  if (isLoadingBlog || isLoadingComment) {
+    return <Spinner variant="primary" />;
+  }
+
+  if (sortedComments.length === 0) {
+    return (
+      <Alert>
+        Looks like no comments have been added. Head over to the{" "}
+        <Link to="/">home page</Link> to add some!
+      </Alert>
+    );
+  }
 
   return (
     <div className="m-3">

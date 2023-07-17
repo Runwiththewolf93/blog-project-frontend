@@ -6,6 +6,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import FigureComponent from "./Figure";
 
+// TabbedInterface component
 function TabbedInterface({
   locationData,
   images,
@@ -36,14 +37,13 @@ function TabbedInterface({
             <Tab.Pane eventKey="first">
               <Row>
                 <Col sm={12}>
-                  <h4
-                    className="mb-4"
-                    style={{ transform: "translateX(-15px)" }}
-                  >
+                  <h4 className="mb-4">
                     <FontAwesomeIcon
                       icon={faLocationCrosshairs}
                       size="2x"
-                      style={{ transform: "translateY(10px)" }}
+                      style={{
+                        transform: "translateY(10px) translateX(-5px)",
+                      }}
                     />
                     <strong className="ps-1">Location Information:</strong>
                   </h4>
@@ -55,10 +55,16 @@ function TabbedInterface({
                     <Alert variant="danger">{errorGeolocation}</Alert>
                   ) : (
                     <Row className="align-items-start">
-                      <Col xs={1}>
-                        <FontAwesomeIcon icon={faCircle} />
+                      <Col
+                        xs={1}
+                        className="d-flex flex-column justify-content-between"
+                      >
                         <FontAwesomeIcon
-                          style={{ marginTop: "20px" }}
+                          icon={faCircle}
+                          style={{ marginTop: "5px" }}
+                        />
+                        <FontAwesomeIcon
+                          style={{ marginTop: "25px" }}
                           icon={faCircle}
                         />
                         {Array(7)
@@ -66,12 +72,12 @@ function TabbedInterface({
                           .map((_, index) => (
                             <FontAwesomeIcon
                               key={index}
-                              style={{ marginTop: "20px" }}
+                              style={{ marginTop: "25px" }}
                               icon={faCircle}
                             />
                           ))}
                         <FontAwesomeIcon
-                          style={{ marginTop: "37px" }}
+                          style={{ marginTop: "30px" }}
                           icon={faCircle}
                         />
                       </Col>
@@ -142,7 +148,5 @@ function TabbedInterface({
     </Tab.Container>
   );
 }
-
-// images tomorrow
 
 export default TabbedInterface;
