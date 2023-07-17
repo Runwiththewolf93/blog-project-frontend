@@ -22,6 +22,7 @@ This project is complete. Tests remain to be conducted on some components, but t
 #### Example:   
 
 [ PRETEND SCREEN SHOT IS HERE ]
+[![Screenshot Title]([screenshot.png](https://drive.google.com/file/d/1LtvKLm1ufLOhltYrOo29boWFkjvOptdB/view?usp=drive_link))]([screenshot.png](https://drive.google.com/file/d/1LtvKLm1ufLOhltYrOo29boWFkjvOptdB/view?usp=drive_link))
 
 [ PRETEND OTHER SCREEN SHOT IS HERE ]
 
