@@ -21,10 +21,36 @@ This project is complete. Tests remain to be conducted on some components, but t
 
 #### Example:   
 
-[ PRETEND SCREEN SHOT IS HERE ]
+Before login
 ![Screenshot](./public/assets/Frontend-1.png)
 
-[ PRETEND OTHER SCREEN SHOT IS HERE ]
+Login
+![Screenshot](./public/assets/Frontend-2.png)
+
+Logged in
+![Screenshot](./public/assets/Frontend-3.png)
+
+Add blog post modal
+![Screenshot](./public/assets/Frontend-4.png)
+
+Profile Page
+![Screenshot](./public/assets/Frontend-5.png)
+
+Interests Page
+![Screenshot](./public/assets/Frontend-6.png)
+
+Information Page - part 1
+![Screenshot](./public/assets/Frontend-7.png)
+
+Information Page - part 2
+![Screenshot](./public/assets/Frontend-8.png)
+
+Information Page - part 3
+![Screenshot](./public/assets/Frontend-9.png)
+
+Information Page - part 4
+![Screenshot](./public/assets/Frontend-10.png)
+
 
 ## Installation and Setup Instructions
 
