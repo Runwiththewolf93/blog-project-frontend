@@ -13,6 +13,14 @@ import {
   initialState,
 } from "./CommentsReducer";
 
+/**
+ * Render a list of comments for a blog post.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.blogId - The ID of the blog post.
+ * @param {Object} props.userInfo - The user information.
+ * @returns {JSX.Element} The rendered component.
+ */
 // CommentList component
 const CommentList = ({ blogId, userInfo }) => {
   const { scrollToBlogPost } = useBlogContextDispatch();
@@ -50,10 +58,10 @@ const CommentList = ({ blogId, userInfo }) => {
 
   // handleLoadMoreComments function activated on click
   const handleLoadMoreComments = () => {
-    console.log(
-      "state.sortedComments",
-      state.sortedComments.map(c => c._id)
-    );
+    // console.log(
+    //   "state.sortedComments",
+    //   state.sortedComments.map(c => c._id)
+    // );
     const limit = 5;
     getMoreFilteredComments(
       blogId,
@@ -62,7 +70,7 @@ const CommentList = ({ blogId, userInfo }) => {
       sortState.field,
       sortState.order
     ).then(newComments => {
-      console.log("newComments:", newComments);
+      // console.log("newComments:", newComments);
       // Append the new comments to the sortedComments state
       dispatch(setSortedComments([...state.sortedComments, ...newComments]));
     });
@@ -144,12 +152,3 @@ const CommentList = ({ blogId, userInfo }) => {
 };
 
 export default CommentList;
-
-// test out some more tomorrow, see about votes what can be done.
-// console.log("hasMoreComments[blogId]", hasMoreComments[blogId]);
-// console.log("showComments", showComments);
-// console.log(
-//   "state.sortedComments.length > 0",
-//   state.sortedComments.length > 0
-// );
-// console.log("shouldLoadMoreComments", shouldLoadMoreComments);

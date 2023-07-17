@@ -46,34 +46,59 @@ export const initialState = {
   sortedComments: [],
 };
 
+/**
+ * Reducer function for managing comments state.
+ *
+ * @param {object} state - The current state.
+ * @param {object} action - The action object.
+ * @return {object} The updated state.
+ */
 export const commentsReducer = (state, action) => {
   switch (action.type) {
     case SET_EDIT_COMMENT_ID:
+      if (!action.payload || typeof action.payload !== "string") {
+        return state;
+      }
       return {
         ...state,
         editCommentId: action.payload,
       };
     case SET_EDITED_COMMENT:
+      if (!action.payload || typeof action.payload !== "string") {
+        return state;
+      }
       return {
         ...state,
         editedComment: action.payload,
       };
     case SET_LOADING_COMMENT_ID:
+      if (!action.payload || typeof action.payload !== "string") {
+        return state;
+      }
       return {
         ...state,
         loadingCommentId: action.payload,
       };
     case SET_ERROR_COMMENT_ID:
+      if (!action.payload || typeof action.payload !== "string") {
+        return state;
+      }
       return {
         ...state,
         errorCommentId: action.payload,
       };
     case SET_ERROR_MESSAGE:
+      if (!action.payload || typeof action.payload !== "string") {
+        return state;
+      }
       return {
         ...state,
         errorMessage: action.payload,
       };
     case SET_SORTED_COMMENTS:
+      if (!action.payload || !Array.isArray(action.payload)) {
+        return state;
+      }
       return {
         ...state,
         sortedComments: action.payload,

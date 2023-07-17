@@ -8,6 +8,16 @@ import {
   ClearSubmitButtonGroup,
 } from "./FormComponents";
 
+/**
+ * Renders a form for resetting password.
+ *
+ * @param {Object} props - The props object containing the following properties:
+ *   - isLoadingReset (boolean): Indicates if the reset process is in progress.
+ *   - successMessage (string): The success message to display.
+ *   - errorReset (string): The error message to display.
+ * @return {JSX.Element} The rendered form.
+ */
+// ForgotPasswordForm component
 const ForgotPasswordForm = ({ isLoadingReset, successMessage, errorReset }) => {
   const { forgotUserPassword, resetSuccessMessage } = useAppContextDispatch();
   const navigate = useNavigate();

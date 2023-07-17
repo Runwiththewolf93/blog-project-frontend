@@ -15,6 +15,13 @@ import {
 } from "../../store/appContext";
 import { useMediaQuery } from "react-responsive";
 
+/**
+ * Renders a navigation component with a search bar and links to different pages.
+ *
+ * @param {function} handleSearch - a callback function to handle search input changes
+ * @return {JSX.Element} - the rendered navigation component
+ */
+// Navigation component
 function Navigation({ handleSearch }) {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const { userInfo } = useAppContextState();

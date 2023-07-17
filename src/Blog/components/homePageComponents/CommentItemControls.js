@@ -9,6 +9,16 @@ import {
   setErrorMessage,
 } from "./CommentsReducer";
 
+/**
+ * Renders the controls for a comment item.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.comment - The comment object.
+ * @param {string} props.blogId - The ID of the blog post.
+ * @param {Object} props.state - The component state.
+ * @param {Function} props.dispatch - The dispatch function.
+ * @return {JSX.Element} The rendered controls for the comment item.
+ */
 // CommentItemControls component
 const CommentItemControls = ({ comment, blogId, state, dispatch }) => {
   const { editCommentBlogPost, deleteCommentBlogPost } =

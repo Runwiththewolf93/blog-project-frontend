@@ -1,6 +1,14 @@
 import { useEffect } from "react";
 import { debounce } from "../../utils/helper";
 
+/**
+ * useScrollToLoadMore hook
+ *
+ * @param {Object} options - The options for the hook.
+ * @param {boolean} options.isLoadingFilter - Whether the filter is currently loading.
+ * @param {boolean} options.hasMore - Whether there are more items to load.
+ * @param {function} options.setPage - The function to set the current page.
+ */
 // useScrollToLoadMore hook
 const useScrollToLoadMore = ({ isLoadingFilter, hasMore, setPage }) => {
   useEffect(() => {

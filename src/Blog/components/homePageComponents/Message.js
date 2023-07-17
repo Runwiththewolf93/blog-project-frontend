@@ -31,7 +31,6 @@ function Message({
     setIsStateReset,
   } = useBlogContextDispatch();
 
-  // Test out the app further
   const handleSortChange = newSort => {
     setSort(newSort);
     setIsStateReset(true);
@@ -62,13 +61,13 @@ function Message({
     // eslint-disable-next-line
   }, [userInfo, sort, order]);
 
-  console.log("userInfo", userInfo);
-  console.log("mounted.current", mounted.current);
-  console.log("sortOrOrderChanged.current", sortOrOrderChanged.current);
-  console.log(
-    "blogFilterLocalStorage",
-    blogFilterLocalStorage?.map(b => b._id || [])
-  );
+  // console.log("userInfo", userInfo);
+  // console.log("mounted.current", mounted.current);
+  // console.log("sortOrOrderChanged.current", sortOrOrderChanged.current);
+  // console.log(
+  //   "blogFilterLocalStorage",
+  //   blogFilterLocalStorage?.map(b => b._id || [])
+  // );
 
   // Fetch additional data from server
   useEffect(() => {
@@ -87,10 +86,10 @@ function Message({
     // eslint-disable-next-line
   }, [page]);
 
-  console.log("sort", sort);
-  console.log("order", order);
-  console.log("page", page);
-  console.log("hasMore", hasMore);
+  // console.log("sort", sort);
+  // console.log("order", order);
+  // console.log("page", page);
+  // console.log("hasMore", hasMore);
 
   useScrollToLoadMore({ isLoadingFilter, hasMore, setPage });
 

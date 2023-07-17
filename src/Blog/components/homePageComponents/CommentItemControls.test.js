@@ -1,13 +1,5 @@
-import {
-  render,
-  screen,
-  fireEvent,
-  waitFor,
-  act,
-} from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import CommentItemControls from "./CommentItemControls";
-import { useCommentContextDispatch } from "../../store/commentContext";
-import { useVoteContextDispatch } from "../../store/voteContext";
 import {
   setEditCommentId,
   setEditedComment,
@@ -297,14 +289,33 @@ it("triggers setEditedComment action on typing in the 'edit comment' input field
 });
 
 // Tests that clicking the dismiss button on the error alert dismisses the error
-// it("dismisses the error on clicking the dismiss button on the error alert", async () => {
-//   // arrange your test
-//   // ...
+it("dismisses the error on clicking the dismiss button on the error alert", async () => {
+  const comment = {
+    _id: "1",
+  };
+  const blogId = "1";
+  const state = {
+    loadingCommentId: null,
+    errorCommentId: "1",
+    editCommentId: null,
+    editedComment: "",
+    errorMessage: "Test error",
+  };
+  const dispatch = jest.fn();
 
-//   // simulate clicking the dismiss button
-//   fireEvent.click(screen.getByRole("button", { name: "Close" }));
+  render(
+    <CommentItemControls
+      comment={comment}
+      blogId={blogId}
+      state={state}
+      dispatch={dispatch}
+    />
+  );
 
-//   // assert that the appropriate actions were dispatched
-//   expect(dispatch).toHaveBeenCalledWith(setErrorCommentId(null));
-//   expect(dispatch).toHaveBeenCalledWith(setErrorMessage(""));
-// });
+  // simulate clicking the dismiss button
+  fireEvent.click(screen.getByRole("button", { name: "Close alert" }));
+
+  // assert that the appropriate actions were dispatched
+  expect(dispatch).toHaveBeenCalledWith(setErrorCommentId(null));
+  expect(dispatch).toHaveBeenCalledWith(setErrorMessage(""));
+});

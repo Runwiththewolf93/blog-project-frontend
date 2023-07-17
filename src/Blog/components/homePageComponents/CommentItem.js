@@ -3,7 +3,18 @@ import { ListGroup } from "react-bootstrap";
 import Vote from "../shared/Vote";
 import CommentItemControls from "./CommentItemControls";
 
-// CommentItem component, parent to CommentItemControls component
+/**
+ * Render a single comment item.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.comment - The comment object.
+ * @param {Object} props.userInfo - The user information object.
+ * @param {string} props.blogId - The blog ID.
+ * @param {Object} props.state - The component state.
+ * @param {Function} props.dispatch - The state dispatch function.
+ * @returns {JSX.Element} The rendered comment item.
+ */
+// CommentItem component
 const CommentItem = ({ comment, userInfo, blogId, state, dispatch }) => {
   const controlsProps = useMemo(
     () => ({

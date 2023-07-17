@@ -37,10 +37,6 @@ import { useMediaQuery } from "react-responsive";
  */
 // CommentSort component
 const CommentSort = ({ state, dispatch, sortState, setSortState }) => {
-  console.log(state);
-  console.log(dispatch);
-  console.log(sortState);
-  console.log(setSortState);
   const { handleSortByCreatedAt, handleSortByUpdatedAt, handleSortByVotes } =
     useCommentSort(state.sortedComments, dispatch, sortState, setSortState);
 
