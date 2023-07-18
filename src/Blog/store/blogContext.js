@@ -68,6 +68,12 @@ const initialState = {
 const BlogContextState = React.createContext();
 const BlogContextDispatch = React.createContext();
 
+/**
+ * Renders the BlogProvider component, which wraps the children components with the BlogContext state and dispatch providers.
+ *
+ * @param {object} children - The children components.
+ * @returns {JSX.Element} - The rendered component.
+ */
 const BlogProvider = ({ children }) => {
   const [state, dispatch] = useReducer(blogReducer, initialState);
   const [postUpdated, setPostUpdated] = useState(false);
@@ -85,6 +91,12 @@ const BlogProvider = ({ children }) => {
     setVoteFilterLocalStorage,
   } = useLocalStorageContext();
 
+  /**
+   * Logs out the user and clears the local storage.
+   *
+   * @param {function} dispatch - The dispatch function from the Redux store.
+   * @return {void} This function does not return a value.
+   */
   const logoutUser = () => {
     dispatch({ type: LOGOUT_USER });
     localStorage.clear();
@@ -94,15 +106,32 @@ const BlogProvider = ({ children }) => {
   const authFetch = createAuthFetch(userInfo, logoutUser);
 
   // dispatching below
+
+  /**
+   * Resets the blog post and removes it from localStorage.
+   *
+   * @param {void}
+   * @return {void}
+   */
   const resetBlogPost = () => {
     dispatch({ type: RESET_BLOG_POST });
     localStorage.removeItem("blogPost");
   };
 
+  /**
+   * Resets the blog error.
+   *
+   * @param {void}
+   * @return {void}
+   */
   const resetBlogError = () => {
     dispatch({ type: RESET_BLOG_ERROR });
   };
 
+  /**
+   * The function `resetFilteredBlogPosts` resets filters for blog posts by removing them from local
+   * storage and dispatching a reset action.
+   */
   // resetFilteredBlogPosts dispatch function
   const resetFilteredBlogPosts = async callback => {
     try {
@@ -132,10 +161,21 @@ const BlogProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Resets the error filter.
+   *
+   * @param {void}
+   * @return {void}
+   */
   const resetErrorFilter = () => {
     dispatch({ type: RESET_ERROR_FILTER });
   };
 
+  /**
+   * Retrieves all blog posts.
+   *
+   * @return {Promise} - The data representing all blog posts.
+   */
   // getAllBlogPosts dispatch function
   const getAllBlogPosts = async () => {
     dispatch({ type: GET_ALL_BLOG_POSTS_BEGIN });
@@ -152,6 +192,16 @@ const BlogProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Retrieves filtered blog posts based on the specified parameters.
+   *
+   * @param {Array} blogFilterIds - An array of blog filter IDs.
+   * @param {number} page - The page number (default: 1).
+   * @param {string} sort - The sort key (default: "createdAt").
+   * @param {number} limit - The maximum number of posts to retrieve (default: 5).
+   * @param {string} order - The sort order (default: "desc").
+   * @return {Promise} A promise that resolves to the filtered blog posts.
+   */
   // getFilteredBlogPosts dispatch function
   const getFilteredBlogPosts = async (
     blogFilterIds,
@@ -298,6 +348,11 @@ const BlogProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Fetches a single blog post by ID and dispatches the result to the state.
+   * @param {string} id - The ID of the blog post to fetch.
+   * @returns {Promise<void>}
+   */
   const getSingleBlogPost = async id => {
     dispatch({ type: GET_SINGLE_BLOG_POST_BEGIN });
 
@@ -311,6 +366,12 @@ const BlogProvider = ({ children }) => {
     }
   };
 
+  /**
+   * @function addBlogPost
+   * @description Adds a new blog post to the blog filter.
+   * @param {Object} newPostData The data for the new blog post.
+   * @returns {Promise} A promise that resolves with the updated blog filter.
+   */
   // addBlogPost dispatch function
   const addBlogPost = async newPostData => {
     dispatch({ type: ADD_BLOG_POST_BEGIN });
@@ -336,6 +397,11 @@ const BlogProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Uploads blog images using the provided form data and dispatches the result to the state.
+   * @param {FormData} formData - The form data containing the images to upload.
+   * @returns {Promise<{avatar: string, images: string[]}>} - The avatar URL and an array of image URLs.
+   */
   const uploadBlogImages = async formData => {
     dispatch({ type: UPLOAD_BLOG_IMAGES_BEGIN });
 
@@ -354,6 +420,14 @@ const BlogProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Edits a blog post.
+   *
+   * @param {Object} param - The parameters for editing the blog post.
+   * @param {string} param.id - The ID of the blog post to edit.
+   * @param {Object} param.updatedValues - The updated values for the blog post.
+   * @return {Promise} A promise that resolves to the edited blog post.
+   */
   // editBlogPost dispatch function
   const editBlogPost = async ({ id, updatedValues }) => {
     dispatch({ type: EDIT_BLOG_POST_BEGIN });
@@ -377,6 +451,11 @@ const BlogProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Deletes a blog post by ID and updates the state and local storage accordingly.
+   * @param {string} id - The ID of the blog post to delete.
+   * @returns {Promise<void>}
+   */
   // deleteBlogPost dispatch function
   const deleteBlogPost = async id => {
     dispatch({ type: DELETE_BLOG_POST_BEGIN });
@@ -447,10 +526,20 @@ const BlogProvider = ({ children }) => {
   );
 };
 
+/**
+ * Returns the state object from the BlogContext.
+ *
+ * @return {Object} The state object from the BlogContext.
+ */
 const useBlogContextState = () => {
   return useContext(BlogContextState);
 };
 
+/**
+ * Returns the context dispatcher for the BlogContext.
+ *
+ * @return {function} The context dispatcher.
+ */
 const useBlogContextDispatch = () => {
   return useContext(BlogContextDispatch);
 };

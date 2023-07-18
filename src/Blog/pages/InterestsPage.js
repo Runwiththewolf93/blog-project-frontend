@@ -7,6 +7,11 @@ import { useBlogContextState } from "../store/blogContext";
 import { useCommentContextState } from "../store/commentContext";
 import { useVoteContextState } from "../store/voteContext";
 
+/**
+ * Renders the InterestsPage component.
+ *
+ * @return {ReactElement} The rendered InterestsPage component.
+ */
 // InterestsPage component
 const InterestsPage = () => {
   const { blogInfo, isLoadingBlog } = useBlogContextState();

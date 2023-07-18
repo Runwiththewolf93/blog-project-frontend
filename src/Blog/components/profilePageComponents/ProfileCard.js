@@ -16,6 +16,17 @@ import { Link } from "react-router-dom";
 import useFetchHighestVotedBlogComments from "./useFetchHighestVotedBlogComments";
 import { useMediaQuery } from "react-responsive";
 
+/**
+ * Renders a profile card component.
+ *
+ * @param {Object} userProfile - The user profile object.
+ * @param {Object} userInfo - The user info object.
+ * @param {Object} blogInfo - The blog info object.
+ * @param {Array} userCommentInfo - The user comment info array.
+ * @param {boolean} isLoadingUserComment - Flag indicating if user comment is loading.
+ * @param {boolean} errorUserComment - Error flag for user comment.
+ * @return {JSX.Element} The profile card component.
+ */
 // ProfileCard component
 const ProfileCard = ({
   userProfile,

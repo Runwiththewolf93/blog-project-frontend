@@ -3,6 +3,13 @@ import { ProgressBar, Card } from "react-bootstrap";
 import { capitalizeName } from "../../utils/helper";
 import { shuffle } from "lodash";
 
+/**
+ * Renders a progress component with randomized labels and variants.
+ *
+ * @param {Object} userProfile - The user profile object.
+ * @param {Object} userInfo - The user info object.
+ * @returns {JSX.Element} The rendered progress component.
+ */
 // Progress component
 const Progress = React.memo(({ userProfile, userInfo }) => {
   const getRandomNumber = () => Math.floor(Math.random() * 71) + 30;

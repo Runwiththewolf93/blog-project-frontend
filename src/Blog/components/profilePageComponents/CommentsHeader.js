@@ -1,6 +1,16 @@
 import { Button } from "react-bootstrap";
 import { useMediaQuery } from "react-responsive";
 
+/**
+ * Renders the header component for comments.
+ *
+ * @param {Object} props - The properties passed to the component.
+ * @param {Function} props.sortByTitleFunction - The function to sort comments by title.
+ * @param {Function} props.sortByDateFunction - The function to sort comments by date.
+ * @param {string} props.titleSortOrder - The current sort order for title.
+ * @param {string} props.dateSortOrder - The current sort order for date.
+ * @return {JSX.Element} The rendered header component.
+ */
 const CommentsHeader = ({
   sortByTitleFunction,
   sortByDateFunction,

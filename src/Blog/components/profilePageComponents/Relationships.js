@@ -3,6 +3,14 @@ import useRandomUsers from "../../hooks/useRandomUsers";
 import { processUsers, concatAndSliceData } from "../../utils/helper";
 import { useAppContextState } from "../../store/appContext";
 
+/**
+ * Render the Relationships component.
+ *
+ * @param {Object} userProfile - the user profile object
+ * @param {Object} userInfo - the user info object
+ * @param {Object} blogInfo - the blog info object
+ * @return {JSX.Element} - the rendered component
+ */
 const Relationships = ({ userProfile, userInfo, blogInfo }) => {
   const { isLoading, users: allUsers, error } = useAppContextState();
 

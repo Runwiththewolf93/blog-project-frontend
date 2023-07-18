@@ -4,6 +4,15 @@ import PinnedBlogPost from "./PinnedBlogPost";
 import CommentsOverview from "./CommentsOverview";
 import useSort from "./useSort";
 
+/**
+ * Renders the UserComments component.
+ *
+ * @param {Object} userInfo - The information about the user.
+ * @param {boolean} isLoadingUserComment - Indicates if the user comments are still loading.
+ * @param {string} errorUserComment - The error message, if any, when loading the user comments.
+ * @param {Object} userCommentInfo - The information about the user's comments.
+ * @return {JSX.Element} The rendered UserComments component.
+ */
 const UserComments = ({
   userInfo,
   isLoadingUserComment,

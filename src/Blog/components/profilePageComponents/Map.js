@@ -6,6 +6,13 @@ import Spinner from "../shared/Spinner";
 import "leaflet/dist/leaflet.css";
 import { useMediaQuery } from "react-responsive";
 
+/**
+ * Renders a Map component that displays the current location of a user.
+ *
+ * @param {object} userProfile - The user profile object.
+ * @param {object} userInfo - The user info object.
+ * @return {JSX.Element} The rendered Map component.
+ */
 // Map component
 const MapComponent = ({ userProfile, userInfo }) => {
   const position =

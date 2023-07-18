@@ -8,6 +8,17 @@ import Map from "./Map";
 import Information from "./Information";
 import UserComments from "./UserComments";
 
+/**
+ * Renders the tablet layout component.
+ *
+ * @param {Object} userProfile - The user profile information.
+ * @param {Object} userInfo - The user information.
+ * @param {Object} blogInfo - The blog information.
+ * @param {Object} userCommentInfo - The user comment information.
+ * @param {boolean} isLoadingUserComment - Indicates if the user comment is being loaded.
+ * @param {Object} errorUserComment - The error encountered while loading the user comment.
+ * @return {JSX.Element} The tablet layout component.
+ */
 const TabletLayout = ({
   userProfile,
   userInfo,

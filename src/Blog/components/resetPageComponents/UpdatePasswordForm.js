@@ -9,6 +9,16 @@ import {
   ClearSubmitButtonGroup,
 } from "./FormComponents";
 
+/**
+ * Renders the UpdatePasswordForm component.
+ *
+ * @param {Object} props - The component props.
+ * @param {boolean} props.isLoadingReset - Indicates whether the reset operation is in progress.
+ * @param {string} props.successMessage - The success message to display.
+ * @param {string} props.errorReset - The error message to display.
+ * @param {Object} props.userInfo - The user information.
+ * @return {JSX.Element} The rendered UpdatePasswordForm component.
+ */
 const UpdatePasswordForm = ({
   isLoadingReset,
   successMessage,
@@ -46,10 +56,20 @@ const UpdatePasswordForm = ({
   const handleCurrentPasswordChange = e => setCurrentPassword(e.target.value);
   const handleNewPasswordChange = e => setNewPassword(e.target.value);
 
+  /**
+   * Toggles the visibility of the current password.
+   *
+   * @return {void} No return value.
+   */
   const toggleCurrentPasswordVisibility = () => {
     setShowCurrentPassword(!showCurrentPassword);
   };
 
+  /**
+   * Toggles the visibility of the new password.
+   *
+   * @return {void} No return value.
+   */
   const toggleNewPasswordVisibility = () => {
     setShowNewPassword(!showNewPassword);
   };
@@ -65,6 +85,11 @@ const UpdatePasswordForm = ({
     setNewPassword("");
   };
 
+  /**
+   * Clear the current password and new password.
+   *
+   * @return {void}
+   */
   const handleClear = () => {
     setCurrentPassword("");
     setNewPassword("");
@@ -124,5 +149,3 @@ const UpdatePasswordForm = ({
 };
 
 export default UpdatePasswordForm;
-
-// refactor the forms, test out a bit more, see if state can be fixed. Implement file upload for create and update blog post.

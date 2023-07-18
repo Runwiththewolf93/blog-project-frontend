@@ -1,6 +1,15 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+/**
+ * Fetches Unsplash images based on the provided query.
+ *
+ * @param {string} query - The search query for the images.
+ * @param {number} numOfPhotos - The number of photos to fetch.
+ * @param {function} setIsLoadingImages - A function to set the loading state of the images.
+ * @param {function} setErrorImages - A function to set the error state of the images.
+ * @return {Array} The fetched images.
+ */
 const useUnsplashImages = (
   query,
   numOfPhotos,

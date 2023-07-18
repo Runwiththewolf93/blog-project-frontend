@@ -61,6 +61,12 @@ const ForgotPasswordForm = ({ isLoadingReset, successMessage, errorReset }) => {
     setEmailAddress("");
   };
 
+  /**
+   * Clears the email address.
+   *
+   * @param {void}
+   * @return {void}
+   */
   const handleClear = () => {
     setEmailAddress("");
   };

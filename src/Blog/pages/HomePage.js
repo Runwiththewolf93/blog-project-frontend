@@ -5,6 +5,11 @@ import Layout from "../components/shared/Layout";
 import { useAppContextState } from "../store/appContext";
 import { useBlogContextState } from "../store/blogContext";
 
+/**
+ * Renders the homepage component.
+ *
+ * @returns {JSX.Element} The rendered homepage component.
+ */
 // HomePage component
 const HomePage = () => {
   const searchTimeout = useRef();

@@ -52,6 +52,12 @@ const initialState = {
 const CommentContextState = React.createContext();
 const CommentContextDispatch = React.createContext();
 
+/**
+ * Renders a CommentProvider component that wraps the specified children components.
+ *
+ * @param {ReactNode} children - The components to be wrapped by CommentProvider.
+ * @return {ReactNode} The wrapped components.
+ */
 const CommentProvider = ({ children }) => {
   const [state, dispatch] = useReducer(commentReducer, initialState);
   const [hasMoreComments, setHasMoreComments] = useState({});
@@ -77,6 +83,10 @@ const CommentProvider = ({ children }) => {
 
   // dispatching below
 
+  /**
+   * The function `getAllCommentsBlogPost` is an asynchronous function that retrieves all comments for
+   * a specific blog post.
+   */
   const getAllCommentsBlogPost = async blogId => {
     dispatch({ type: GET_ALL_COMMENTS_BLOG_POST_BEGIN });
     try {
@@ -88,6 +98,11 @@ const CommentProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Retrieves all comments for a user.
+   *
+   * @return {Promise<void>} - A Promise that resolves when all comments are retrieved.
+   */
   const getAllCommentsUser = async () => {
     dispatch({ type: GET_ALL_COMMENTS_USER_BEGIN });
 
@@ -102,6 +117,11 @@ const CommentProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Retrieves all comments from the server.
+   *
+   * @return {Promise<void>} - A promise that resolves when the comments are retrieved successfully.
+   */
   const getAllComments = async () => {
     dispatch({ type: GET_ALL_COMMENTS_BEGIN });
 
@@ -116,6 +136,13 @@ const CommentProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Add a comment to a blog post.
+   *
+   * @param {string} blogId - The ID of the blog post.
+   * @param {string} comment - The comment to be added.
+   * @return {Promise<void>} A promise that resolves when the comment is added successfully.
+   */
   // addCommentBlogPost dispatch function
   const addCommentBlogPost = async (blogId, comment) => {
     dispatch({ type: ADD_COMMENT_BLOG_POST_BEGIN });
@@ -146,6 +173,14 @@ const CommentProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Edits a comment of a blog post.
+   *
+   * @param {string} blogId - The ID of the blog post.
+   * @param {string} commentId - The ID of the comment to be edited.
+   * @param {Object} editedComment - The edited comment data.
+   * @return {Promise<void>} - A promise that resolves when the comment is edited successfully.
+   */
   // editCommentBlogPost dispatch function
   const editCommentBlogPost = async (blogId, commentId, editedComment) => {
     dispatch({ type: EDIT_COMMENT_BLOG_POST_BEGIN });
@@ -179,6 +214,13 @@ const CommentProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Deletes a comment from a blog post.
+   *
+   * @param {string} blogId - The ID of the blog post.
+   * @param {string} commentId - The ID of the comment to be deleted.
+   * @return {Promise<void>} - A promise that resolves when the comment is deleted.
+   */
   // deleteCommentBlogPost dispatch function
   const deleteCommentBlogPost = async (blogId, commentId) => {
     dispatch({ type: DELETE_COMMENT_BLOG_POST_BEGIN });
@@ -210,6 +252,11 @@ const CommentProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Deletes all comments for a specific blog post.
+   * @param {string} blogId - The ID of the blog post.
+   * @returns {Promise<void>}
+   */
   // deleteAllCommentsBlogPost dispatch function
   const deleteAllCommentsBlogPost = async blogId => {
     dispatch({ type: DELETE_ALL_COMMENTS_BLOG_POST_BEGIN });
@@ -238,11 +285,26 @@ const CommentProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Resets the comment error.
+   *
+   * @return {void}
+   */
   // resetCommentError dispatch function
   const resetCommentError = () => {
     dispatch({ type: RESET_COMMENT_ERROR });
   };
 
+  /**
+   * Retrieves more filtered comments from the server.
+   *
+   * @param {string} blogId - The ID of the blog.
+   * @param {Array<string>} commentIds - An array of comment IDs.
+   * @param {number} [limit=5] - The maximum number of comments to retrieve.
+   * @param {string} [sort="createdAt"] - The field used to sort the comments.
+   * @param {string} [order="asc"] - The order in which the comments are sorted.
+   * @returns {Array<object>} An array of new comments.
+   */
   // getMoreFilteredComments dispatch function
   const getMoreFilteredComments = async (
     blogId,
@@ -333,10 +395,20 @@ const CommentProvider = ({ children }) => {
   );
 };
 
+/**
+ * Returns the state of the CommentContext.
+ *
+ * @return {CommentContextState} The state of the CommentContext.
+ */
 const useCommentContextState = () => {
   return useContext(CommentContextState);
 };
 
+/**
+ * Returns the CommentContextDispatch value from the comment context.
+ *
+ * @return {CommentContextDispatch} The CommentContextDispatch value from the comment context.
+ */
 const useCommentContextDispatch = () => {
   return useContext(CommentContextDispatch);
 };

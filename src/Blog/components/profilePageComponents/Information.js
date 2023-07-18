@@ -6,6 +6,14 @@ import {
 } from "../../utils/helper";
 import { useVoteContextState } from "../../store/voteContext";
 
+/**
+ * Renders information about the user, including their comments, blogs, and vote counts.
+ *
+ * @param {Object} userCommentInfo - Information about the user's comments.
+ * @param {Object} userInfo - Information about the user.
+ * @param {Object[]} blogInfo - Information about the user's blogs.
+ * @return {JSX.Element} A Card component displaying the user's most popular blog post, most popular comment, and an interesting fact about their voting activity.
+ */
 const Information = ({ userCommentInfo, userInfo, blogInfo }) => {
   const { voteInfo } = useVoteContextState();
 

@@ -3,6 +3,15 @@ import useUnsplashImages from "../../hooks/useUnsplash";
 import { capitalizeFirstLetter, concatAndSliceData } from "../../utils/helper";
 import { useMediaQuery } from "react-responsive";
 
+/**
+ * Renders a component that displays pictures based on user profile and blog information.
+ *
+ * @param {Object} userProfile - The user profile object.
+ * @param {Object} userInfo - The user information object.
+ * @param {Array} blogInfo - The array of blog information.
+ * @return {JSX.Element} The rendered component.
+ */
+// Pictures component
 function Pictures({ userProfile, userInfo, blogInfo }) {
   // filter blogInfo to only include objects that belong to logged in user
   const userBlogInfo = blogInfo.filter(blog => blog.user._id === userInfo._id);

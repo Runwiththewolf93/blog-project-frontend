@@ -8,6 +8,14 @@ import TabletLayout from "../components/profilePageComponents/TabletLayout";
 import MobileLayout from "../components/profilePageComponents/MobileLayout";
 import { useMediaQuery } from "react-responsive";
 
+/**
+ * Generates the profile page based on the user's profile, user info, blog info,
+ * and user comment information. It uses media queries to determine the layout
+ * based on the device width. The function returns different layouts for desktop,
+ * tablet, and mobile devices.
+ *
+ * @returns {React.Component} The profile page component.
+ */
 // ProfilePage component
 const ProfilePage = () => {
   const { userProfile } = useRandomUsers("male");

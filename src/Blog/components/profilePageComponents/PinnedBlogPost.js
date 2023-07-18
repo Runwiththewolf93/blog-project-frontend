@@ -11,6 +11,11 @@ import {
 import CustomListGroup from "../shared/CustomListGroup";
 import { useMediaQuery } from "react-responsive";
 
+/**
+ * Renders a pinned blog post component.
+ *
+ * @returns {JSX.Element} - The pinned blog post component.
+ */
 const PinnedBlogPost = () => {
   const { blogPost } = useBlogContextState();
   const { resetBlogPost } = useBlogContextDispatch();

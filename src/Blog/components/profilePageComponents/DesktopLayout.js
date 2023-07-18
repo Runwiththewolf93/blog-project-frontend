@@ -8,6 +8,17 @@ import Map from "./Map";
 import Information from "./Information";
 import UserComments from "./UserComments";
 
+/**
+ * Renders the desktop layout for the website.
+ *
+ * @param {Object} userProfile - User profile information.
+ * @param {Object} userInfo - User information.
+ * @param {Object} blogInfo - Blog information.
+ * @param {Object} userCommentInfo - User comment information.
+ * @param {boolean} isLoadingUserComment - Indicates if user comment is loading.
+ * @param {Error} errorUserComment - Error object if there is an error retrieving user comment.
+ * @return {JSX.Element} The desktop layout component.
+ */
 const DesktopLayout = ({
   userProfile,
   userInfo,

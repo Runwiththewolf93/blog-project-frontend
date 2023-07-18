@@ -3,11 +3,29 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import styles from "./UpdatePasswordForm.module.css";
 
+/**
+ * A function that renders a form card component.
+ *
+ * @param {Object} children - The child components to be rendered inside the form card.
+ * @return {JSX.Element} - The form card component.
+ */
 // FormCard Component
 const FormCard = ({ children }) => (
   <Card className="p-5 border border-dark rounded-5">{children}</Card>
 );
 
+/**
+ * Renders a password field component.
+ *
+ * @param {Object} props - The props for the component.
+ * @param {string} props.label - The label for the password field.
+ * @param {string} props.placeholder - The placeholder for the password field.
+ * @param {string} props.value - The value of the password field.
+ * @param {boolean} props.showPassword - Flag indicating whether the password is visible.
+ * @param {function} props.togglePasswordVisibility - Function to toggle the visibility of the password.
+ * @param {function} props.onChange - Function to handle the onChange event of the password field.
+ * @returns {ReactElement} The rendered password field component.
+ */
 // PasswordField Component
 const PasswordField = ({
   label,
@@ -35,6 +53,15 @@ const PasswordField = ({
   </Form.Group>
 );
 
+/**
+ * Render an alert message component.
+ *
+ * @param {string} variant - The variant of the alert message.
+ * @param {string} message - The message to be displayed in the alert.
+ * @param {boolean} showAlert - Indicates whether the alert should be shown.
+ * @param {function} onClose - The function to be called when the alert is closed.
+ * @return {ReactElement} The rendered Alert component.
+ */
 // AlertMessage Component
 const AlertMessage = ({ variant, message, showAlert, onClose }) => (
   <Alert
@@ -48,6 +75,16 @@ const AlertMessage = ({ variant, message, showAlert, onClose }) => (
   </Alert>
 );
 
+/**
+ * Generates a function comment for the given function body.
+ *
+ * @param {Object} props - The props object containing the following properties:
+ *   - {string} clearLabel - The label for the clear button.
+ *   - {string} submitLabel - The label for the submit button.
+ *   - {function} handleClear - The callback function for the clear button click event.
+ *   - {boolean} isLoading - Indicates whether the function is currently loading.
+ * @return {JSX.Element} The JSX element representing the ClearSubmitButtonGroup component.
+ */
 // ClearSubmitButtonGroup Component
 const ClearSubmitButtonGroup = ({
   clearLabel,

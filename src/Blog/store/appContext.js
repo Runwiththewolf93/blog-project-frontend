@@ -49,9 +49,21 @@ const initialState = {
 const AppContextState = React.createContext();
 const AppContextDispatch = React.createContext();
 
+/**
+ * A function that creates the AppProvider component and defines various helper functions for user authentication and management.
+ *
+ * @param {Object} children - The child components to be rendered inside the AppProvider component.
+ * @return {JSX.Element} The rendered AppProvider component.
+ */
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
 
+  /**
+   * Logs out the user and clears the local storage.
+   *
+   * @param {boolean} manualLogout - Indicates if the logout was triggered manually.
+   * @return {undefined}
+   */
   const logoutUser = (manualLogout = false) => {
     dispatch({ type: LOGOUT_USER, manualLogout });
     localStorage.clear();
@@ -60,6 +72,15 @@ const AppProvider = ({ children }) => {
   // axios
   const authFetch = createAuthFetch(state.userInfo, logoutUser);
 
+  /**
+   * Registers a user with the given name, email, and password.
+   *
+   * @param {Object} user - The user object containing the name, email, and password.
+   * @param {string} user.name - The name of the user.
+   * @param {string} user.email - The email of the user.
+   * @param {string} user.password - The password of the user.
+   * @returns {Promise} A promise that resolves to the result of the registration.
+   */
   // dispatching below
   const registerUser = async ({ name, email, password }) => {
     dispatch({ type: REGISTER_USER_BEGIN });
@@ -78,6 +99,14 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Logs in a user with the provided email and password.
+   *
+   * @param {Object} param - An object containing the user's email and password.
+   *   @param {string} param.email - The user's email.
+   *   @param {string} param.password - The user's password.
+   * @return {Promise<void>} A promise that resolves when the login is successful.
+   */
   const loginUser = async ({ email, password }) => {
     dispatch({ type: LOGIN_USER_BEGIN });
 
@@ -97,6 +126,11 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Retrieves all users from the server.
+   *
+   * @return {Promise<void>} - A promise that resolves when the operation is complete.
+   */
   const getAllUsers = async () => {
     dispatch({ type: GET_ALL_USERS_BEGIN });
 
@@ -108,22 +142,43 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Resets the user error by dispatching a RESET_USER_ERROR action.
+   * @returns {void}
+   */
   const resetUserError = () => {
     dispatch({ type: RESET_USER_ERROR });
   };
-
+  /**
+   * Resets the user success state.
+   * @returns {void}
+   */
   const resetUserSuccess = () => {
     dispatch({ type: RESET_USER_SUCCESS });
   };
-
+  /**
+   * Resets the success message.
+   * @returns {void}
+   */
   const resetSuccessMessage = () => {
     dispatch({ type: RESET_SUCCESS_MESSAGE });
   };
-
+  /**
+   * Resets the error message.
+   * @returns {void}
+   */
   const resetErrorMessage = () => {
     dispatch({ type: RESET_ERROR_MESSAGE });
   };
 
+  /**
+   * Updates the user's password.
+   *
+   * @param {Object} param - The object containing the current and new passwords.
+   * @param {string} param.currentPassword - The user's current password.
+   * @param {string} param.newPassword - The user's new password.
+   * @return {Promise} A promise that resolves when the password is successfully updated, or rejects with an error.
+   */
   const updateUserPassword = async ({ currentPassword, newPassword }) => {
     dispatch({ type: UPDATE_USER_PASSWORD_BEGIN });
 
@@ -142,6 +197,11 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Sends a forgot password request to the server and dispatches the result to the state.
+   * @param {string} email - The email address of the user.
+   * @returns {Promise<void>}
+   */
   const forgotUserPassword = async email => {
     dispatch({ type: FORGOT_USER_PASSWORD_BEGIN });
 
@@ -156,6 +216,14 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Resets the user's password using the provided password and token.
+   *
+   * @param {Object} param - An object containing the password and token.
+   * @param {string} param.password - The new password to be set.
+   * @param {string} param.token - The token used for password reset.
+   * @return {Promise} A promise that resolves with the updated user data.
+   */
   const resetUserPassword = async ({ password, token }) => {
     dispatch({ type: RESET_USER_PASSWORD_BEGIN });
 
@@ -207,10 +275,20 @@ const AppProvider = ({ children }) => {
   );
 };
 
+/**
+ * Returns the state from the AppContext.
+ *
+ * @return {Object} The state from the AppContext.
+ */
 const useAppContextState = () => {
   return useContext(AppContextState);
 };
 
+/**
+ * Returns the AppContextDispatch from the AppContext.
+ *
+ * @return {AppContextDispatch} The AppContextDispatch object.
+ */
 const useAppContextDispatch = () => {
   return useContext(AppContextDispatch);
 };

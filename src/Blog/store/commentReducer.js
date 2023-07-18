@@ -31,6 +31,13 @@ import {
 
 import { initialState } from "./commentContext";
 
+/**
+ * Reduces the state based on the given action.
+ *
+ * @param {object} state - The current state of the application.
+ * @param {object} action - The action to be performed.
+ * @return {object} The new state after reducing the action.
+ */
 const commentReducer = (state, action) => {
   // list comments for a blog post
   if (action.type === GET_ALL_COMMENTS_BLOG_POST_BEGIN) {

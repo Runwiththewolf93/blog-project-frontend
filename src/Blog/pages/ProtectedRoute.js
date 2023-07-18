@@ -1,6 +1,12 @@
 import { Navigate } from "react-router-dom";
 import { useAppContextState } from "../store/appContext";
 
+/**
+ * Check if the user is authenticated before rendering the children components.
+ *
+ * @param {Object} children - The components to be rendered if the user is authenticated.
+ * @return {Object} The children components if the user is authenticated.
+ */
 // ProtectedRoute wrapper component
 const ProtectedRoute = ({ children }) => {
   const { userInfo } = useAppContextState();

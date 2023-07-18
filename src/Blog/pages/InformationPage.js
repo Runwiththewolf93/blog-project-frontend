@@ -7,6 +7,11 @@ import Holiday from "../components/informationPageComponents/Holiday";
 import useGeolocation from "../hooks/useGeolocation";
 import Charts from "../components/informationPageComponents/Charts";
 
+/**
+ * Renders the InformationPage component.
+ *
+ * @return {ReactNode} The rendered InformationPage component.
+ */
 const InformationPage = () => {
   const apiKey = process.env.REACT_APP_ABSTRACT_LOCATION_API_KEY;
   const {

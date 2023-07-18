@@ -34,6 +34,13 @@ import {
 
 import { initialState } from "./blogContext";
 
+/**
+ * Reducer function for the blog state.
+ *
+ * @param {object} state - The current state of the blog.
+ * @param {object} action - The action object that contains the type and payload.
+ * @return {object} The new state of the blog after applying the action.
+ */
 const blogReducer = (state, action) => {
   // logout reducer
   if (action.type === LOGOUT_USER) {

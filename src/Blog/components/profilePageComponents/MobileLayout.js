@@ -8,6 +8,17 @@ import Map from "./Map";
 import Information from "./Information";
 import UserComments from "./UserComments";
 
+/**
+ * Renders the mobile layout component.
+ *
+ * @param {Object} userProfile - The user profile object.
+ * @param {Object} userInfo - The user information object.
+ * @param {Object} blogInfo - The blog information object.
+ * @param {Object} userCommentInfo - The user comment information object.
+ * @param {boolean} isLoadingUserComment - Indicates if user comments are loading.
+ * @param {string} errorUserComment - The error message for user comments.
+ * @return {JSX.Element} The rendered mobile layout component.
+ */
 const MobileLayout = ({
   userProfile,
   userInfo,

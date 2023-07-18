@@ -27,6 +27,13 @@ import {
 
 import { initialState } from "./appContext";
 
+/**
+ * A reducer function that updates the state based on the action type.
+ *
+ * @param {Object} state - The current state of the application.
+ * @param {Object} action - The action object that contains the type and payload.
+ * @return {Object} The updated state after applying the reducer logic.
+ */
 const appReducer = (state, action) => {
   // register reducer
   if (action.type === REGISTER_USER_BEGIN) {

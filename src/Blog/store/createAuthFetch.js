@@ -1,6 +1,13 @@
 import axios from "axios";
 import axiosRetry from "axios-retry";
 
+/**
+ * Creates an authenticated fetch function.
+ *
+ * @param {Object} userInfo - The user information object.
+ * @param {Function} logoutUser - The function to logout the user.
+ * @return {Function} The authenticated fetch function.
+ */
 const createAuthFetch = (userInfo, logoutUser) => {
   const authFetch = axios.create({
     baseURL: "/api/v1",

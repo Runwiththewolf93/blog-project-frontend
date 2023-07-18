@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+/**
+ * Custom hook that retrieves geolocation data based on the provided API key.
+ * @param {string} apiKey - The API key for accessing the geolocation service.
+ * @returns {Object} - An object containing location data, loading state, and error state.
+ */
 const useGeolocation = apiKey => {
   const [locationData, setLocationData] = useState({});
   const [isLoading, setIsLoading] = useState(true);

@@ -23,6 +23,13 @@ import {
 
 import { initialState } from "./voteContext";
 
+/**
+ * Reduces the state based on the given action.
+ *
+ * @param {Object} state - The current state.
+ * @param {Object} action - The action to be performed.
+ * @return {Object} The updated state.
+ */
 const voteReducer = (state, action) => {
   // get all votes
   if (action.type === GET_ALL_VOTES_BEGIN) {

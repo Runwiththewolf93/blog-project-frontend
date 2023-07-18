@@ -46,6 +46,13 @@ const initialState = {
 const VoteContextState = React.createContext();
 const VoteContextDispatch = React.createContext();
 
+/**
+ * Render the VoteProvider component.
+ *
+ * @param {Object} props - The component props.
+ * @param {ReactNode} props.children - The children elements.
+ * @return {ReactNode} The rendered component.
+ */
 const VoteProvider = ({ children }) => {
   const [state, dispatch] = useReducer(voteReducer, initialState);
   const {
@@ -58,6 +65,12 @@ const VoteProvider = ({ children }) => {
   } = useLocalStorageContext();
   const { userInfo } = useAppContextState();
 
+  /**
+   * Logs out the user.
+   *
+   * @param {type} dispatch - The dispatch function.
+   * @return {type} No return value.
+   */
   const logoutUser = () => {
     dispatch({ type: LOGOUT_USER });
     localStorage.clear();
@@ -66,6 +79,12 @@ const VoteProvider = ({ children }) => {
   // axios
   const authFetch = createAuthFetch(userInfo, logoutUser);
 
+  /**
+   * Retrieves all votes from the server.
+   *
+   * @return {Promise<void>} No return value.
+   */
+  // getAllVotes dispatch function
   const getAllVotes = async () => {
     dispatch({ type: GET_ALL_VOTES_BEGIN });
 
@@ -80,6 +99,13 @@ const VoteProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Updates the vote count of a blog.
+   *
+   * @param {string} blogId - The ID of the blog to update the vote count for.
+   * @param {number} voteCount - The new vote count for the blog.
+   * @return {Promise<void>} A promise that resolves when the vote count is updated successfully.
+   */
   // updateBlogVoteCount dispatch function
   const updateBlogVoteCount = async (blogId, voteCount) => {
     dispatch({ type: UPDATE_BLOG_VOTE_COUNT_BEGIN });
@@ -145,6 +171,13 @@ const VoteProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Updates the vote count of a comment.
+   *
+   * @param {string} commentId - The ID of the comment.
+   * @param {number} voteCount - The new vote count for the comment.
+   * @return {Promise<void>} A promise that resolves when the vote count is updated.
+   */
   // updateCommentVoteCount dispatch function
   const updateCommentVoteCount = async (commentId, voteCount) => {
     dispatch({ type: UPDATE_COMMENT_VOTE_COUNT_BEGIN });
@@ -210,6 +243,10 @@ const VoteProvider = ({ children }) => {
     }
   };
 
+  /**
+   * The `deleteBlogVoteCount` function is an asynchronous function that deletes a vote count for a
+   * blog post and updates the corresponding blog and vote filters in the state.
+   */
   const deleteBlogVoteCount = async blogId => {
     dispatch({ type: DELETE_BLOG_VOTE_COUNT_BEGIN });
 
@@ -248,6 +285,10 @@ const VoteProvider = ({ children }) => {
     }
   };
 
+  /**
+   * The function `deleteCommentVoteCount` is an asynchronous function that deletes a comment vote and
+   * updates the comment and vote filters in the state.
+   */
   const deleteCommentVoteCount = async commentId => {
     dispatch({ type: DELETE_COMMENT_VOTE_COUNT_BEGIN });
 
@@ -286,6 +327,10 @@ const VoteProvider = ({ children }) => {
     }
   };
 
+  /**
+   * The function `deleteAllCommentVotesForBlogPost` deletes all comment votes associated with a
+   * specific blog post.
+   */
   const deleteAllCommentVotesForBlogPost = async blogId => {
     dispatch({ type: DELETE_ALL_COMMENT_VOTES_FOR_BLOG_POST_BEGIN });
 
@@ -341,10 +386,20 @@ const VoteProvider = ({ children }) => {
   );
 };
 
+/**
+ * Returns the state value from the VoteContext.
+ *
+ * @return {VoteContextState} The state value from the VoteContext.
+ */
 const useVoteContextState = () => {
   return useContext(VoteContextState);
 };
 
+/**
+ * Returns the VoteContextDispatch from the current VoteContext.
+ *
+ * @return {VoteContextDispatch} The VoteContextDispatch from the current VoteContext.
+ */
 const useVoteContextDispatch = () => {
   return useContext(VoteContextDispatch);
 };

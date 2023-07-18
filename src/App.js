@@ -40,8 +40,6 @@ function App() {
     // eslint-disable-next-line
   }, [userInfo]);
 
-  // continue tomorrow get some tests working at least.
-
   return (
     <BrowserRouter>
       <Routes>

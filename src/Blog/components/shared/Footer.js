@@ -1,3 +1,8 @@
+/**
+ * Render the footer component.
+ *
+ * @return {JSX.Element} The rendered footer component.
+ */
 function Footer() {
   return (
     <footer className="bg-dark text-center text-white">

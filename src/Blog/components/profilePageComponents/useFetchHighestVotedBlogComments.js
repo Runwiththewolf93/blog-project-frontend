@@ -4,6 +4,11 @@ import {
   useCommentContextDispatch,
 } from "../../store/commentContext";
 
+/**
+ * The function `useFetchHighestVotedBlogComments` fetches the highest voted comments for a given blog
+ * post.
+ * @returns an object with three properties: `isLoadingComment`, `blogCommentInfo`, and `errorComment`.
+ */
 const useFetchHighestVotedBlogComments = blogInfo => {
   const { isLoadingComment, blogCommentInfo, errorComment } =
     useCommentContextState();

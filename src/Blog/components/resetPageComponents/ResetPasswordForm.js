@@ -9,6 +9,16 @@ import {
   ClearSubmitButtonGroup,
 } from "./FormComponents";
 
+/**
+ * Renders a form for resetting the user's password.
+ *
+ * @param {object} props - An object containing the following properties:
+ *   - isLoadingReset: A boolean indicating if the reset process is loading.
+ *   - successMessage: A string containing a success message.
+ *   - errorReset: A string containing an error message.
+ *   - token: A string containing the user's reset token.
+ * @return {JSX.Element} The rendered form component.
+ */
 const ResetPasswordForm = ({
   isLoadingReset,
   successMessage,
@@ -35,6 +45,13 @@ const ResetPasswordForm = ({
 
   const handleNewPasswordChange = e => setNewPassword(e.target.value);
 
+  /**
+   * Toggles the visibility of the new password.
+   *
+   * No parameters.
+   *
+   * @return {void} No return value.
+   */
   const toggleNewPasswordVisibility = () => {
     setShowNewPassword(!showNewPassword);
   };
@@ -49,6 +66,12 @@ const ResetPasswordForm = ({
     setNewPassword("");
   };
 
+  /**
+   * Clear the password value.
+   *
+   * @param {type} - No parameters are required.
+   * @return {type} - No return value.
+   */
   const handleClear = () => {
     setNewPassword("");
   };

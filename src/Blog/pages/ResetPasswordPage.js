@@ -6,6 +6,11 @@ import ForgotPasswordForm from "../components/resetPageComponents/ForgotPassword
 import ResetPasswordForm from "../components/resetPageComponents/ResetPasswordForm";
 import ConfirmationPage from "../components/resetPageComponents/ConfirmationPage";
 
+/**
+ * Renders the Reset Password page based on the user information and token.
+ *
+ * @return {JSX.Element} The rendered Reset Password page.
+ */
 const ResetPasswordPage = () => {
   const { isLoadingReset, userInfo, successMessage, errorReset } =
     useAppContextState();

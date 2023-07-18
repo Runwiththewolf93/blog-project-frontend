@@ -14,6 +14,13 @@ const initialState = {
   isMember: true,
 };
 
+/**
+ * Renders the login page.
+ *
+ * @param {boolean} show - indicates whether the login page should be shown
+ * @param {function} handleClose - callback function to handle closing the login page
+ * @return {JSX.Element} the rendered login page
+ */
 // LoginPage component
 const LoginPage = ({ show, handleClose }) => {
   const { isLoading, error, success } = useAppContextState();
@@ -38,6 +45,11 @@ const LoginPage = ({ show, handleClose }) => {
     resetUserSuccess
   );
 
+  /**
+   * Toggles the value of the 'isMember' property in the 'values' object.
+   *
+   * @return {void}
+   */
   const toggleMember = () => {
     setValues({ ...values, isMember: !values.isMember });
   };
@@ -77,6 +89,9 @@ const LoginPage = ({ show, handleClose }) => {
 
   // Update the LoginForm height whenever the window is resized
   useEffect(() => {
+    /**
+     * Updates the height of the login form.
+     */
     const updateLoginFormHeight = () => {
       if (loginFormRef.current) {
         setLoginFormHeight(loginFormRef.current.offsetHeight);
