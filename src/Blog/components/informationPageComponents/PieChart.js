@@ -1,5 +1,13 @@
 import { PieChart, Pie, Tooltip, Legend } from "recharts";
 
+/**
+ * Generate a pie chart component based on the given vote information, user data, and screen size.
+ *
+ * @param {Array} voteInfo - An array of objects representing the vote information.
+ * @param {Array} users - An array of objects representing the user data.
+ * @param {boolean} isLaptopScreenOrSmaller - A boolean indicating whether the screen size is laptop or smaller.
+ * @return {JSX.Element} The pie chart component.
+ */
 // PieChartComponent
 const PieChartComponent = ({ voteInfo, users, isLaptopScreenOrSmaller }) => {
   const data = voteInfo.reduce((acc, vote) => {

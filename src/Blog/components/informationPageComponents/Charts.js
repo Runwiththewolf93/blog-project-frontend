@@ -14,6 +14,11 @@ import PieChartComponent from "./PieChart";
 import CustomCard from "./CustomCard";
 import { useMediaQuery } from "react-responsive";
 
+/**
+ * Renders a set of charts displaying blog post, comment, and vote data.
+ *
+ * @returns {JSX.Element} The JSX element containing the charts.
+ */
 // Charts component
 const Charts = () => {
   const { users } = useAppContextState();

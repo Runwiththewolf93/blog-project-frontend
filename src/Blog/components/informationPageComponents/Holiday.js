@@ -1,6 +1,14 @@
 import { Table, Spinner, Alert } from "react-bootstrap";
 import useFetchPublicHolidays from "./useFetchPublicHolidays";
 
+/**
+ * Renders a list of holidays at the destination based on the provided location data.
+ *
+ * @param {Object} locationData - The data of the location.
+ * @param {boolean} isLoadingGeolocation - Flag indicating if the geolocation data is being loaded.
+ * @param {Object} errorGeolocation - The error object in case of geolocation error.
+ * @return {ReactElement} The rendered list of holidays or error message.
+ */
 // Holiday component
 const Holiday = ({ locationData, isLoadingGeolocation, errorGeolocation }) => {
   const {

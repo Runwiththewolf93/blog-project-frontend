@@ -10,6 +10,12 @@ import {
 } from "recharts";
 import { generateChartData } from "../../utils/helper";
 
+/**
+ * Renders a bar chart component based on the provided comment information.
+ *
+ * @param {Array} commentInfo - An array of comment information.
+ * @return {JSX.Element} The rendered bar chart component.
+ */
 const BarChartComponent = ({ commentInfo }) => {
   const data = commentInfo.reduce((acc, comment) => {
     const user = comment.user.name;

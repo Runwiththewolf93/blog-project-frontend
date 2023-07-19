@@ -9,6 +9,12 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+/**
+ * Renders an area chart component based on the provided blog information.
+ *
+ * @param {Array} blogInfo - An array of blog objects containing information such as title and total votes.
+ * @return {ReactElement} The rendered area chart component.
+ */
 const AreaChartComponent = ({ blogInfo }) => {
   const voteData = blogInfo.map(blog => ({
     title: blog.title,

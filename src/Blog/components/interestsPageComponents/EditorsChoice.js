@@ -6,6 +6,15 @@ import { useMediaQuery } from "react-responsive";
 import CardComponent from "./CardComponent";
 import { Link } from "react-router-dom";
 
+/**
+ * Renders a component that displays a selection of editor's choice comments based on the provided blog and comment information.
+ *
+ * @param {Object} blogInfo - An array of blog information objects.
+ * @param {Object} commentInfo - An array of comment information objects.
+ * @param {boolean} isLoadingBlog - A boolean indicating whether the blog information is currently being loaded.
+ * @param {boolean} isLoadingComment - A boolean indicating whether the comment information is currently being loaded.
+ * @return {JSX.Element} The rendered component.
+ */
 // EditorsChoice component
 const EditorsChoice = ({
   blogInfo,

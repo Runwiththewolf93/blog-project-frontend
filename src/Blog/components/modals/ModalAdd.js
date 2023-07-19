@@ -17,6 +17,12 @@ const initialState = {
   images: ["", "", ""],
 };
 
+/**
+ * Renders a modal for adding a blog post.
+ *
+ * @returns {JSX.Element} The rendered modal component.
+ */
+// ModalAdd component
 const ModalAdd = () => {
   const {
     show,

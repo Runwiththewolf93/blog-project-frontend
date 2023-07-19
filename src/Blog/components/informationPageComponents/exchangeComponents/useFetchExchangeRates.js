@@ -7,9 +7,21 @@ import {
   setErrorMessage,
 } from "./ExchangeReducer";
 
+/**
+ * Fetches exchange rates from the abstractAPI and updates the state.
+ *
+ * @param {string} abstractAPIKey - The API key for the abstractAPI.
+ * @param {function} dispatch - The dispatch function from the state.
+ * @return {void} This function does not return anything.
+ */
 // useFetchExchangeRates hook
 const useFetchExchangeRates = (abstractAPIKey, dispatch) => {
   useEffect(() => {
+    /**
+     * Fetches exchange rates from the API and updates the state.
+     *
+     * @return {Promise<void>} A promise that resolves once the exchange rates have been fetched and the state has been updated.
+     */
     const fetchExchangeRates = async () => {
       dispatch(setLoading(true));
       try {

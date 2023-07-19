@@ -1,5 +1,14 @@
 import { Spinner, Alert, Button } from "react-bootstrap";
 
+/**
+ * Renders the content for the modal footer based on the given props.
+ *
+ * @param {boolean} isLoading - Indicates whether the content is currently loading.
+ * @param {string} error - The error message to display, if any.
+ * @param {function} onClose - The function to call when the modal is closed.
+ * @param {string} buttonText - The text to display on the button.
+ * @return {ReactNode} The rendered content for the modal footer.
+ */
 const ModalFooterContent = ({ isLoading, error, onClose, buttonText }) => {
   if (isLoading) {
     return (

@@ -10,6 +10,13 @@ import {
 } from "recharts";
 import { generateChartData } from "../../utils/helper";
 
+/**
+ * Generates a line chart component based on the given blog data.
+ *
+ * @param {Object[]} blogInfo - An array of blog information.
+ * @param {string} blogInfo[].createdAt - The creation date of the blog.
+ * @return {ReactElement} The line chart component.
+ */
 // LineChartComponent
 const LineChartComponent = ({ blogInfo }) => {
   const data = blogInfo.reduce((acc, blog) => {

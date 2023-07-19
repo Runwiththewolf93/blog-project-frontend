@@ -1,6 +1,12 @@
 import { Carousel, Image } from "react-bootstrap";
 import useUnsplashImages from "../../hooks/useUnsplash";
 
+/**
+ * Renders a carousel login component.
+ *
+ * @param {number} loginFormHeight - The height of the login form.
+ * @return {JSX.Element} The rendered carousel login component.
+ */
 // CarouselLogin component
 const CarouselLogin = ({ loginFormHeight }) => {
   const images = useUnsplashImages("blog", 3);

@@ -2,6 +2,18 @@ import { useState, useMemo } from "react";
 import { Accordion, Spinner } from "react-bootstrap";
 import { calculateMostPost } from "../../utils/helper";
 
+/**
+ * Generates the other choices component.
+ *
+ * @param {Object} props - The props object.
+ * @param {Array} props.blogInfo - The information about the blogs.
+ * @param {Array} props.commentInfo - The information about the comments.
+ * @param {Array} props.voteInfo - The information about the votes.
+ * @param {boolean} props.isLoadingBlog - Whether the blog information is loading.
+ * @param {boolean} props.isLoadingComment - Whether the comment information is loading.
+ * @param {boolean} props.isLoadingVote - Whether the vote information is loading.
+ * @return {ReactElement} The other choices component.
+ */
 // OtherChoices component
 const OtherChoices = ({
   blogInfo,

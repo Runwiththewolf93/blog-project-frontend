@@ -11,6 +11,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useMediaQuery } from "react-responsive";
 
+/**
+ * Renders a form input component.
+ *
+ * @param {Object} props - The properties of the component.
+ * @param {string} props.label - The label for the form input.
+ * @param {string} props.placeholder - The placeholder text for the form input.
+ * @param {string} props.type - The type of the form input.
+ * @param {string} props.value - The value of the form input.
+ * @param {function} props.onChange - The event handler for when the form input value changes.
+ * @return {JSX.Element} The rendered form input component.
+ */
 // FormInput component
 const FormInput = ({ label, placeholder, type, value, onChange }) => (
   <Col>
@@ -26,6 +37,16 @@ const FormInput = ({ label, placeholder, type, value, onChange }) => (
   </Col>
 );
 
+/**
+ * Renders a form select component.
+ *
+ * @param {string} value - The current value of the select component.
+ * @param {string} label - The label for the select component.
+ * @param {function} onChange - The callback function to handle value changes.
+ * @param {Array} options - The array of options to be rendered in the select component.
+ * @param {string} baseExchangeRate - The value of the base exchange rate option.
+ * @return {JSX.Element} - The rendered form select component.
+ */
 // FormSelect component
 const FormSelect = ({ label, value, onChange, options, baseExchangeRate }) => (
   <Col>
@@ -39,6 +60,12 @@ const FormSelect = ({ label, value, onChange, options, baseExchangeRate }) => (
   </Col>
 );
 
+/**
+ * Renders a SwapButton component.
+ *
+ * @param {function} onClick - The function to be called when the button is clicked.
+ * @return {JSX.Element} The rendered SwapButton component.
+ */
 // SwapButton component
 const SwapButton = ({ onClick }) => (
   <Col xs="auto" className="align-self-end" type="button">
@@ -48,6 +75,13 @@ const SwapButton = ({ onClick }) => (
   </Col>
 );
 
+/**
+ * Renders a button group component.
+ *
+ * @param {Function} onClear - The callback function to be called when the "Clear" button is clicked.
+ * @param {Function} onConvert - The callback function to be called when the "Convert" button is clicked.
+ * @return {ReactElement} The rendered button group component.
+ */
 // ButtonGroup component
 const ButtonGroup = ({ onClear, onConvert }) => {
   const isLaptopScreenOrSmaller = useMediaQuery({
@@ -82,6 +116,13 @@ const ButtonGroup = ({ onClear, onConvert }) => {
   );
 };
 
+/**
+ * Renders a DateInput component.
+ *
+ * @param {object} value - The value of the date input.
+ * @param {function} onChange - The function to be called when the date input changes.
+ * @return {JSX.Element} - The rendered DateInput component.
+ */
 // DateInput component
 const DateInput = ({ value, onChange }) => {
   const isLaptopScreenOrSmaller = useMediaQuery({
@@ -116,6 +157,18 @@ const DateInput = ({ value, onChange }) => {
   );
 };
 
+/**
+ * Renders a component that displays the conversion result.
+ *
+ * @param {Object} props - The properties for the component.
+ * @param {number} props.baseAmount - The base amount to be converted.
+ * @param {string} props.baseCurrency - The currency of the base amount.
+ * @param {number} props.convertedAmount - The converted amount.
+ * @param {string} props.targetCurrency - The currency of the converted amount.
+ * @param {number} props.exchangeRate - The exchange rate used for the conversion.
+ * @param {boolean} props.showExchangeRate - Flag indicating whether to display the exchange rate.
+ * @return {JSX.Element} The rendered component.
+ */
 // ConversionResult component
 const ConversionResult = ({
   baseAmount,
@@ -153,6 +206,13 @@ const ConversionResult = ({
   );
 };
 
+/**
+ * Renders an error message component.
+ *
+ * @param {string} message - The error message to display.
+ * @param {function} handleClose - The function to call when the message is closed.
+ * @return {JSX.Element} The rendered error message component.
+ */
 // ErrorMessage component
 const ErrorMessage = ({ message, handleClose }) =>
   message && (
@@ -161,6 +221,11 @@ const ErrorMessage = ({ message, handleClose }) =>
     </Alert>
   );
 
+/**
+ * Renders a spinner exchange component.
+ *
+ * @return {React.Element} The rendered spinner exchange component.
+ */
 // SpinnerExchange component
 const SpinnerExchange = () => (
   <Col>

@@ -77,6 +77,13 @@ export const initialState = {
   errorMessage: null,
 };
 
+/**
+ * Reducer function that handles state updates for the exchange feature.
+ *
+ * @param {Object} state - The current state of the application.
+ * @param {Object} action - The action object that contains information about the state update.
+ * @return {Object} The updated state after applying the action.
+ */
 export const exchangeReducer = (state, action) => {
   switch (action.type) {
     case SET_BASE_CURRENCY:

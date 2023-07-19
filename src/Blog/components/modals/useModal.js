@@ -4,6 +4,12 @@ import {
   useBlogContextDispatch,
 } from "../../store/blogContext";
 
+/**
+ * Custom React hook for managing a modal state and related functionality.
+ *
+ * @param {Object} initialState - The initial state for the hook.
+ * @returns {Object} - An object containing the hook's state and functions.
+ */
 // useModal hook
 const useModal = initialState => {
   const [show, setShow] = useState(false);
@@ -21,7 +27,14 @@ const useModal = initialState => {
   const { isLoadingBlog, errorBlog, postUpdated } = useBlogContextState();
   const { uploadBlogImages } = useBlogContextDispatch();
 
+  /**
+   * Closes the modal.
+   */
   const handleClose = () => setShow(false);
+
+  /**
+   * Shows the modal.
+   */
   const handleShow = () => setShow(true);
 
   useEffect(() => {
@@ -34,6 +47,11 @@ const useModal = initialState => {
     setValues(values => ({ ...values, avatar: avatarField }));
   }, [avatarField]);
 
+  /**
+   * Handles the change event for input fields.
+   *
+   * @param {Object} e - The event object.
+   */
   const handleChange = e => {
     const { name, value } = e.target;
     if (name === "images") {
@@ -48,6 +66,11 @@ const useModal = initialState => {
     }
   };
 
+  /**
+   * Handles the file change event for file inputs.
+   *
+   * @param {Object} e - The event object.
+   */
   const handleFileChange = e => {
     const { name, files: incomingFiles } = e.target;
 
@@ -69,6 +92,12 @@ const useModal = initialState => {
     }
   };
 
+  /**
+   * Toggles the file input for a specific field.
+   *
+   * @param {string} name - The name of the field.
+   * @param {number} index - The index of the field (for image inputs).
+   */
   const handleToggle = (name, index) => {
     if (name === "images") {
       const newIsImageFileInput = [...isImageFileInput];

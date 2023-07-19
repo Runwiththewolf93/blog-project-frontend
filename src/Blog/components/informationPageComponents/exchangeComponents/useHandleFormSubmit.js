@@ -7,6 +7,14 @@ import {
   setErrorMessage,
 } from "./ExchangeReducer";
 
+/**
+ * Generates a function comment for the given function body.
+ *
+ * @param {string} abstractAPIKey - the abstract API key
+ * @param {object} state - the state object
+ * @param {function} dispatch - the dispatch function
+ * @return {function} the handleFormSubmit function
+ */
 // useHandleFormSubmit hook
 const useHandleFormSubmit = (abstractAPIKey, state, dispatch) => {
   const handleFormSubmit = e => {

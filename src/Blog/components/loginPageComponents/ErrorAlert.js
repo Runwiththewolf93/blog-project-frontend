@@ -1,5 +1,13 @@
 import { Alert } from "react-bootstrap";
 
+/**
+ * Renders an error alert component.
+ *
+ * @param {object} error - The error object to be displayed.
+ * @param {boolean} showError - A flag indicating whether the error should be shown.
+ * @param {function} setShowError - A function to toggle the visibility of the error.
+ * @return {JSX.Element} The rendered error alert component.
+ */
 export const ErrorAlert = ({ error, showError, setShowError }) => (
   <>
     {error && (

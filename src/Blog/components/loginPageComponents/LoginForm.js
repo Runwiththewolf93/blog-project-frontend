@@ -1,6 +1,18 @@
 import { Form, Button } from "react-bootstrap";
 import FormInput from "./FormInput";
 
+/**
+ * Renders a login form with input fields for username, email, and password.
+ *
+ * @param {Object} props - The props object containing the following properties:
+ *   - onSubmit: A function to handle the form submission.
+ *   - values: An object representing the form values.
+ *   - handleChange: A function to handle input change.
+ *   - formValid: A boolean indicating if the form is valid.
+ *   - isLoading: A boolean indicating if the form is currently being submitted.
+ *   - toggleMember: A function to toggle between login and registration mode.
+ * @return {JSX.Element} The rendered login form.
+ */
 export const LoginForm = ({
   onSubmit,
   values,

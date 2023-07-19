@@ -13,6 +13,13 @@ import PostTypeSelector from "./PostTypeSelector";
 import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
 
+/**
+ * Renders a carousel component that displays the top blog posts.
+ *
+ * @param {Object} blogInfo - Information about the blog posts.
+ * @param {boolean} isLoadingBlog - Indicates whether the blog is currently loading.
+ * @return {JSX.Element} The rendered carousel component.
+ */
 // CarouselComponent
 const CarouselComponent = ({ blogInfo, isLoadingBlog }) => {
   const [currentPostIndex, setCurrentPostIndex] = useState(0);

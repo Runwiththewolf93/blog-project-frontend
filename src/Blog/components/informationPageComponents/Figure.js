@@ -2,6 +2,13 @@ import { Figure, Image } from "react-bootstrap";
 import { useMediaQuery } from "react-responsive";
 import classNames from "classnames";
 
+/**
+ * Renders a component that displays a collection of images as figures.
+ *
+ * @param {Object} props - The properties object.
+ * @param {Array} props.images - An array of images to be displayed.
+ * @return {JSX.Element|null} The rendered component.
+ */
 function FigureComponent({ images }) {
   const isTabletScreenOrSmaller = useMediaQuery({
     query: "(max-width: 768px)",

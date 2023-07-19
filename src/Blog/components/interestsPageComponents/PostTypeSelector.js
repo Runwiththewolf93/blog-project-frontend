@@ -1,5 +1,12 @@
 import React from "react";
 
+/**
+ * Renders a PostTypeSelector component.
+ *
+ * @param {function} setPostType - A function to set the post type.
+ * @param {string} typeText - The text to display after the post types.
+ * @return {JSX.Element} The rendered PostTypeSelector component.
+ */
 const PostTypeSelector = ({ setPostType, typeText }) => {
   const handlePostTypeChange = type => {
     setPostType(type);

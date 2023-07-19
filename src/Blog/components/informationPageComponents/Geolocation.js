@@ -4,6 +4,14 @@ import ToastComponent from "./Toast";
 import TabbedInterface from "./TabbedInterface";
 import useUnsplashImages from "../../hooks/useUnsplash";
 
+/**
+ * Renders the Geolocation component.
+ *
+ * @param {Object} locationData - The location data object.
+ * @param {boolean} isLoadingGeolocation - Indicates if geolocation is loading.
+ * @param {string} errorGeolocation - The error message for geolocation.
+ * @return {JSX.Element} The rendered Geolocation component.
+ */
 const Geolocation = ({
   locationData,
   isLoadingGeolocation,

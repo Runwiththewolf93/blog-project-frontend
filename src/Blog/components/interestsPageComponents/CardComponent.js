@@ -1,6 +1,19 @@
 import { Card } from "react-bootstrap";
 import { useMediaQuery } from "react-responsive";
 
+/**
+ * Renders a card component displaying a blog post comment.
+ *
+ * @param {Object} comment - The comment object containing the blog post details and user information.
+ * @param {string} comment.blogPostImage - The URL of the blog post image.
+ * @param {string} comment.blogPostTitle - The title of the blog post.
+ * @param {string} comment.comment - The comment text.
+ * @param {Object} comment.user - The user object containing the user's name and email.
+ * @param {string} comment.user.name - The name of the user.
+ * @param {string} comment.user.email - The email of the user.
+ * @param {number} comment.totalVotes - The total number of votes for the comment.
+ * @return {JSX.Element} - The rendered Card component.
+ */
 // CardComponent
 const CardComponent = ({ comment }) => {
   // Use the useMediaQuery hook to check if the screen width is less than or equal to 992px and 576px

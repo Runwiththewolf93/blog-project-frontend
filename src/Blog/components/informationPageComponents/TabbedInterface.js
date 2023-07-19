@@ -6,6 +6,17 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import FigureComponent from "./Figure";
 
+/**
+ * Create a tabbed interface component for displaying vacation location information and images.
+ *
+ * @param {Object} locationData - the data for the vacation location
+ * @param {Array} images - the images of the vacation location
+ * @param {boolean} isLoadingGeolocation - indicates if the geolocation data is still loading
+ * @param {boolean} isLoadingImages - indicates if the images are still loading
+ * @param {string} errorGeolocation - the error message for geolocation data retrieval
+ * @param {string} errorImages - the error message for image retrieval
+ * @return {JSX.Element} the tabbed interface component
+ */
 // TabbedInterface component
 function TabbedInterface({
   locationData,

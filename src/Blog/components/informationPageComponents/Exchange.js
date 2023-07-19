@@ -28,6 +28,11 @@ import useFetchExchangeRates from "./exchangeComponents/useFetchExchangeRates";
 import useHandleFormSubmit from "./exchangeComponents/useHandleFormSubmit";
 import useCurrencyOptions from "./exchangeComponents/useCurrencyOptions";
 
+/**
+ * Renders the Exchange component.
+ *
+ * @return {JSX.Element} The rendered Exchange component.
+ */
 const Exchange = () => {
   const [state, dispatch] = useReducer(exchangeReducer, initialState);
   const abstractAPIKey = process.env.REACT_APP_ABSTRACT_EXCHANGE_API_KEY;
@@ -39,15 +44,30 @@ const Exchange = () => {
   const baseCurrencyOptions = useCurrencyOptions(state.exchangeRates);
   const targetCurrencyOptions = useCurrencyOptions(state.exchangeRates);
 
+  /**
+   * Clears the form and sets the base exchange rate to "EUR".
+   *
+   * @return {void} - No return value.
+   */
   const handleClear = () => {
     dispatch({ type: CLEAR_FORM });
     dispatch(setBaseExchangeRate("EUR"));
   };
 
+  /**
+   * Handles the swapping of currencies.
+   *
+   * @return {void} - No return value.
+   */
   const handleSwapCurrencies = () => {
     dispatch({ type: SWAP_CURRENCIES });
   };
 
+  /**
+   * Closes the handle.
+   *
+   * @return {void} - No return value.
+   */
   const handleClose = () => {
     dispatch({ type: CLEAR_ERROR_MESSAGE });
   };
