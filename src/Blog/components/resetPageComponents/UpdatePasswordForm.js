@@ -19,6 +19,7 @@ import {
  * @param {Object} props.userInfo - The user information.
  * @return {JSX.Element} The rendered UpdatePasswordForm component.
  */
+// UpdatePasswordForm component
 const UpdatePasswordForm = ({
   isLoadingReset,
   successMessage,

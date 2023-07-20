@@ -19,6 +19,7 @@ import {
  *   - token: A string containing the user's reset token.
  * @return {JSX.Element} The rendered form component.
  */
+// ResetPasswordForm component
 const ResetPasswordForm = ({
   isLoadingReset,
   successMessage,
@@ -47,8 +48,6 @@ const ResetPasswordForm = ({
 
   /**
    * Toggles the visibility of the new password.
-   *
-   * No parameters.
    *
    * @return {void} No return value.
    */

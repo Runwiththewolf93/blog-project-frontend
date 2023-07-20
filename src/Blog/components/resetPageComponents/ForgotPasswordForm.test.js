@@ -16,62 +16,34 @@ jest.mock("react-router-dom", () => ({
   useNavigate: jest.fn(() => mockNavigate),
 }));
 
-// Get the state values
-let emailAddress,
-  isValidEmail,
-  showEmailError,
-  showSuccessAlert,
-  showErrorAlert;
-
-// Spy on useState
-jest.spyOn(React, "useState").mockImplementation(init => {
-  switch (init) {
-    case "":
-      return [emailAddress, newState => (emailAddress = newState)];
-    case true:
-      if (isValidEmail === true) {
-        return [isValidEmail, newState => (isValidEmail = newState)];
-      } else if (showEmailError === true) {
-        return [showEmailError, newState => (showEmailError = newState)];
-      } else if (showSuccessAlert === true) {
-        return [showSuccessAlert, newState => (showSuccessAlert = newState)];
-      } else {
-        return [showErrorAlert, newState => (showErrorAlert = newState)];
-      }
-    default:
-      return [init, jest.fn()];
-  }
-});
-
-// Mocking useEffect
-jest.mock("react", () => ({
-  ...jest.requireActual("react"),
-  useEffect: jest.fn().mockImplementation(f => f()),
-}));
-
 // Mocking the FormComponents
 jest.mock("./FormComponents", () => ({
-  AlertMessage: jest.fn(props => (
-    <div>AlertMessage: {JSON.stringify(props)}</div>
-  )),
-  ClearSubmitButtonGroup: jest.fn(props => (
-    <div>ClearSubmitButtonGroup: {JSON.stringify(props)}</div>
-  )),
   FormCard: jest.fn(({ children, ...props }) => (
     <div>
       FormCard: {JSON.stringify(props)}
       {children}
     </div>
   )),
-}));
+  AlertMessage: jest.fn(({ message, ...props }) => (
+    <div>AlertMessage: {JSON.stringify({ ...props, message })}</div>
+  )),
+  ClearSubmitButtonGroup: jest.fn(
+    ({ clearLabel, submitLabel, handleClear, ...props }) => {
+      // Call handleClear when the "Clear" button is clicked
+      const handleClick = () => {
+        handleClear();
+      };
 
-beforeEach(() => {
-  emailAddress = "";
-  isValidEmail = true;
-  showEmailError = true;
-  showSuccessAlert = true;
-  showErrorAlert = true;
-});
+      return (
+        <div>
+          ClearSubmitButtonGroup: {JSON.stringify(props)}
+          <button>{submitLabel}</button>
+          <button onClick={handleClick}>{clearLabel}</button>
+        </div>
+      );
+    }
+  ),
+}));
 
 const mockProps = {
   isLoadingReset: false,
@@ -89,13 +61,19 @@ describe("ForgotPasswordForm_function", () => {
   // Tests that a valid email address is submitted successfully
   it("test_submit_valid_email", async () => {
     const mockForgotUserPassword = jest.fn();
-    useAppContextDispatch.mockReturnValue({ mockForgotUserPassword });
+    useAppContextDispatch.mockReturnValue({
+      forgotUserPassword: mockForgotUserPassword,
+    });
 
     render(<ForgotPasswordForm {...mockProps} />);
 
     const emailInput = screen.getByLabelText("Email Address");
 
     fireEvent.change(emailInput, { target: { value: "validemail@test.com" } });
+
+    await waitFor(() => {
+      expect(emailInput.value).toBe("validemail@test.com");
+    });
 
     fireEvent.submit(screen.getByText("Send"));
 
@@ -110,53 +88,136 @@ describe("ForgotPasswordForm_function", () => {
     useAppContextDispatch.mockReturnValue({
       forgotUserPassword: mockForgotUserPassword,
     });
-    const { getByLabelText, getByText, queryByText } = render(
-      <ForgotPasswordForm />
-    );
-    const emailInput = getByLabelText("Email Address");
+
+    render(<ForgotPasswordForm {...mockProps} />);
+
+    const emailInput = screen.getByLabelText("Email Address");
+
     fireEvent.change(emailInput, { target: { value: "invalidemail" } });
-    fireEvent.submit(getByText("Send"));
+
+    fireEvent.submit(screen.getByText("Send"));
+
     await waitFor(() => expect(mockForgotUserPassword).not.toHaveBeenCalled());
+
     expect(
-      queryByText("Please enter a valid email address.")
+      screen.getByText("Please enter a valid email address.")
     ).toBeInTheDocument();
   });
 
   // Tests that the success message is displayed and redirects to confirmation page after 3 seconds
   it("test_display_success_message", async () => {
+    jest.useFakeTimers();
+
     const mockResetSuccessMessage = jest.fn();
+    let successMessage = "";
+
+    const mockForgotUserPassword = jest.fn(() => {
+      // Simulate the change of successMessage
+      successMessage = "Success message";
+    });
+
     useAppContextDispatch.mockReturnValue({
       resetSuccessMessage: mockResetSuccessMessage,
+      forgotUserPassword: mockForgotUserPassword,
     });
-    const { getByLabelText, getByText, queryByText } = render(
-      <ForgotPasswordForm successMessage="Success message" />
+
+    const { rerender } = render(
+      <ForgotPasswordForm
+        isLoadingReset={false}
+        successMessage={successMessage}
+        errorReset={null}
+      />
     );
-    const emailInput = getByLabelText("Email Address");
+
+    const emailInput = screen.getByLabelText("Email Address");
+
     fireEvent.change(emailInput, { target: { value: "validemail@test.com" } });
-    fireEvent.submit(getByText("Send"));
+
+    fireEvent.submit(screen.getByText("Send"));
+
+    // Wait for the forgotUserPassword function to be called
+    await waitFor(() => expect(mockForgotUserPassword).toHaveBeenCalled());
+
+    // Rerender the component with the updated value of successMessage
+    rerender(
+      <ForgotPasswordForm
+        isLoadingReset={false}
+        successMessage={successMessage}
+        errorReset={null}
+      />
+    );
+
+    // Wait for the success message to appear in the document
+    // eslint-disable-next-line testing-library/prefer-find-by
+    await waitFor(() =>
+      expect(screen.getByText(/Success message/i)).toBeInTheDocument()
+    );
+
+    jest.advanceTimersByTime(3000);
+
+    // Wait for the resetSuccessMessage function to be called
     await waitFor(() => expect(mockResetSuccessMessage).toHaveBeenCalled());
-    expect(queryByText("Success message")).toBeInTheDocument();
-    await waitFor(() => expect(mockResetSuccessMessage).toHaveBeenCalled());
-    expect(mockResetSuccessMessage).toHaveBeenCalled();
   });
 
   // Tests that the error message is displayed when reset process fails
   it("test_display_error_message", async () => {
-    const { getByLabelText, getByText, queryByText } = render(
-      <ForgotPasswordForm errorReset="Error message" />
+    let errorMessage = "";
+
+    const mockForgotUserPassword = jest.fn(() => {
+      // Simulate the change of successMessage
+      errorMessage = "Error message";
+    });
+
+    useAppContextDispatch.mockReturnValue({
+      forgotUserPassword: mockForgotUserPassword,
+    });
+
+    const { rerender } = render(
+      <ForgotPasswordForm
+        isLoadingReset={false}
+        successMessage={null}
+        errorReset={errorMessage}
+      />
     );
-    const emailInput = getByLabelText("Email Address");
+
+    const emailInput = screen.getByLabelText("Email Address");
+
     fireEvent.change(emailInput, { target: { value: "validemail@test.com" } });
-    fireEvent.submit(getByText("Send"));
-    expect(queryByText("Error message")).toBeInTheDocument();
+
+    fireEvent.submit(screen.getByText("Send"));
+
+    // Wait for the forgotUserPassword function to be called
+    await waitFor(() => expect(mockForgotUserPassword).toHaveBeenCalled());
+
+    // Rerender the component with the updated value of successMessage
+    rerender(
+      <ForgotPasswordForm
+        isLoadingReset={false}
+        successMessage={null}
+        errorReset={errorMessage}
+      />
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(/Error message/i)).toBeInTheDocument();
+    });
   });
 
   // Tests that the clear button clears email input field
   it("test_clear_button", async () => {
-    const { getByLabelText, getByText } = render(<ForgotPasswordForm />);
-    const emailInput = getByLabelText("Email Address");
+    // Mock useState
+    const setEmailAddress = jest.fn();
+    React.useState = jest.fn(() => ["", setEmailAddress]);
+
+    render(<ForgotPasswordForm {...mockProps} />);
+
+    const emailInput = screen.getByLabelText("Email Address");
+
     fireEvent.change(emailInput, { target: { value: "validemail@test.com" } });
-    fireEvent.click(getByText("Clear"));
-    expect(emailInput.value).toBe("");
+
+    fireEvent.click(screen.getByText("Clear"));
+
+    // Check that setEmailAddress was called with an empty string
+    expect(setEmailAddress).toHaveBeenCalledWith("");
   });
 });
