@@ -39,12 +39,21 @@ const FormInput = ({
   handleToggle,
   fileUpload,
 }) => {
+  // Check if controlId and label are strings
+  if (typeof controlId !== "string" || typeof label !== "string") {
+    return null;
+  }
+
   const uniqueControlId = `${controlId}-${
     dataIndex !== undefined ? dataIndex : new Date().getTime()
   }`;
 
   return (
-    <Form.Group className="mb-3" controlId={uniqueControlId}>
+    <Form.Group
+      className="mb-3"
+      controlId={uniqueControlId}
+      data-testid="form-group"
+    >
       <Form.Label className="mb-0">{label}</Form.Label>
       {isFileInput ? (
         <>

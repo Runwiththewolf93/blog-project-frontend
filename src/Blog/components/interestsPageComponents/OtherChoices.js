@@ -68,6 +68,8 @@ const OtherChoices = ({
     return <Spinner variant="primary" />;
   }
 
+  console.log(categories);
+
   return (
     <div className="m-3">
       <h1>Other topics that might interest you...</h1>
@@ -97,7 +99,9 @@ const OtherChoices = ({
                   </div>
                 </div>
               ) : (
-                <p>No data available for this category.</p>
+                <p data-testid="no-data">
+                  No data available for this category.
+                </p>
               )}
             </Accordion.Body>
           </Accordion.Item>

@@ -15,13 +15,12 @@ import { useMediaQuery } from "react-responsive";
  */
 // Map component
 const MapComponent = ({ userProfile, userInfo }) => {
-  const position =
-    userProfile && userProfile.location && userProfile.location.coordinates
-      ? [
-          parseFloat(userProfile.location.coordinates.latitude),
-          parseFloat(userProfile.location.coordinates.longitude),
-        ]
-      : null;
+  const position = userProfile?.location?.coordinates
+    ? [
+        parseFloat(userProfile.location.coordinates.latitude),
+        parseFloat(userProfile.location.coordinates.longitude),
+      ]
+    : null;
 
   // Use the useMediaQuery hook to check if the screen width is less than 576px
   const isMobileScreen = useMediaQuery({ query: "(max-width: 576px)" });

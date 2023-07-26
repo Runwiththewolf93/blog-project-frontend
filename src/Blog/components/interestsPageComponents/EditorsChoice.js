@@ -33,18 +33,21 @@ const EditorsChoice = ({
 
     const sortedComments = sortData(commentInfo, postType);
 
-    sortedComments.forEach(comment => {
+    const newSortedComments = sortedComments?.map(comment => {
       const blogPost = blogInfoMap[comment.blog];
       if (blogPost) {
         const randomImageIndex = Math.floor(
           Math.random() * blogPost.images.length
         );
-        comment.blogPostTitle = blogPost.title;
-        comment.blogPostImage = blogPost.images[randomImageIndex];
+        return {
+          ...comment,
+          blogPostTitle: blogPost.title,
+          blogPostImage: blogPost.images[randomImageIndex],
+        };
       }
+      return comment;
     });
-
-    setSortedComments(sortedComments.slice(0, 6));
+    setSortedComments(newSortedComments?.slice(0, 6));
   }, [blogInfo, commentInfo, postType]);
 
   // Use the useMediaQuery hook to check if the screen width is less than or equal to 768px

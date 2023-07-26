@@ -20,21 +20,12 @@ export const useForm = (
   const [values, setValues] = useState(initialState);
   const [formValid, setFormValid] = useState(false);
 
-  const handleChange = e => {
-    setValues({ ...values, [e.target.name]: e.target.value });
-    checkFormValidity();
-    if (error && e.target.value) {
-      resetUserError();
-      resetUserSuccess();
-    }
-  };
-
   /**
    * Checks the validity of the form based on the values of email, password, and name.
    *
    * @return {void}
    */
-  const checkFormValidity = () => {
+  const checkFormValidity = values => {
     const { email, password } = values;
     if (values.isMember) {
       if (email && password) {
@@ -52,13 +43,27 @@ export const useForm = (
     }
   };
 
- /**
-  * The handleSubmit function prevents the default form submission, checks if the form is valid, and
-  * calls the onSubmit function with the form values if it is valid.
-  * @returns If the form is not valid, the function will return early and display a window alert
-  * message. If the form is valid, the function will call the `onSubmit` function with the `values` as
-  * an argument.
-  */
+  const handleChange = e => {
+    const { name, value } = e.target;
+    const validNames = ["email", "password", "name", "isMember"];
+    if (validNames.includes(name)) {
+      const newValues = { ...values, [name]: value };
+      setValues(newValues);
+      checkFormValidity(newValues);
+      if (error && value) {
+        resetUserError();
+        resetUserSuccess();
+      }
+    }
+  };
+
+  /**
+   * The handleSubmit function prevents the default form submission, checks if the form is valid, and
+   * calls the onSubmit function with the form values if it is valid.
+   * @returns If the form is not valid, the function will return early and display a window alert
+   * message. If the form is valid, the function will call the `onSubmit` function with the `values` as
+   * an argument.
+   */
   const handleSubmit = e => {
     e.preventDefault();
     if (!formValid) {

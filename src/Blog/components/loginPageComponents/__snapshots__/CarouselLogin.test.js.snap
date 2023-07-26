@@ -1,0 +1,131 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CarouselLogin_function test_happy_path_carousel_has_fade_effect_and_pause_on_hover 1`] = `
+<DocumentFragment>
+  <div
+    class="carousel slide carousel-fade"
+    data-testid="carousel"
+  >
+    <div
+      class="carousel-indicators"
+    >
+      <button
+        aria-current="true"
+        aria-label="Slide 1"
+        class="active"
+        data-bs-target=""
+        type="button"
+      />
+      <button
+        aria-current="false"
+        aria-label="Slide 2"
+        data-bs-target=""
+        type="button"
+      />
+      <button
+        aria-current="false"
+        aria-label="Slide 3"
+        data-bs-target=""
+        type="button"
+      />
+    </div>
+    <div
+      class="carousel-inner"
+    >
+      <div
+        class="active carousel-item"
+        data-testid="carousel-item"
+        interval="10000"
+      >
+        <img
+          alt="Image 1"
+          class="rounded"
+          src="https://example.com/image1.jpg"
+          style="object-fit: cover; height: 500px;"
+        />
+        <div
+          class="carousel-caption"
+          data-testid="carousel-caption"
+        >
+          <h3
+            class="text-black"
+          >
+            <strong>
+              Stay up to date
+            </strong>
+          </h3>
+          <p
+            class="text-black"
+          >
+            <strong>
+              With the many topics available for browsing on our website
+            </strong>
+          </p>
+        </div>
+      </div>
+      <div
+        class="carousel-item"
+        data-testid="carousel-item"
+        interval="10000"
+      >
+        <img
+          alt="Image 2"
+          class="rounded"
+          src="https://example.com/image2.jpg"
+          style="object-fit: cover; height: 500px;"
+        />
+        <div
+          class="carousel-caption"
+          data-testid="carousel-caption"
+        >
+          <h3
+            class="text-black"
+          >
+            <strong>
+              Spark your interest
+            </strong>
+          </h3>
+          <p
+            class="text-black"
+          >
+            <strong>
+              Get your creative juices flowing with our many social networks
+            </strong>
+          </p>
+        </div>
+      </div>
+      <div
+        class="carousel-item"
+        data-testid="carousel-item"
+        interval="10000"
+      >
+        <img
+          alt="Image 3"
+          class="rounded"
+          src="https://example.com/image3.jpg"
+          style="object-fit: cover; height: 500px;"
+        />
+        <div
+          class="carousel-caption"
+          data-testid="carousel-caption"
+        >
+          <h3
+            class="text-black"
+          >
+            <strong>
+              Get relevant information
+            </strong>
+          </h3>
+          <p
+            class="text-black"
+          >
+            <strong>
+              For your vacation trip to another country around the world
+            </strong>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

@@ -50,7 +50,7 @@ function Pictures({ userProfile, userInfo, blogInfo }) {
   return (
     <Card className={`mt-4 ${isMobile && "my-4"}`}>
       <Card.Title className="mt-1 ms-2">
-        Some of {userProfile.gender === "male" ? "his" : "her"} interests
+        Some of {userProfile?.gender === "male" ? "his" : "her"} interests
         include:
       </Card.Title>
       <Row xs={3} className="g-3 mx-1 mb-3">

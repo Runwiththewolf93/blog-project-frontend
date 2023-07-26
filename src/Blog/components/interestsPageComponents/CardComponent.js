@@ -1,5 +1,6 @@
 import { Card } from "react-bootstrap";
 import { useMediaQuery } from "react-responsive";
+import { truncateContent } from "../../utils/helper";
 
 /**
  * Renders a card component displaying a blog post comment.
@@ -49,8 +50,9 @@ const CardComponent = ({ comment }) => {
         <div className="mt-3" />
         <Card.Text
           className={`d-inline ${isSmallScreenAndSmaller ? "fs-4" : ""}`}
+          data-testid="card-comment"
         >
-          {comment.comment}
+          {truncateContent(comment.comment, 100)}
         </Card.Text>
       </Card.Body>
       <Card.Footer
@@ -59,11 +61,13 @@ const CardComponent = ({ comment }) => {
         }`}
         style={isLargeScreenAndSmaller ? textEllipsis : {}}
       >
-        <small>{comment.user.name}</small>
+        <small>{comment.user?.name}</small>
         <div />
-        <small>{comment.user.email}</small>
+        <small>{comment.user?.email}</small>
         <div style={{ marginTop: "-6px" }}>
-          <small>Total votes: {comment.totalVotes}</small>
+          <small data-testid="total-votes">
+            Total votes: {comment?.totalVotes}
+          </small>
         </div>
       </Card.Footer>
     </Card>

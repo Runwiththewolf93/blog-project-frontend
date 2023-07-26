@@ -11,6 +11,7 @@ import { useMediaQuery } from "react-responsive";
  * @param {string} props.dateSortOrder - The current sort order for date.
  * @return {JSX.Element} The rendered header component.
  */
+// CommentsHeader component
 const CommentsHeader = ({
   sortByTitleFunction,
   sortByDateFunction,

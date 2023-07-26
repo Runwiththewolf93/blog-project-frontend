@@ -11,6 +11,7 @@ import useSortedComments from "./useSortedComments";
  * @param {string} dateSortOrder - The sort order for comments based on the date.
  * @return {JSX.Element} The rendered list of comments.
  */
+// CommentsList component
 const CommentsList = ({
   userCommentInfo,
   sortType,

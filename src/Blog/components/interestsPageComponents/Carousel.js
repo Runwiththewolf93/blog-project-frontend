@@ -27,8 +27,6 @@ const CarouselComponent = ({ blogInfo, isLoadingBlog }) => {
   const [postType, setPostType] = useState("popular");
   const [topPosts, setTopPosts] = useState([]);
 
-  console.log("blogInfo", blogInfo);
-
   // Sort the blogInfo by the value of totalVotes and get the top 3 posts
   useEffect(() => {
     let sortedPosts = sortData(blogInfo, postType);
@@ -41,10 +39,11 @@ const CarouselComponent = ({ blogInfo, isLoadingBlog }) => {
     // Once we have finished a full rotation of the carousel
     if (eventKey === 0) {
       setPostImageIndices(prevIndices =>
-        prevIndices.map(
-          (index, postIndex) =>
-            // Increment the image index for each post, wrapping around to the start of the images array if we've reached the end
-            (index + 1) % topPosts[postIndex].images.length
+        prevIndices.map((index, postIndex) =>
+          // Increment the image index for each post, wrapping around to the start of the images array if we've reached the end
+          topPosts[postIndex]
+            ? (index + 1) % topPosts[postIndex].images.length
+            : index
         )
       );
     }
@@ -58,7 +57,7 @@ const CarouselComponent = ({ blogInfo, isLoadingBlog }) => {
 
   if (topPosts.length === 0) {
     return (
-      <Alert variant="primary">
+      <Alert variant="primary" data-testid="no-posts">
         Looks like no blog posts have been added. Head over to the{" "}
         <Link to="/">home page</Link> to add some!
       </Alert>
@@ -72,18 +71,23 @@ const CarouselComponent = ({ blogInfo, isLoadingBlog }) => {
         <PostTypeSelector setPostType={setPostType} typeText="posts" />
       </h1>
       <Col md={8} className="m-0 p-0">
-        <Carousel fade activeIndex={currentPostIndex} onSelect={handleSelect}>
+        <Carousel
+          fade
+          activeIndex={currentPostIndex}
+          onSelect={handleSelect}
+          data-testid="carousel"
+        >
           {topPosts.map((post, postIndex) => (
             <Carousel.Item key={post._id}>
               <img
                 className="d-block w-100"
-                src={post.images[postImageIndices[postIndex]]}
-                alt={post.title}
+                src={post?.images[postImageIndices[postIndex]]}
+                alt={post?.title}
                 style={{ height: "500px", objectFit: "cover" }}
               />
               <Carousel.Caption>
-                <h3>{post.title}</h3>
-                <p>{truncateContent(post.content, 100)}</p>
+                <h3>{post?.title}</h3>
+                <p>{truncateContent(post?.content, 100)}</p>
               </Carousel.Caption>
             </Carousel.Item>
           ))}
@@ -94,7 +98,7 @@ const CarouselComponent = ({ blogInfo, isLoadingBlog }) => {
           {topPosts[currentPostIndex] && (
             <>
               <Card.Header>
-                By {topPosts[currentPostIndex].user.name}
+                By {topPosts[currentPostIndex]?.user?.name}
               </Card.Header>
               <ListGroup className={isTabletOrSmaller && "fs-6"}>
                 <ListGroup.Item>

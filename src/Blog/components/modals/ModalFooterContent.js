@@ -9,11 +9,12 @@ import { Spinner, Alert, Button } from "react-bootstrap";
  * @param {string} buttonText - The text to display on the button.
  * @return {ReactNode} The rendered content for the modal footer.
  */
+// ModalFooterContent component
 const ModalFooterContent = ({ isLoading, error, onClose, buttonText }) => {
   if (isLoading) {
     return (
       <div className="d-flex justify-content-center">
-        <Spinner animation="border" size="sm" />
+        <Spinner animation="border" size="sm" data-testid="loading-spinner" />
       </div>
     );
   } else if (error) {

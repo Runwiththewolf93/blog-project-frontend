@@ -16,6 +16,7 @@ import { useMediaQuery } from "react-responsive";
  *
  * @returns {JSX.Element} - The pinned blog post component.
  */
+// PinnedBlogPost component
 const PinnedBlogPost = () => {
   const { blogPost } = useBlogContextState();
   const { resetBlogPost } = useBlogContextDispatch();
@@ -25,6 +26,7 @@ const PinnedBlogPost = () => {
   });
 
   if (!blogPost || Object.keys(blogPost).length === 0) {
+    console.log("is this rendering?");
     return (
       <CustomListGroup
         mb={3}
@@ -39,6 +41,7 @@ const PinnedBlogPost = () => {
       <BlogPostWrapper>
         <Row>
           <Col xs={isTabletOrMobileDevice ? 2 : 1} className="text-end">
+            {console.log("is this rendering?")}
             <Avatar src={blogPost.avatar} alt={`${blogPost.title} Image 1`} />
           </Col>
           <Col

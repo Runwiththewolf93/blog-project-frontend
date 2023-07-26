@@ -39,7 +39,10 @@ const UserComments = ({
     <>
       <PinnedBlogPost />
       {isLoadingUserComment && (
-        <div className="d-flex justify-content-center mb-3">
+        <div
+          className="d-flex justify-content-center mb-3"
+          data-testid="spinner"
+        >
           <Spinner />
         </div>
       )}

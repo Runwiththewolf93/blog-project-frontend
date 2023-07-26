@@ -9,6 +9,7 @@ import { useMemo } from "react";
  * @param {string} dateSortOrder - The sort order for the dates ("asc" or "desc").
  * @return {Array} The sorted array of comments.
  */
+// useSortedComments hook
 const useSortedComments = (
   comments,
   sortType,
@@ -19,8 +20,8 @@ const useSortedComments = (
     if (!comments || comments.length === 0) return [];
 
     return [...comments].sort((a, b) => {
-      const titleA = a.blog.title ? a.blog.title.toLowerCase() : "";
-      const titleB = b.blog.title ? b.blog.title.toLowerCase() : "";
+      const titleA = a?.blog?.title?.toLowerCase() ?? "";
+      const titleB = b?.blog?.title?.toLowerCase() ?? "";
 
       if (sortType === "title") {
         return (

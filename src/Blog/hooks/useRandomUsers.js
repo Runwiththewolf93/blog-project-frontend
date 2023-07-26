@@ -14,17 +14,12 @@ const useRandomUsers = (gender = "male", results = 7) => {
 
   useEffect(() => {
     axios
-      .get(`https://randomuser.me/api/?results=${results}`)
-      .then(({ data }) => setUsers(data.results));
-  }, [results]);
-
-  useEffect(() => {
-    axios
-      .get(`https://randomuser.me/api/?gender=${gender}`)
+      .get(`https://randomuser.me/api/?gender=${gender}&results=${results}`)
       .then(({ data }) => {
+        setUsers(data.results);
         setUserProfile(data.results[0]);
       });
-  }, [gender]);
+  }, [gender, results]);
 
   return { users, userProfile };
 };

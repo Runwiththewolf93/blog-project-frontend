@@ -39,9 +39,13 @@ const ProfileCard = ({
   const { isLoadingComment, blogCommentInfo, errorComment } =
     useFetchHighestVotedBlogComments(blogInfo);
 
-  const sortedComments = userCommentInfo?.sort(
-    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-  );
+  const sortedComments = userCommentInfo?.sort((a, b) => {
+    if (a.createdAt && b.createdAt) {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    } else {
+      return 0;
+    }
+  });
 
   const avatar = getLatestAvatar(blogInfo, userInfo);
 
@@ -57,7 +61,11 @@ const ProfileCard = ({
     <Card className={isLessThan1200px && "mb-4"}>
       {userProfile ? (
         <>
-          <Card.Img variant="top" src={avatar || userProfile.picture?.large} />
+          <Card.Img
+            variant="top"
+            src={avatar || userProfile.picture?.large}
+            alt={`${userProfile.name?.first} ${userProfile.name?.last}`}
+          />
           <Card.Body>
             <Card.Title className="mb-3">
               {capitalizeName(userInfo?.name) ||

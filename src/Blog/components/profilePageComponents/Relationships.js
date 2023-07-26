@@ -3,6 +3,37 @@ import useRandomUsers from "../../hooks/useRandomUsers";
 import { processUsers, concatAndSliceData } from "../../utils/helper";
 import { useAppContextState } from "../../store/appContext";
 
+const imgStyle = {
+  objectFit: "cover",
+  borderRadius: "50%",
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "100%",
+  height: "100%",
+};
+
+const imgContainerStyle = {
+  width: "100%",
+  paddingBottom: "100%",
+  position: "relative",
+  margin: "auto",
+};
+
+const cardStyle = {
+  flex: "1 0 30%",
+  maxWidth: "25%",
+};
+
+const cardTextStyle = {
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+  height: "1.2em",
+  lineHeight: "1.2em",
+};
+
 /**
  * Render the Relationships component.
  *
@@ -23,37 +54,6 @@ const Relationships = ({ userProfile, userInfo, blogInfo }) => {
   const numAdditionalUsers = Math.max(0, 7 - filteredUsers?.length);
   const additionalUsers = useRandomUsers("female", numAdditionalUsers);
   const users = concatAndSliceData(filteredUsers, additionalUsers?.users, 7);
-
-  const imgStyle = {
-    objectFit: "cover",
-    borderRadius: "50%",
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "100%",
-    height: "100%",
-  };
-
-  const imgContainerStyle = {
-    width: "100%",
-    paddingBottom: "100%",
-    position: "relative",
-    margin: "auto",
-  };
-
-  const cardStyle = {
-    flex: "1 0 30%",
-    maxWidth: "25%",
-  };
-
-  const cardTextStyle = {
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-    height: "1.2em",
-    lineHeight: "1.2em",
-  };
 
   if (isLoading) {
     return <Spinner />;
@@ -79,7 +79,7 @@ const Relationships = ({ userProfile, userInfo, blogInfo }) => {
             <div style={imgContainerStyle}>
               <Image
                 variant="top"
-                src={userAvatars?.[user._id] || user.picture?.thumbnail}
+                src={userAvatars?.[user._id] ?? user.picture?.thumbnail}
                 style={imgStyle}
               />
             </div>

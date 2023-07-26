@@ -9,7 +9,7 @@ import useUnsplashImages from "../../hooks/useUnsplash";
  */
 // CarouselLogin component
 const CarouselLogin = ({ loginFormHeight }) => {
-  const images = useUnsplashImages("blog", 3);
+  const images = useUnsplashImages("blog", 3) || [];
 
   const carouselText = [
     {
@@ -27,26 +27,36 @@ const CarouselLogin = ({ loginFormHeight }) => {
   ];
 
   return (
-    <Carousel fade pause="hover" controls={false}>
-      {images &&
-        images.map((image, index) => (
-          <Carousel.Item interval={10000} key={image.id}>
+    <Carousel fade pause="hover" controls={false} data-testid="carousel">
+      {images.map((image, index) => {
+        // Check if image has the required properties
+        if (!image.id || !image.urls?.regular || !image.alt_description) {
+          return null;
+        }
+
+        return (
+          <Carousel.Item
+            interval={10000}
+            key={image.id}
+            data-testid="carousel-item"
+          >
             <Image
-              style={{ objectFit: "cover", height: loginFormHeight }}
+              style={{ objectFit: "cover", height: loginFormHeight || "500px" }}
               src={image.urls?.regular}
               alt={image.alt_description}
               rounded
             />
-            <Carousel.Caption>
-              <h3 style={{ color: "black" }}>
+            <Carousel.Caption data-testid="carousel-caption">
+              <h3 className="text-black">
                 <strong>{carouselText[index].h3}</strong>
               </h3>
-              <p style={{ color: "black" }}>
+              <p className="text-black">
                 <strong>{carouselText[index].p}</strong>
               </p>
             </Carousel.Caption>
           </Carousel.Item>
-        ))}
+        );
+      })}
     </Carousel>
   );
 };
