@@ -12,6 +12,7 @@ import useUnsplashImages from "../../hooks/useUnsplash";
  * @param {string} errorGeolocation - The error message for geolocation.
  * @return {JSX.Element} The rendered Geolocation component.
  */
+// Geolocation component
 const Geolocation = ({
   locationData,
   isLoadingGeolocation,

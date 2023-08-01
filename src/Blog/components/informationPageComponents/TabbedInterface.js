@@ -59,7 +59,11 @@ function TabbedInterface({
                     <strong className="ps-1">Location Information:</strong>
                   </h4>
                   {isLoadingGeolocation ? (
-                    <Spinner animation="border" role="status">
+                    <Spinner
+                      animation="border"
+                      role="status"
+                      data-testid="loader1"
+                    >
                       <span className="visually-hidden">Loading...</span>
                     </Spinner>
                   ) : errorGeolocation ? (
@@ -144,7 +148,7 @@ function TabbedInterface({
             </Tab.Pane>
             <Tab.Pane eventKey="second">
               {isLoadingImages ? (
-                <Spinner animation="border" role="status">
+                <Spinner animation="border" role="status" data-testid="loader2">
                   <span className="visually-hidden">Loading...</span>
                 </Spinner>
               ) : errorImages ? (

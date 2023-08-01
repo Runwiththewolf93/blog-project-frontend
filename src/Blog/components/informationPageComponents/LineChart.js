@@ -18,7 +18,7 @@ import { generateChartData } from "../../utils/helper";
  * @return {ReactElement} The line chart component.
  */
 // LineChartComponent
-const LineChartComponent = ({ blogInfo }) => {
+const LineChartComponent = ({ blogInfo = [] }) => {
   const data = blogInfo.reduce((acc, blog) => {
     const date = new Date(blog.createdAt).toLocaleDateString();
     acc[date] = (acc[date] || 0) + 1;
@@ -32,6 +32,7 @@ const LineChartComponent = ({ blogInfo }) => {
       <LineChart
         data={blogData}
         margin={{ top: 5, right: 30, left: -20, bottom: 5 }}
+        data-testid="line-chart"
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" tick={{ dy: 5 }} />

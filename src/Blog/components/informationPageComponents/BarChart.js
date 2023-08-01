@@ -16,7 +16,8 @@ import { generateChartData } from "../../utils/helper";
  * @param {Array} commentInfo - An array of comment information.
  * @return {JSX.Element} The rendered bar chart component.
  */
-const BarChartComponent = ({ commentInfo }) => {
+// BarChartComponent
+const BarChartComponent = ({ commentInfo = [] }) => {
   const data = commentInfo.reduce((acc, comment) => {
     const user = comment.user.name;
     acc[user] = (acc[user] || 0) + 1;

@@ -15,6 +15,7 @@ import {
  * @param {Array} blogInfo - An array of blog objects containing information such as title and total votes.
  * @return {ReactElement} The rendered area chart component.
  */
+// AreaChartComponent
 const AreaChartComponent = ({ blogInfo }) => {
   const voteData = blogInfo.map(blog => ({
     title: blog.title,

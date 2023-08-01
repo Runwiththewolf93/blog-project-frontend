@@ -94,6 +94,7 @@ const ButtonGroup = ({ onClear, onConvert }) => {
 
   return (
     <Col
+      data-testid="col-element"
       className={`d-flex ${
         isLaptopScreenOrSmaller
           ? "justify-content-center align-items-center mt-3"
@@ -135,7 +136,7 @@ const DateInput = ({ value, onChange }) => {
       className={isLaptopScreenOrSmaller && "d-flex align-items-center pb-3"}
     >
       <Form.Group>
-        <Form.Label>Date</Form.Label>
+        <Form.Label htmlFor="date-input">Date</Form.Label>
         <OverlayTrigger
           placement="right"
           overlay={
@@ -146,6 +147,7 @@ const DateInput = ({ value, onChange }) => {
           }
         >
           <Form.Control
+            id="date-input"
             placeholder="$1.00"
             type="date"
             value={value}
@@ -189,19 +191,21 @@ const ConversionResult = ({
         isLaptopScreenOrSmaller && "flex-column text-center"
       }`}
     >
-      {exchangeRate && showExchangeRate && (
-        <>
-          <p className="mt-4 mb-0">
-            {baseAmount} {baseCurrency} =
-          </p>
-          <h3 className="mt-4 mb-0">
-            {convertedAmount.toFixed(2)} {targetCurrency}
-          </h3>
-          <p className="mt-4 mb-0">
-            1 {baseCurrency} = {exchangeRate.toFixed(2)} {targetCurrency}
-          </p>
-        </>
-      )}
+      {exchangeRate !== null &&
+        exchangeRate !== undefined &&
+        showExchangeRate && (
+          <>
+            <p className="mt-4 mb-0">
+              {baseAmount} {baseCurrency} =
+            </p>
+            <h3 className="mt-4 mb-0">
+              {convertedAmount.toFixed(2)} {targetCurrency}
+            </h3>
+            <p className="mt-4 mb-0">
+              1 {baseCurrency} = {exchangeRate.toFixed(2)} {targetCurrency}
+            </p>
+          </>
+        )}
     </Col>
   );
 };

@@ -9,6 +9,7 @@ import classNames from "classnames";
  * @param {Array} props.images - An array of images to be displayed.
  * @return {JSX.Element|null} The rendered component.
  */
+// FigureComponent
 function FigureComponent({ images }) {
   const isTabletScreenOrSmaller = useMediaQuery({
     query: "(max-width: 768px)",

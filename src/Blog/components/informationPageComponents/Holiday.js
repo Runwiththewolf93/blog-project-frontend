@@ -45,7 +45,7 @@ const Holiday = ({ locationData, isLoadingGeolocation, errorGeolocation }) => {
         hover
         responsive
         variant="dark"
-        aria-label="List of holidays"
+        aria-label="Table listing holidays at destination"
       >
         <thead>
           <tr>

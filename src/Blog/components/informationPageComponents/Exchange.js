@@ -33,6 +33,7 @@ import useCurrencyOptions from "./exchangeComponents/useCurrencyOptions";
  *
  * @return {JSX.Element} The rendered Exchange component.
  */
+// Exchange component
 const Exchange = () => {
   const [state, dispatch] = useReducer(exchangeReducer, initialState);
   const abstractAPIKey = process.env.REACT_APP_ABSTRACT_EXCHANGE_API_KEY;
@@ -75,7 +76,7 @@ const Exchange = () => {
   return (
     <Col className="vh-100 mt-5">
       <Card className="mb-3">
-        <Form className="m-3" onSubmit={handleFormSubmit}>
+        <Form className="m-3" onSubmit={handleFormSubmit} data-testid="form">
           <Row>
             <FormInput
               label="Amount"
@@ -93,6 +94,7 @@ const Exchange = () => {
               }}
               options={baseCurrencyOptions}
               baseExchangeRate={state.baseExchangeRate}
+              testId="mockFormSelectBase"
             />
             <SwapButton
               onClick={() => {
@@ -109,6 +111,7 @@ const Exchange = () => {
               }}
               options={targetCurrencyOptions}
               baseExchangeRate={state.baseExchangeRate}
+              testId="mockFormSelectTarget"
             />
           </Row>
           <Col className="d-flex justify-content-between mt-3">

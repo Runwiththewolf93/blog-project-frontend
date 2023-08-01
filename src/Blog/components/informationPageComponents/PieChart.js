@@ -1,4 +1,5 @@
 import { PieChart, Pie, Tooltip, Legend } from "recharts";
+import { Alert } from "react-bootstrap";
 
 /**
  * Generate a pie chart component based on the given vote information, user data, and screen size.
@@ -10,6 +11,9 @@ import { PieChart, Pie, Tooltip, Legend } from "recharts";
  */
 // PieChartComponent
 const PieChartComponent = ({ voteInfo, users, isLaptopScreenOrSmaller }) => {
+  if (!voteInfo || !users)
+    return <Alert>No data available. Please reload the page.</Alert>;
+
   const data = voteInfo.reduce((acc, vote) => {
     const user = vote.user;
     acc[user] = (acc[user] || 0) + 1;

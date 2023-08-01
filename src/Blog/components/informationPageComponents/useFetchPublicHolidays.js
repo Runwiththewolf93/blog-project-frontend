@@ -9,12 +9,18 @@ import axios from "axios";
  * @param {number} year - The year for which public holidays are to be fetched.
  * @return {object} - An object containing the loading state, error message, and fetched data.
  */
+// useFetchPublicHolidays hook
 const useFetchPublicHolidays = (countryCode, year) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [data, setData] = useState([]);
 
   useEffect(() => {
+    if (!countryCode || !year) {
+      setLoading(false);
+      setError("Please provide a valid country code and year.");
+      return;
+    }
     /**
      * Fetches public holidays from a specified API endpoint.
      *

@@ -10,6 +10,7 @@ import Spinner from "../shared/Spinner";
  * @param {boolean} locationIsVpn - Indicates whether the user is using a VPN.
  * @return {ReactElement} The rendered Toast component.
  */
+// ToastComponent
 const ToastComponent = ({ locationIpAddress, locationIsVpn }) => {
   const [showToast, setShowToast] = useState(true);
   const handleClose = () => setShowToast(false);
